@@ -1,0 +1,224 @@
+baseurl = "https://ees3310.jgilligan.org"
+languageCode = "en-us"
+defaultContentLanguage = "en-us"
+title = "EES 3310/5310"
+theme = "hugo-syllabus"
+# disqusShortname = ""
+enableRobotsTXT = true
+# googleAnalytics = "UA-101117636-3"
+paginate = 10
+relativeurls = true
+publishDir = "public"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_data$", "\\.gitkeep"]
+
+[markup]
+  defaultMarkdownHandler = "goldmark"
+  [markup.blackFriday]
+    angledQuotes = false
+    footnoteAnchorPrefix = ""
+    footnoteReturnLinkContents = ""
+    fractions = true
+    hrefTargetBlank = true
+    latexDashes = true
+    nofollowLinks = false
+    noreferrerLinks = false
+    plainIDAnchors = true
+    skipHTML = false
+    smartDashes = true
+    smartypants = true
+    smartypantsQuotesNBSP = false
+    taskLists = true
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.parser]
+      attribute = true
+      autoHeadingID = true
+    [markup.goldmark.renderer]
+      hardWraps = false
+      unsafe = true
+      xHTML = false
+  [markup.highlight]
+    codeFences = true
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = "monokai"
+    tabWidth = 4
+  [markup.tableOfContents]
+    endLevel = 3
+    startLevel = 2
+
+[permalinks]
+  post = "/:year/:month/:slug/"
+  reading = "/reading/:slug"
+  assignment = "/assignment/:slug"
+  lab = "/lab/:slug"
+  lab_docs = "/lab_docs/:slug"
+  lab_solutions = "/lab_solutions/:slug"
+  homework_solutions = "/homework_solutions/:slug"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  archive = "archives"
+
+[author]
+  name = "Jonathan Gilligan"
+  bio = ""
+  job = "Associate Professor"
+  location = "Vanderbilt University"
+  gravatarEmail = "jonathan.gilligan@gmail.com"
+  # Your profile picture
+#  picture = ""
+  homepage = "https://www.jonathangilligan.org"
+  twitter = "jg_environ"
+
+# Menu Configuration
+[[menu.main]]
+  weight = 1
+  identifier = "home"
+  name = "Home"
+  pre = "<i class=\"sidebar-button-icon fas fa-lg fa-home\"></i> "
+  url = "/"
+[[menu.main]]
+  weight = 2
+  identifier = "overview"
+  name = "Overview"
+  pre = "<i class=\"sidebar-button-icon fas fa-lg fa-globe\"></i> "
+  url = "/overview"
+[[menu.main]]
+  weight = 3
+  identifier = "schedule"
+  name = "Schedule"
+  pre = "<i class=\"sidebar-button-icon fal fa-lg fa-calendar-alt\"></i> "
+  url = "/schedule"
+[[menu.main]]
+  weight = -4
+  identifier = "labs"
+  name = "Labs"
+  pre = "<i class=\"sidebar-button-icon fas fa-lg fa-flask\"></i> "
+  url = "/labs"
+[[menu.main]]
+  weight = 5
+  identifier = "exams"
+  name = "Exams"
+  pre = "<i class=\"sidebar-button-icon far fa-lg fa-pencil\"></i> "
+  url = "/exams"
+[[menu.main]]
+  weight = 6
+  identifier = "policies"
+  name = "Policies"
+  pre = "<i class=\"material-icons\">gavel</i> "
+  url = "/policies"
+[[menu.main]]
+  weight = -7
+  identifier = "downloads"
+  name = "Downloads"
+  pre = "<i class=\"sidebar-button-icon fas fa-lg fa-download\"></i> "
+  url = "/downloads"
+[[menu.main]]
+  weight = 8
+  identifier = "tools"
+  name = "Tools"
+  pre = "<i class=\"sidebar-button-icon fas fa-lg fa-wrench\"></i> "
+  url = "/tools"
+
+[[menu.footer]]
+  weight = 2
+  identifier = "GitHub"
+  name = "Class Repos"
+  pre = "<i class=\"button-icon fab fa-2x fa-github\"></i>"
+  url = "https://github.com/gilligan-ees-3310-2022"
+
+[params]
+  profname = "Jonathan Gilligan"
+  dateFormat = "January 2, 2006"
+  midtermDate = "2022-03-03"
+  finalExamDate = "2022-05-07T11:00:00"
+  energyGameDate = "2022-04-25"
+  roleplayDate = "2021-04-11"
+  projectPresentDate = "2021-05-01"
+  decarbPresentDate = "2021-05-01"
+  background = "img/BoxcarPair.jpg"
+  backgroundCredit = "[NASA Terra/CERES](https://terra.nasa.gov/news/study-long-term-global-warming-needs-external-drivers \"NASA: CERES Clouds and the Earth's Radiant Energy System. Radiant longwave energy (left) and reflected sunlight (right)\")"
+  math = "true"
+  backgroundColor = "white"
+  backgroundSize = "cover"
+  backgroundBlendMode = "multiply"
+  backgroundRepeat = "repeat-y"
+  shortCourseName = "EES 3310/5310"
+  fullCourseName = "EES 3310/5310: Global Climate Change"
+  semester = "Spring 2022"
+  courseCatalogEntry = "Scientific principles and policy applications. Earth's past; evidence of human impact; future climate change; and economic, social, and ecological consequences. Economic, technological, and public policy responses. Repeat credit for 2110. Students who have earned credit for 2110 will earn only one credit hour for this course. Prerequisite: one of 1030, 1080, 1510, BSCI 1510, CHEM 1601, ECON 1010, ES 1401 or PHYS 1501, 1601, 1901. [4] (MNS)"
+  fontAwesomePro = "sha384-POYwD7xcktv3gUeZO5s/9nUbRJG/WOmV6jfEGikMJu77LGYO8Rfs2X7URG822aum"
+  siteGitHub = "https://github.com/gilligan-ees-3310-2020/EES-3310-5310-website.git"
+
+  [params.lectures]
+    times = "MWF 9:05--9:55"
+    classroom = "SC 1117"
+
+  [params.lab]
+    times = "Mon. 1:25--4:15"
+    classroom = "Wilson 120"
+
+  [params.prof]
+    name = "Jonathan Gilligan"
+    lastname = "Gilligan"
+    title = "Prof."
+    email = "jonathan.gilligan@vanderbilt.edu"
+    phone = "322-2420"
+    url = "https://www.jonathangilligan.org"
+    office = "SC 5735 and on Zoom"
+    officeHours = "Monday 10:10--11:00 AM in person, Wednesday 8:00--9:00 PM, or by appointment. You can find link to the Zoom office hour on Brightspace, under \"Office Hours.\""
+
+  [params.ta]
+    hasTA = true
+    name = "Bryce Belanger"
+    lastname = "Belanger"
+    title = "Mr."
+    email = "bryce.k.belanger@vanderbilt.edu"
+    office = "Stevenson 5703A"
+    officeHours = "Thursday 9:00--11:00 AM, or by appointment"
+
+  [params.assignments]
+    labs = true
+    homework = false
+    reading = true
+
+  [params.ip]
+    copyright = "Copyright 2022, <a href=\"https://www.jonathangilligan.org\" target=\"_blank\">Jonathan Gilligan</a>."
+    licenseIcon = "/img/cc-by.svg"
+    licenseURL = "https://creativecommons.org/licenses/by/4.0/"
+    licenseTitle = "Creative Commons Attribution License"
+
+  [params.mathjax]
+    extensions = [ "color.js", "mhchem.js" ]
+    sansserif = false
+
+    [params.mathjax.macros]
+      permil = "\\unicode{x2030}"
+      pH = "p\\ce{H}"
+      CaSi = "\\ce{CaSiO3}"
+      silicate = "\\ce{SiO3^2-}"
+      Caplus = "\\ce{Ca^2+}"
+      calcite = "\\ce{CaCO3}"
+      silica = "\\ce{SiO2}"
+      OH = "\\ce{OH-}"
+      Hplus = "\\ce{H+}"
+      carbonic = "\\ce{H2CO3}"
+      bicarb = "\\ce{HCO3-}"
+      carb = "\\ce{CO3^2-}"
+      water = "\\mathrm{H_2O}"
+      degF = "^\\circ \\mathrm{F}"
+      degC = "^\\circ \\mathrm{C}"
+      methane = "\\ce{CH4}"
+      COO = "\\ce{CO2}"
