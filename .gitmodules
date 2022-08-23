@@ -2,3 +2,5 @@
 	path = themes/hugo-syllabus
 	url = git@github.com:jonathan-g/hugo-syllabus.git
 	branch = main
+[submodule "themes/hugo-syllabus/"]
+	url = https://github.com/jonathan-g/hugo-syllabus.git
