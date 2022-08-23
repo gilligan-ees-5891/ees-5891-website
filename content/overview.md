@@ -2,7 +2,7 @@
 title: "Course Description"
 date: "2021-08-26T00:00:00"
 ---
-#### <a href="/files/EES_4760_5760_Syllabus.pdf" target="_blank"><i class="fa fa-file-pdf-o" style="margin-right:0.25em;"></i> **Printable syllabus**</a>
+#### <a href="/files/EES_5891_Syllabus.pdf" target="_blank"><i class="fa fa-file-pdf-o" style="margin-right:0.25em;"></i> **Printable syllabus**</a>
 
 # **Course Description**
 
@@ -24,130 +24,197 @@ date: "2021-08-26T00:00:00"
 
 ## Catalog Description
 
-**EES 4760/5760 Agent- and Individual-Based Computational Modeling** 
-Applications in natural, social, and behavioral sciences and engineering. 
-Designing, programming, and documenting models. Using models for experiments. 
-Examples from environmental science, ecology, economics, urban planning, and 
-medicine. Familiarity with basic statistics and proficiency in algebra are 
-expected. \[3\] \(MNS\)
+**EES 5891-03 Bayesian Statistical Methods**
+The class will begin with an introduction to Bayesian statistics and then focus 
+on practical application of regression methods to data. We will use R together 
+with the 
+[Stan software package](https://mc-stan.org) for Hamiltonian Monte Carlo methods
+and the [R-INLA software package](https://www.r-inla.org/) 
+for Integrated Nested Laplace Approximation (INLA) analysis 
+(https://www.r-inla.org/). 
+The course will combine practical applications of Bayesian methods to real 
+(often messy) data with more philosophical discussions of Bayesian approaches 
+to statistics and how to interpret results of statistical analyses. 
+We will focus on regression methods, including hierarchical or 
+multilevel regression modeling methods, which can be very powerful when you 
+have data that has a nested structure (e.g., cities and counties within states 
+or species within genera). Students will do projects applying Bayesian methods 
+to their own data sets.
 
 ### Prerequisites
 
-You should be generally numerically literate and I will assume that you are
-familiar and comfortable with basic algebra and statistics.
-Prior programming experience is not required. 
-Students with significant experience in programming and statistical analysis
-should find themselves well prepared but should find plenty still to learn
-throughout the semester.
+You should be comfortable with differential and integral calculus and have 
+some previous experience with standard statistics. 
+
+This course will be very mathematical and will make extensive use of the R
+software system, but I do not assume that you already know R or advanced 
+mathematics beyond calculus.
 
 ## Narrative Description
 
-Agent-based and individual-based modeling has become a powerful tool for 
-research in many fields, including anthropology, civil engineering, computer 
-science, ecology, economics, epidemiology, marketing, medicine, political 
-science, public policy, robotics, sociology, transportation, and urban planning.
+Bayesian statistics is a branch of statistics that has been around for almost
+300 years, but for most of that time, it was very difficult to apply to 
+practical problems because the mathematical equations were too difficult to
+solve. In the last 30 years, as computers have become much faster and more 
+powerful, new computational methods have emerged that make Bayesian statistics
+practical for research and applications. 
 
-Agent-based modeling is used to study how individual agents (which can represent 
-people, animals, plants, cars, robots, or packets of information in a 
-communications network) making simple decisions can produce complex and 
-unexpected collective behavior through their interactions. Agent-based models 
-have been used to investigate  racial segregation in American cities,
-traffic jams, adaptation to global warming, disease outbreaks, inflammatory 
-response to wound infections, ecosystem dynamics, impacts of changing land-use 
-on tropical rain forests, political instability, and market penetration of home 
-solar-energy systems.
+Bayesian analysis is widely used across a wide variety of research as well as
+practical applications. It is used to analyze results from high-energy 
+particle physics experiments to discover new subatomic particles. 
+It's used by geologists to improve estimates of mineral distributions and
+radon hazards. 
+It's used by biologists to identify and categorize variations in the genomes of 
+humans and other species. 
+It's used extensively in medicine to analyze the results of clinical trials, 
+to determine the pharmacokinetics of drug metabolism, and to assess the 
+predictive value of tests for diseases such as cancer or COVID infection.
+It's used in political science and sociology to improve the 
+accuracy of public opinion surveys and to understand patterns of voting.
+It's widely used in marketing to identify consumer preferences and 
+improve the effectiveness of advertising. 
+If you use Google, Amazon, 
+Netflix, Stitchfix, or practically any large online platform for shopping or
+entertainment, advanced Bayesian methods form the basis of their 
+recommendations. 
+Bayesian analysis has also been applied effectively to law and criminology to 
+assess the value of evidence in proving guilt or innocence. 
+It has been applied to public health to estimate the prevalence of dieseases 
+and tomake more effective treatment decisions when medical tests are uncertain. 
+It is widely used in meteorology to make weather forecasts and in 
+climate science to combine data from many different sources and come up with 
+quantitative predictions and detailed understanding of their associated 
+uncertainties. 
+Bayesian methods are also widely used in computational applications, such as 
+image analysis and reconstruction, computational text analysis, and natural 
+language processing. 
+One of the earliest practical applications of Bayesian textual analysis, 
+in 1964, identified the anonymous authors of the Federalist Papers.
+More recent applications of Bayesian textual analysis are used to separate
+desired email from spam.
 
-This course will provide an introduction to agent and individual-based modeling. 
-You will learn how to design, program, and document agent-based computational 
-models using the free open-source {{% NETLOGO %}} environment. You will use 
-these models scientifically to perform computational experiments and interpret 
-the results.
+Bayesian statistical methods are valuable because they provide a systematic
+way to combine what you already know about a problem with new data from 
+experiments or observations, and the results of Bayesian analyses are more 
+straightforward to interpret than conventional statistics.
+
+This course will provide a general introduction to Bayesian statistics and 
+will combine practical instruction in how to do Bayesian data analysis and 
+philosophical discussions about how to think about the assumptions that go into
+a Bayesian analysis and how to interpret the results that it produces.
 
 You do not need to have any prior knowledge of computer programming, but I do 
-expect that you are familiar with basic statistics and algebra.
-We will use the {{% NETLOGO %}} environment for writing and running agent-based 
-models. 
-{{% NETLOGO %}} is a widely used system that is both powerful and easy to learn, 
-so you can quickly start to program your own models.
+expect that you are familiar with basic statistics and calculus 
+(both derivatives and integrals).
 
 # **Structure of the Course:**
 
 I divide the semester into three parts:
 
-* **Introduction to Agent-Based Models and {{% NETLOGO %}}:** 
-  The first part of the course introduces the basic concepts of computer 
-  modeling, what agent-based models are, and how to use the NetLogo environment 
-  to write and run simple agent based models.
-  I do not assume any prior experience with programming or computer modeling, 
-  so this part of the course will give you everything you need to get started.
+* **Introduction to Bayes's Theorem and its Applications:**
+  The first part of the course introduces the basic concepts of Bayesian 
+  statistics, using simplified approximations to calculate difficult 
+  equations. This section will focus on linear regression methods.
 
-* **Designing Agent-Based Models:** 
-  Next, we study the essential components of agent-based models and develop a 
-  systematic approach to designing and implementing agent-based models that will 
-  be suitable for doing real science. This section will use examples of real 
-  agent-based models that have been used for published research.
+* **Monte Carlo Methods:** 
+  Next, we study Monte Carlo methods, which help us solve more difficult 
+  problems that our earlier approximations are not powerful enough for.
+  This section will introduce statistical models of discrete data
+  (counts, categories, etc.), and generalized linear models. It will conclude
+  with multilevel statistical models, which can be very powerful methods for
+  working with large and complex data sets.
 
-* **Using Models for Serious Research:**
-  After mastering the components that good models should have, we step back from 
-  the details and work at a more strategic level to consider how we can design 
-  and use models to answer research questions in social and natural sciences.
+* **Geospatial Modeling:**
+  Finally, we will learn a different approach, called the Integrated 
+  Nested Laplace Approximation (INLA), which is very well suited for 
+  analyzing geospatial data that may be too difficult to analyze uding 
+  Monte Carlo methods. 
 
 
 ## Reading Material
 
-There is one required textbook.
-Supplementary reading on the Internet or in handouts will also be assigned 
-during the term.
+There are two required textbooks and two optional textbooks:
 
-### Textbook
+### Textbooks
 
-* {{% LONG_RAILSBACK %}}
+1. {{% LONG_RETHINKING %}}
 
-    There is a companion web site to the book,
-    <http://railsback-grimm-abm-book.com/>
-    where you can find errata in the textbook and download supporting data files 
-    and {{% NETLOGO %}} models for some of the exercises.
+   This will be the main textbook for most of the semester.
+
+   There is a [companion web site]({{% RETHINKING_COMPANION_URL %}}) to the book, 
+   and the author has posted 
+   [videos of his lectures]({{% RETHINKING_LECTURES %}})
+   on YouTube.
+  
+   McElreath uses basic R, which is fine, but many people have learned to use
+   a more modern dialect of R called the "tidyverse," which is described
+   at length in our companion book, [{{% MEDIUM_WICKHAM %}}]({{% WICKHAM_URL %}}).
+   For people who are used to the Tidyverse, there is an online e-book
+   * {{% LONG_TIDY_RETHINKING %}},
+
+
+   that translates McElreath's R code into the _tidyverse_, dialect.
+   If you want to use this, you will read the text in McElreath's book, 
+   but use the code from Kurz's e-book.
+
+2. {{% LONG_INLA %}}
+
+   You can buy the printed version of this book or use the free 
+   [online e-book version]({{% INLA_URL %}}).
+  
+   We will use this book in the third part of the semester, when we study 
+   Bayesian geospatial methods. This book covers a method called the 
+   Integrated Nested Laplace Approximation, which is very powerful for 
+   statistical models that are too computationally intensive for Monte Carlo
+   methods.
+  
+#### Optional Textbooks
+  
+There are two optional textbooks that you don't need to buy, but which may 
+be very useful as companions to the assigned textbooks. 
+  
+3. {{% LONG_DBDA %}}
+
+   This is an excellent introduction to Bayesian data analysis for beginners.
+   It is gentler than {{% MEDIUM_RETHINKING %}}, and would be better suited for
+   an undergraduate course, but I decided not to use it as the main textbook 
+   for this class because it focuses more on the statistical methods and does 
+   not give as much application of them to real scientific problems.
+  
+   The author writes very clearly and this book may be helpful if you find
+   some of the material in {{% MEDIUM_RETHINKING %}} confusing.
+   I have asked the Science and Engineering Library to put a copy on reserve so
+   you will be able to access it without buying a copy.
+
+4. {{% LONG_WICKHAM %}}
+
+   This book is the best practical introduction I have found for getting started
+   in R and getting things done in data analysis. The author is the chief data
+   scientist as the RStudio company and wrote a huge number of widely used free
+   packages to extend and enrich R. This book follows his philosophy of how to 
+   organize data sensibly for analyzing and presenting it.
 
 ## Additional Resources
 
-This course only scratches the surface of what is possible with agent-based 
-models, and what researchers are doing with them.
-I have prepared a separate handout on additional reading and computational 
-resources for doing research with agent-based models.
-This handout lists a number of helpful books, journals, web sites, and software 
-tools that you may find useful or interesting if your want to learn more.
+This course only scratches the surface of what is possible with Bayesian 
+statistics. I have prepared a handout with a lot of additional recommendations
+for reading about these powerful methods and how to use them.
 
 ## Class Web Site
 
-In addition to the Blackboard web site, I have set up a server at 
-<https://ees4760.jgilligan.org>, 
-where I post the web versions of class slides and interactive web-based 
-applications to that can be useful for working with data output from agent-based 
-modeling experiments.
+In addition to the {{% BRIGHTSPACE %}} web site, I have set up a server at 
+<https://ees5891.jgilligan.org>, 
+where I post the reading and homework assignments, 
+my slides from class, and other useful material.
 
 ## Computer Software
 
-For this class, we will write and execute agent-based models using the NetLogo 
-modeling system. NetLogo is free software developed at Northwestern University. 
-You can download it from {{% NETLOGO_URL %}}.
-NetLogo is available for Windows, Mac OS X, and Linux.
-I have chosen it for this course because it is free, it runs on all the major 
-operating systems, its programming language is very easy to learn; and it 
-allows you to easily create a visual representation of your model.
-
-You should download {{% NETLOGO %}} version {{% NETLOGO_VERSION %}} from 
-{{% NETLOGO_DOWNLOAD_URL %}}
-and install it on your computer.
-
-{{% NETLOGO %}} has been used widely both for education and also for 
-research-grade modeling. However, no computer software is perfect and for some 
-large or complicated models, {{% NETLOGO %}} may be inadequate. There are a 
-number of open-source agent-based modeling systems that are more powerful than 
-{{% NETLOGO %}} and are better suited for large and complex models. However, 
-these systems are much harder to learn and much harder for even experts to write 
-models in. My experience is that for most modeling projects, you can get more 
-done in a week with {{% NETLOGO %}} than in a month or more with the other 
-systems I know of.
+For this class, we will work in R, and I strongly recommend that you install
+the free version of RStudio Desktop for working with R. All the software we will
+use this semester is free and can be downloaded and installed on Windows,
+Mac, and Linux systems. You can find details at the 
+[tools page]({{% TOOLS_PAGE_URL %}}) of the 
+{{% CLASS_WEB_SITE %}}
 
 # **Assignments**
  
@@ -164,25 +231,14 @@ assigned material and ask questions if there are things you don't understand.
 
 ### Homework
 
-Homework must be turned in electronically to Brightspace by 11:59 pm on the 
-day it is due.
+Homework must be turned in at the beginning of class on the day it's due.
 
 ### Projects
 
-You will do one assigned team project and one research project.
-On the team project you will work with a partner to program and work with a 
-model from the textbook,
-run experiments with the model, write up the results, 
-and make a short presentation to the class.
-
-For your research project, you will study an existing model, adapt it to 
-investigate a new research question, run and analyze experiments using the 
-model, write up the results, and make a presentation to the class.
-
-**{{% small_caps "Note:" %}}** 
-Graduate student research projects will involve additional requirements and a 
-longer final report than undergraduate projects, and graduate students will be 
-assigned more homework exercises.
+In the second half of the semester, you will do a research project, in which you
+will choose a data set that's interesting to you and apply Bayesian methods to 
+analyze it. You will present the results of your project in class during the
+last week of the semester and turn in a written report about your project.
 
 ### Tests and Examinations
 
@@ -195,9 +251,8 @@ presentations.
 |                            |       |      |
 |:--------------------------:|------:|-----:|
 | Class participation        |  5%   |      |
-| Homework                   | 30%   |      |
-| Team Project               | 25%   |      |
-| Research Project           | 40%   |      |
+| Homework                   | 40%   |      |
+| Research Project           | 55%   |      |
 
 
 # **Final Note:**

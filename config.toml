@@ -1,7 +1,7 @@
-baseurl = "https://ees3310.jgilligan.org"
+baseurl = "https://ees5891.jgilligan.org"
 languageCode = "en-us"
 defaultContentLanguage = "en-us"
-title = "EES 3310/5310"
+title = "EES 5891-03"
 theme = "hugo-syllabus"
 # disqusShortname = ""
 enableRobotsTXT = true
@@ -108,7 +108,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_
   pre = "<i class=\"sidebar-button-icon fas fa-lg fa-flask\"></i> "
   url = "/labs"
 [[menu.main]]
-  weight = 5
+  weight = -5
   identifier = "exams"
   name = "Exams"
   pre = "<i class=\"sidebar-button-icon far fa-lg fa-pencil\"></i> "
@@ -142,55 +142,36 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_
 [params]
   profname = "Jonathan Gilligan"
   dateFormat = "January 2, 2006"
-  midtermDate = "2022-03-03"
-  finalExamDate = "2022-05-07T11:00:00"
-  energyGameDate = "2022-04-25"
-  roleplayDate = "2021-04-11"
-  projectPresentDate = "2021-05-01"
-  decarbPresentDate = "2021-05-01"
-  background = "img/BoxcarPair.jpg"
-  backgroundCredit = "[NASA Terra/CERES](https://terra.nasa.gov/news/study-long-term-global-warming-needs-external-drivers \"NASA: CERES Clouds and the Earth's Radiant Energy System. Radiant longwave energy (left) and reflected sunlight (right)\")"
+  projectPresentDate = "2022-xx-xx"
+  background = "img/stan_corrplot.png"
+  backgroundCredit = ""
   math = "true"
   backgroundColor = "white"
   backgroundSize = "cover"
   backgroundBlendMode = "multiply"
   backgroundRepeat = "repeat-y"
-  shortCourseName = "EES 3310/5310"
-  fullCourseName = "EES 3310/5310: Global Climate Change"
-  semester = "Spring 2022"
-  courseCatalogEntry = "Scientific principles and policy applications. Earth's past; evidence of human impact; future climate change; and economic, social, and ecological consequences. Economic, technological, and public policy responses. Repeat credit for 2110. Students who have earned credit for 2110 will earn only one credit hour for this course. Prerequisite: one of 1030, 1080, 1510, BSCI 1510, CHEM 1601, ECON 1010, ES 1401 or PHYS 1501, 1601, 1901. [4] (MNS)"
+  shortCourseName = "EES 5891-03"
+  fullCourseName = "EES 5891-03: Bayesian Statistical Methods"
+  semester = "Fall 2022"
+  courseCatalogEntry = "An introduction to Bayesian statistics, with a focus on both practical application of Bayesian regression methods to data as well as philosophical background on statistical inference and interpretation of statistical analyses. Bayes's theorem and tools for applying it, including quadratic approximations, Hamiltonian Monte Carlo sampling, and Integrated Nested Laplace Approximation (INLA). Advanced methods, including multilevel regression methods and geospatial analysis."
   fontAwesomePro = "sha384-POYwD7xcktv3gUeZO5s/9nUbRJG/WOmV6jfEGikMJu77LGYO8Rfs2X7URG822aum"
-  siteGitHub = "https://github.com/gilligan-ees-3310-2020/EES-3310-5310-website.git"
+  siteGitHub = "https://github.com/gilligan-ees-5891/EES-5891-website.git"
 
   [params.lectures]
-    times = "MWF 9:05--9:55"
-    classroom = "SC 1117"
-
-  [params.lab]
-    times = "Mon. 1:25--4:15"
-    classroom = "Wilson 120"
+    times = "TR 11:00--12:15"
+    classroom = "SC 6740"
 
   [params.prof]
     name = "Jonathan Gilligan"
     lastname = "Gilligan"
     title = "Prof."
     email = "jonathan.gilligan@vanderbilt.edu"
-    phone = "322-2420"
     url = "https://www.jonathangilligan.org"
-    office = "SC 5735 and on Zoom"
+    office = "SC 5735 (7th floor of Stevenson 5)"
     officeHours = "Monday 10:10--11:00 AM in person, Wednesday 8:00--9:00 PM, or by appointment. You can find link to the Zoom office hour on Brightspace, under \"Office Hours.\""
 
-  [params.ta]
-    hasTA = true
-    name = "Bryce Belanger"
-    lastname = "Belanger"
-    title = "Mr."
-    email = "bryce.k.belanger@vanderbilt.edu"
-    office = "Stevenson 5703A"
-    officeHours = "Thursday 9:00--11:00 AM, or by appointment"
-
   [params.assignments]
-    labs = true
+    labs = false
     homework = false
     reading = true
 

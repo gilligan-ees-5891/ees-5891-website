@@ -2,15 +2,14 @@
 title: "Policies"
 date: "2017-04-13T00:00:00"
 ---
-#### <a href="/files/EES_3310_5310_Syllabus.pdf" target="_blank"><i class="fa fa-file-pdf-o" style="margin-right:0.25em;"></i> **Printable syllabus**</a>
+#### <a href="/files/EES_5891_Syllabus.pdf" target="_blank"><i class="fa fa-file-pdf-o" style="margin-right:0.25em;"></i> **Printable syllabus**</a>
 
 # **Assignment policy**
 
 **I expect you to complete the assigned reading before class on the day
 for which it is assigned.**
 
-**Homework will be due by 11:59 PM on the due date.** 
-You will turn in homework to Brightspace.
+**Homework will be due at the beginning of class on the day it's due.**
 
 
 ### General instructions for reading assignments
@@ -22,8 +21,8 @@ You will turn in homework to Brightspace.
   to think about to make sure you understand the material, but you do not have 
   to write up your answers or turn them in.
 
-    You are responsible for all the assigned readings, but topics I have 
-    highlighted in the reading notes are particularly important.
+  You are responsible for all the assigned readings, but topics I have 
+  highlighted in the reading notes are particularly important.
 * In addition to the questions I ask in the reading notes, look over the 
   "Conclusions" section at the end of each chapter
   to check whether you understand the key facts and concepts from the chapter.

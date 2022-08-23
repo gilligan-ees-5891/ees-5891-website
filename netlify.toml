@@ -2,7 +2,7 @@
   publish = "public/"
   command = "hugo"
 [build.environment]
-  HUGO_VERSION = "0.62.0"
+  HUGO_VERSION = "0.80.0"
 [context.production]
   branch = "master"
 [build.processing]
@@ -20,51 +20,36 @@
 
 
 [Settings]
-  ID = "ees3310"
+  ID = "ees5891"
 
 [[redirects]]
-  from = "https://www.ees3310.jgilligan.org/*"
-  to   = "https://ees3310.jgilligan.org/:splat"
+  from = "https://www.ees5891.jgilligan.org/*"
+  to   = "https://ees5891.jgilligan.org/:splat"
   force = true
   status = 301
 
 [[redirects]]
-  from = "http://www.ees3310.jgilligan.org/*"
-  to   = "https://ees3310.jgilligan.org/:splat"
+  from = "http://www.ees5891.jgilligan.org/*"
+  to   = "https://ees5891.jgilligan.org/:splat"
   force = true
   status = 301
 
 [[redirects]]
-  from = "https://ees3310.netlify.com/*"
-  to   = "https://ees3310.jgilligan.org/:splat"
+  from = "https://ees5891.netlify.com/*"
+  to   = "https://ees5891.jgilligan.org/:splat"
   force = true
   status = 301
 
 [[redirects]]
-  from = "http://ees3310.netlify.com/*"
-  to   = "https://ees3310.jgilligan.org/:splat"
+  from = "http://ees5891.netlify.com/*"
+  to   = "https://ees5891.jgilligan.org/:splat"
   force = true
   status = 301
 
 [[redirects]]
   from = "/static/*"
-  to = "https://static.jgilligan.org/ees3310/:splat"
+  to = "https://static.jgilligan.org/ees5891/:splat"
   status = 200
-
-[[redirects]]
-  from = "/climatemodels/*"
-  to = "https://climatemodels.jgilligan.org/:splat"
-  status = 302
-
-[[redirects]]
-  from = "/decarbonization/*"
-  to = "https://shiny.jgilligan.org/ees-3310/kaya-tool/:splat"
-  status = 302
-
-[[redirects]]
-  from = "/emissions_trading/*"
-  to = "https://shiny.jgilligan.org/ees-3310/emissions_trading/:splat"
-  status = 302
 
 [[redirects]]
   from = "/*"

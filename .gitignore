@@ -1,12 +1,14 @@
 /blogdown/
 /docs/
 /lectures/semester/
+/lectures/old_semester/
 /public/
 /static/static/
 *cache/
 .Rproj.user/
 node_modules/
 Corel Auto-Preserve/
+.Rproj.user/
 .RData
 .Ruserdata
 .Rhistory
@@ -27,9 +29,8 @@ Corel Auto-Preserve/
 tmp*.tex
 *.knit.md
 *.lock~
-.Rproj.user
-/temp.R
-old_lectures/
-/static/energetic_game
-/static/energetic-game
 *.bib.sav
+/planning/EES-3310-5310.sqlite3
+/planning/EES-3310.sqlite3
+/planning/EES-4760-5760.sqlite3
+/planning/EES-4760.sqlite3
