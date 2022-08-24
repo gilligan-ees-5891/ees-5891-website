@@ -11,7 +11,7 @@ regenerate_site <- function(root = NULL, force = FALSE, keep_tex = FALSE) {
   oldwd = setwd(root)
   on.exit(setwd(oldwd))
   message("Setting working directory to ", getwd())
-  semester <- load_semester_db("planning/EES-3310-5310.sqlite3")
+  semester <- load_semester_db("planning/EES_5891.sqlite3")
   generate_assignments(semester)
   new_update_site(root = getwd(), force = force, keep_tex = keep_tex)
 }
@@ -25,7 +25,7 @@ new_update_site <- function(root = NULL, force = FALSE, keep_tex = FALSE) {
   message("Setting working directory to ", getwd())
   update_site(force = force)
   out_opts = list(md_extensions = semestr:::get_md_extensions(), toc = TRUE,
-                  includes = list(in_header = "ees3310.sty"),
+                  includes = list(in_header = "ees5891.sty"),
                   keep_tex = keep_tex)
   update_pdfs(force_dest = TRUE, force = force, output_options = out_opts)
 }
