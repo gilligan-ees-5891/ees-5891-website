@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>First Day of Class</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.14.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">First Day of Class</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #1:
+       Thursday, August 25
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section id="introductions" class="slide level2"><h2>Introductions</h2>
+<ul>
+<li>Introduce yourselves
+<ul>
+<li>Name</li>
+<li>Department and research interests</li>
+<li>How long have you been in your program?</li>
+<li>What previous math and stats have you taken?</li>
+<li>Where are you from?</li>
+<li>Something interesting about yourself</li>
+</ul>
+</li>
+</ul></section><section><section id="what-stat-sec" class="title-slide slide level1 center"><h1 class="center">What Is Statistics?</h1>
+
+</section><section id="what-stat" class="slide level2"><h2>What Is Statistics?</h2>
+<ul>
+<li class="fragment">Define “statistics”</li>
+<li class="fragment">What do you use statistics for?</li>
+<li class="fragment">What kinds of questions do you expect statistics to answer?</li>
+</ul></section><section id="what-is-bayesian-statistics" class="slide level2"><h2>What is Bayesian Statistics?</h2>
+<ul>
+<li>Why are you taking this class?</li>
+<li class="fragment">What do you know about Bayesian statistics?</li>
+<li class="fragment">Any questions for me?</li>
+</ul></section></section><section><section id="sunrise" class="title-slide slide level1 center"><h1 class="center">What is the probability the sun will rise
+tomorrow?</h1>
+<aside class="notes"><p>This is from the appendix the editor added to Bayes’s original paper
+in 1763</p>
+<p>Suppose you were just born and have no experience in the world. You
+see the sun rise once, and then it sets.</p>
+<ul>
+<li>Will it rise again?</li>
+<li>After several days, what do you know?</li>
+<li>After several years?</li>
+</ul></aside></section><section id="disease-testing" class="slide level2"><h2>Disease testing</h2>
+<ul>
+<li>Roughly 1 in 500 university students (0.2%) are infected with
+HIV</li>
+<li>Suppose a test has
+<ul>
+<li>99% sensitivity (if someone has HIV, there’s a 99% probability the
+test will correctly say “positive”)</li>
+<li>98.5% specificity (if someone doesn’t have HIV, there’s a 98.5%
+probability the test will correctly say “negative”)</li>
+</ul>
+</li>
+<li>If the test is positive, what is the probability the person really
+has HIV?</li>
+<li>If the test is negative, what is the probability the person doesn’t
+have HIV?</li>
+</ul></section><section id="disease-testing-1" class="slide level2"><h2>Disease testing:</h2>
+<div class="columns">
+<div class="column eighty">
+<ul>
+<li>2500 people</li>
+<li>Prevalence of HIV = 0.2%
+<ul>
+<li>5 people are HIV positive.</li>
+</ul>
+</li>
+<li>Sensitivity: 99.0%</li>
+<li>Specificity: 98.5%</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/hiv-status-plot-1.png"></p>
+</div>
+</div>
+</section><section id="disease-testing-2" class="slide level2"><h2>Disease testing:</h2>
+<div class="columns">
+<div class="column eighty">
+<ul>
+<li>2500 people</li>
+<li>Prevalence of HIV = 0.2%
+<ul>
+<li>5 people are HIV positive.</li>
+</ul>
+</li>
+<li class="fragment">Sensitivity: 99.0%
+<ul>
+<li>5 HIV-positive people test true positive</li>
+<li>0 HIV-positive people test false negative</li>
+</ul>
+</li>
+<li class="fragment">Specificity: 98.5%
+<ul>
+<li>2463 HIV-negative people test true negative</li>
+<li>32 HIV-negative people test false positive</li>
+</ul>
+</li>
+<li class="fragment">Of the 37 people who test positive, 5<br>
+(13.5%) actually have HIV and 32 (86.5%) don’t.</li>
+<li class="fragment">More exactly, if a university student tests positive, the
+probability they actually have HIV is 11.7%.</li>
+<li class="fragment">If a student tests negative, the probability they don’t have HIV
+is 99.998%.</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/hiv-test-plot-1.png"></p>
+</div>
+</div>
+</section><section id="what-does-this-mean" class="slide level2"><h2>What does this mean?</h2>
+<ul>
+<li>When you do a standard statistical significance test, and it tells
+you <span class="math inline">\(p = 0.01\)</span>, what does that
+mean?</li>
+<li class="fragment">It means that <em>if</em> the null hypothesis were true, there
+would be a 1% chance that you’d observe data at least this far away from
+the exact null hypothesis.
+<ul>
+<li>If you don’t have HIV, you have a 1.5% chance of getting a positive
+test.</li>
+</ul>
+</li>
+<li class="fragment">But what we usually want to know is not the probability seeing
+the data we collected <em>if</em> the null hypothesis is true.
+<ul>
+<li class="fragment">We want to know the probabilty that the null hypothesis is true
+<em>if</em> we see the data we observed.</li>
+<li class="fragment">That’s a different question.</li>
+</ul>
+</li>
+<li class="fragment">To answer it, we need to know the probability that the null
+hypothesis was true before we collected the data, and then calculate how
+much our data changes that probability by giving us more
+information.</li>
+</ul></section></section><section><section id="applications" class="title-slide slide level1"><h1>Applications</h1>
+<div class="columns">
+<div class="column seventyfive">
+<ul>
+<li>Mid-1990s, two drugs used to treat heart attacks:
+<ul>
+<li>streptokinase (SK): widely used, inespensive.</li>
+<li>Tissue plasminogen activator (t-PA): new, expensive, poorly
+understood.</li>
+</ul>
+</li>
+<li class="fragment">GUSTO: big clinical trial with 30516 patients:
+<ul>
+<li>6.3% of patients treated with t-PA died</li>
+<li>7.3% of patients treated with SK died.</li>
+<li>Statistical significance (t-PA better than SK) was <span class="math inline">\(p &lt; 0.001\)</span>
+</li>
+</ul>
+</li>
+<li class="fragment">But there had been two previous clinical trials with a total of
+47,294 patients found no benefit to t-PA.</li>
+<li class="fragment">Combine all three trials using Bayesian methods:
+<ul>
+<li>If GUSTO was twice as credible as the other studies, 44% probability
+that t-PA was better.</li>
+<li class="fragment">If the other studies were just as credible as GUSTO, 17% chance
+that t-PA was better.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/brophy-gusto-bayes-1995.png" alt="J.M. Brophy, “Placing Trials in Context Using Bayesian Analysis: GUSTO Revisited by Reverant Bayes”, JAMA 273, 871 (1995)"></p>
+</div>
+</div>
+</section><section id="climate" class="slide level2"><h2>Sensitivity of the Climate System</h2>
+<div class="columns">
+<div class="column seventyfive">
+<ul>
+<li>Climate models predict global warming, but we only have a few
+decades with which to test their accuracy
+<ul>
+<li>CO<sub>2</sub> hasn’t varied that much over this time span.</li>
+</ul>
+</li>
+<li class="fragment">Use Bayesian methods to combine paleoclimate data with current
+models.
+<ul>
+<li>More than 800,000 years of Pleistocene data
+<ul>
+<li>Huge variations in CO<sub>2</sub>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Including paleoclimate data helps set an upper limit on how big
+climate sensitivity could be.</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/renoult-bayes-climate-2020.png" alt="M. Renoult et al., A Bayesian framework for emergent constaints: case studies of climate sensitivity with PMIP"></p>
+</div>
+</div>
+</section></section><section><section id="organization-of-the-course" class="title-slide slide level1"><h1>Organization of the Course</h1>
+<ul>
+<li>The main class website is at <a href="https://ees5891.jgilligan.org" class="uri">https://ees5891.jgilligan.org</a>
+</li>
+<li>Copies of the
+<ul>
+<li>syllabus,</li>
+<li>reading assignments,</li>
+<li>homework assignments</li>
+<li>slides from class (also link from QR code on title slide)</li>
+<li>instructions for installing necessary software on your computer</li>
+</ul>
+</li>
+<li>Links to helpful resources.</li>
+<li class="fragment">Slides:
+<ul>
+<li>The title slide has QR code with link to online version.</li>
+<li>PDF versions are also posted to course web site (link on title
+slide)</li>
+<li>Slides have two-dimensional navigation (in a browser, hit “?” for
+help)</li>
+</ul>
+</li>
+</ul></section><section id="section" class="slide level2" data-background="#FFF0F0"><h2 data-background="#FFF0F0"><!--- dummy for formatting ---></h2>
+<h3 id="textbooks">Textbooks</h3>
+<table>
+<tr style="vertical-align:middle; text-align:center">
+<td>
+<img src="assets/images/rethinking-cover.jpg" height="154.285714285714px" alt="Statistical Rethinking (2nd Edition)">
+</td>
+<td style="vertical-align:middle;">
+Richard McElreath, <i>Statistical Rethinking
+(2<sup>nd</sup> Edition)</i><br>Required
+</td>
+</tr>
+<tr style="vertical-align:middle; text-align:center">
+<td>
+<img src="assets/images/inla-cover.jpg" height="154.285714285714px" alt="Bayeian Inference with INLA">
+</td>
+<td style="vertical-align:middle;">
+Virhilio Gómez-Rubio, <i>Bayeian Inference with INLA</i><br>Required
+(Free web version online at
+<a href="https://becarioprecario.bitbucket.io/inla-gitbook/" target="_blank"><code>https://becarioprecario.bitbucket.io/inla-gitbook/</code></a>)
+</td>
+</tr>
+<tr style="vertical-align:middle; text-align:center">
+<td>
+<img src="assets/images/dbda-cover.png" height="154.285714285714px" alt="Doing Bayesian Data Analysis">
+</td>
+<td style="vertical-align:middle;">
+John K. Kruschke, <i>Doing Bayesian Data Analysis</i><br>Optional
+supplementary book, not required
+</td>
+</tr>
+<tr style="vertical-align:middle; text-align:center">
+<td>
+<img src="assets/images/r4ds.png" height="154.285714285714px" alt="R for Data Science">
+</td>
+<td style="vertical-align:middle;">
+Hadley Wickham &amp; Garrett Grolemund, <i>R for Data
+Science</i><br>Recommended (Free web version online at
+<a href="https://r4ds.had.co.nz/" target="_blank"><code>https://r4ds.had.co.nz/</code></a>)
+</td>
+</tr>
+</table></section><section id="course-material" class="slide level2 eighty" data-background="#FFF0F0"><h2 class="eighty" data-background="#FFF0F0">Course Material</h2>
+<ul>
+<li>Main source of material: <a href="https://ees5891.jgilligan.org">ees5891.jgilligan.org</a>
+<ul>
+<li>Syllabus</li>
+<li>Reading assignments for the semester
+<ul>
+<li>Do the assigned reading <strong>before</strong> class on the day
+it’s assigned for.</li>
+</ul>
+</li>
+<li>Homework is due at the beginning of class on the assigned due
+date.</li>
+</ul>
+</li>
+<li class="fragment">Slides from class
+<ul>
+<li>Web-based and PDF versions</li>
+<li>Posted on <a href="https://ees5891.jgilligan.org/schedule/">ees5891.jgilligan.org/schedule/</a>
+</li>
+<li class="fragment">Slides:
+<ul>
+<li>The title slide has QR code with link to online version.</li>
+<li>PDF versions are also posted to course web site (link on title
+slide)</li>
+<li>Web-based slides have two-dimensional navigation (in a browser, hit
+“?” for help)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section></section><section><section id="computing-sec" class="title-slide slide level1 center"><h1 class="center">Computational Resources</h1>
+
+</section><section id="r" class="slide level2"><h2>R</h2>
+<ul>
+<li>We will use the R for all the statistical analysis in this course
+<ul>
+<li>It is free and open source</li>
+<li>It is widely used and powerful</li>
+<li>It is written specifically for statistical analysis</li>
+<li>There is an extensive library of free packages people have written
+to extend it.</li>
+<li>You can find instructions for installing R and the other software we
+will use this semester in the “<a href="https://ees5891.jgilligan.org/tools/">Tools</a>” page of the class
+web site and in the homework assignment for Tuesday.</li>
+</ul>
+</li>
+</ul></section><section id="rstudio" class="slide level2"><h2>RStudio</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>We will use the RStudio integrated development environment for
+working with R.
+<ul>
+<li>RStudio combines an editor for writing code and an environment for
+running R scripts and also using R interactively, displaying graphics,
+etc.</li>
+<li>Like R, RStudio is free and open-source.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/rstudio-image.jpg" alt="Screenshot of RStudio"></p>
+</div>
+</div>
+</section><section id="additional-r-resources" class="slide level2"><h2>Additional R Resources</h2>
+<ul>
+<li>We will also install a lot of packages other people have written to
+add powerful Bayesian data analysis to R.</li>
+<li>To use these, it will be necessary to install the R development
+environmment. There are links to detailed instructions in the homework
+assignment for Tuesday and on the “<a href="https://ees5891.jgilligan.org/tools/">Tools</a>” page of the class
+web site.</li>
+</ul></section></section><section><section id="application-to-law-and-justice" class="title-slide slide level1 center"><h1 class="center">Application to Law and Justice</h1>
+
+</section><section id="weighing-evidence-of-guilt" class="slide level2"><h2>Weighing Evidence of Guilt</h2>
+<ul>
+<li>In a city with 1 million people, someone committed a burglary.</li>
+<li>Police found a partial fingerprint at the crime scene</li>
+<li>A suspect was arrested and his fingerprints match the partial print
+at the scene</li>
+</ul></section><section id="fingerprint-examinations" class="slide level2"><h2>Fingerprint Examinations</h2>
+<ul>
+<li class="fragment">Sensitivity = 0.999
+<ul>
+<li>If the suspect actually left the print, there is a 99.9% probability
+that the fingerprint experts will declare a match.</li>
+</ul>
+</li>
+<li class="fragment">Specificity = 0.99999
+<ul>
+<li>If someone else left the print, there is only a 1 in 100,000 chance
+that the experts will declare a match (a <em>false positive</em>)</li>
+</ul>
+</li>
+</ul></section><section id="prosecutors-fallacy" class="slide level2"><h2>Prosecutor’s Fallacy</h2>
+<ul>
+<li>Specificity = 99.999%. If someone else left the print, there is only
+a 1 in 100,000 chance that the experts would declare a match.</li>
+<li class="fragment">Therefore, if experts declare a match, we can be 99.999% certain
+the suspect is guilty.</li>
+<li class="fragment">This is <strong>not true</strong>.</li>
+</ul></section><section id="bayess-theorem" class="slide level2"><h2>Bayes’s Theorem</h2>
+<p><span class="math display">\[ P(H|DI) = \frac{P(D|HI) \times
+P(H|I)}{P(D|I)} \]</span></p>
+<div class="leftslide">
+<div>
+<ul>
+<li>
+<em>H</em>: Hypothesis, the suspect left the print</li>
+<li>
+<em>h</em>: Null hypothesis, someone else left the print</li>
+<li>
+<em>D</em>: New data, experts say the prints match</li>
+<li>
+<em>d</em>: New data, experts say the prints don’t match</li>
+<li>
+<em>I</em>: Other evidence we had before the fingerprint
+analysis.</li>
+</ul>
+</div>
+<div class="mtop-2">
+<ul>
+<li>
+<span class="math inline">\(P(D|H,I)\)</span> = sensitivity
+(99.9%)</li>
+<li>
+<span class="math inline">\(P(d|h,I)\)</span> = specificity
+(99.999%)</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+P(D|I) &amp;= P(D|HI) \times P(H|I) + P(D|hI) \times P(h|I) \\
+  &amp;=  P(D|HI) \times P(H|I) + (1 - P(d|hI)) \times (1 - P(H|I))
+\end{aligned}
+\]</span></p>
+</div>
+</div>
+</section><section id="prior-probability" class="slide level2"><h2>Prior Probability</h2>
+<p><span class="math display">\[ P(H|DI) = \frac{P(D|HI) \times
+P(H|I)}{P(D|I)} \]</span></p>
+<ul>
+<li>
+<span class="math inline">\(P(D|H,I)\)</span> = sensitivity
+(99.9%)</li>
+<li>
+<span class="math inline">\(P(d|h,I)\)</span> = specificity
+(99.999%)</li>
+<li><span class="math inline">\(P(D|I) = P(D|HI) \times P(H|I) + (1 -
+P(d|hI)) \times (1 - P(H|I))\)</span></li>
+<li class="fragment">We need to know <span class="math inline">\(P(H|I)\)</span>, the
+probability, before we learn the fingerprint evidence, that the suspect
+left the fingerprint at the scene. (this is called the <em>prior
+probability</em>)</li>
+</ul></section><section id="different-values-of-the-prior" class="slide level2 ninety"><h2 class="ninety">Different values of the prior</h2>
+<p><span class="math display">\[ P(H|DI) = \frac{P(D|HI) \times
+P(H|I)}{P(D|I)} \]</span></p>
+<div class="leftslide">
+<ul>
+<li><p><span class="math inline">\(P(D|H,I)\)</span> = sensitivity
+(99.9%)</p></li>
+<li><p><span class="math inline">\(P(d|h,I)\)</span> = specificity
+(99.999%)</p></li>
+<li class="fragment"><p>Suppose the prior <span class="math inline">\(P(H|I)\)</span>
+is very small. The fingerprint is the only useful evidence we
+have.</p></li>
+<li class="fragment"><p>There are 1 million people in the city, so <span class="math inline">\(P(H|I) = 1\times10^{=6}\)</span></p></li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="math display">\[ P(H|DI) = \frac{0.999 \times
+1\times10^{-6}}{0.999 \times 1\times10^{-6} + (1 - 0.99999) \times (1 -
+1\times 10^{-6})}  = 0.091\]</span></p>
+</div>
+<ul>
+<li class="fragment">So there is a 9.1% probability that the suspect is guilty if the
+fingerprint matches.</li>
+</ul></section><section id="different-values-of-the-prior-1" class="slide level2 ninety"><h2 class="ninety">Different values of the prior</h2>
+<p><span class="math display">\[ P(H|DI) = \frac{P(D|HI) \times
+P(H|I)}{P(D|I)} \]</span></p>
+<div class="leftslide">
+<ul>
+<li><p><span class="math inline">\(P(D|H,I)\)</span> = sensitivity
+(99.9%)</p></li>
+<li><p><span class="math inline">\(P(d|h,I)\)</span> = specificity
+(99.999%)</p></li>
+<li class="fragment"><p>Suppose the suspect was seen near the scene of the crime.
+This narrows it down so before we get the fingerprint evidence, we
+estimate that <span class="math inline">\(P(H|I)\)</span> is 1 in 1000
+(0.001).</p></li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="math display">\[ P(H|DI) = \frac{0.999 \times
+0.001}{0.999 \times 0.001 + (1 - 0.99999) \times (1 - 0.001)}  =
+0.99\]</span></p>
+</div>
+<ul>
+<li class="fragment">So there is a 99% probability that the suspect is guilty if the
+fingerprint matches.</li>
+</ul></section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_01">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_01"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_01">https://ees5891.jgilligan.org/slides/class_01</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_01/ees_5891-03_class_01_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_01/ees_5891-03_class_01_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"]
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

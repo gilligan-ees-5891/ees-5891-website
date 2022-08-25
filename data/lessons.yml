@@ -1,6 +1,7 @@
 lessons:
 - date: '2022-08-25'
   title: Introduction
+  lecture: /slides/class_01
 - date: '2022-08-30'
   title: Rethinking statistics
   reading: /reading/reading_02

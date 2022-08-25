@@ -721,9 +721,11 @@ during the term and posted on Brightspace.
 	  The book is expensive, but there is a free web-based e-book version
 	  online at \INLAURL, which is identical to the printed book.
 \end{itemize}
+\begin{sloppypar}
 There is a companion web site to \emph{\Rethinking\/} at \RethinkingWebSite,
 which has links a number of resources, including videos of the author's own
 lectures on the material.
+\end{sloppypar}
 
 For people who are familiar with R and like to work in the \texttt{tidyverse}
 dialect, there is a free companion e-book on the web at \TidyRethinkingBook,
