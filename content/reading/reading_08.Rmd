@@ -1,0 +1,19 @@
+---
+title: Interactions
+class_date: '2022-09-20'
+class_number: 8
+weight: 8
+slug: reading_08
+pubdate: '2022-07-31'
+date: '2022-09-20'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_08.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 8 ("Conditional Manatees").
+

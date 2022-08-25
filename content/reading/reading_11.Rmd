@@ -1,0 +1,19 @@
+---
+title: Generalized linear models
+class_date: '2022-09-29'
+class_number: 11
+weight: 11
+slug: reading_11
+pubdate: '2022-07-31'
+date: '2022-09-29'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_11.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 10 ("Big Entropy and the Generalized Linear Model").
+

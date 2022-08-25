@@ -1,0 +1,19 @@
+---
+title: Many variables
+class_date: '2022-09-08'
+class_number: 5
+weight: 5
+slug: reading_05
+pubdate: '2022-07-31'
+date: '2022-09-08'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_05.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 5 ("The Many Variables and The Superfluous Waffles").
+

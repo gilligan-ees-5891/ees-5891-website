@@ -1,0 +1,19 @@
+---
+title: Geospatial data analysis
+class_date: '2022-11-01'
+class_number: 19
+weight: 19
+slug: reading_19
+pubdate: '2022-07-31'
+date: '2022-11-01'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_19.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Bayesian Inference with INLA.
+

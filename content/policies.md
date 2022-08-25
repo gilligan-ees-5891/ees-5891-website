@@ -46,13 +46,12 @@ This course, like all courses at Vanderbilt, is conducted under the Honor Code.
   the steps yourself and express the answers in your own words. You may not
   simply copy someone else's answer.**
 
-**Team Assignment:**
-: On some assignments, in which I explicitly direct you to work with others.
-  These team assignments will contain instructions how the honor code applies.
-
 **Research Project:**
-: The research project assignment will contain details about how the honor code 
-  applies to the research project.
+: The research project assignment be conducted under the same ethical principles
+  that apply to publishing papers in scientific journals. The work you present
+  must be your own, but you may consult with others and seek help. If anyone
+  else makes a significant contribution to your project, you whould 
+  list them and their contribution in an Acknowledgements section.
 
 If you ever have questions about how the Honor Code applies to your work
 in this course, please ask me.

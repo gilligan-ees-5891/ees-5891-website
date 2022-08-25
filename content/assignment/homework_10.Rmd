@@ -1,0 +1,18 @@
+---
+title: Geospatial modeling
+due_date: '2022-11-01'
+assignment_type: Homework
+short_assignment_type: HW
+assignment_number: 10
+weight: 10
+slug: homework_10
+pubdate: '2022-07-31'
+date: '2022-11-01'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+---
+## Homework
+
+### Homework Exercises:
+

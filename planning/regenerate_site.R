@@ -11,7 +11,7 @@ regenerate_site <- function(root = NULL, force = FALSE, keep_tex = FALSE) {
   oldwd = setwd(root)
   on.exit(setwd(oldwd))
   message("Setting working directory to ", getwd())
-  semester <- load_semester_db("planning/EES_5891.sqlite3")
+  semester <- load_semester_db("planning/EES-5891.sqlite3")
   generate_assignments(semester)
   new_update_site(root = getwd(), force = force, keep_tex = keep_tex)
 }

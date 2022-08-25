@@ -1,0 +1,19 @@
+---
+title: Conditional autoregressive models
+class_date: '2022-11-15'
+class_number: 23
+weight: 23
+slug: reading_23
+pubdate: '2022-07-31'
+date: '2022-11-15'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_23.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Bayesian Inference with INLA.
+

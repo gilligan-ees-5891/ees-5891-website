@@ -1,0 +1,19 @@
+---
+title: Messy data
+class_date: '2022-10-27'
+class_number: 18
+weight: 18
+slug: reading_18
+pubdate: '2022-07-31'
+date: '2022-10-27'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_18.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 15 ("Missing Data and Other Opportunities").
+

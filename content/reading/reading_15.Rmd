@@ -1,0 +1,19 @@
+---
+title: Multilevel models
+class_date: '2022-10-18'
+class_number: 15
+weight: 15
+slug: reading_15
+pubdate: '2022-07-31'
+date: '2022-10-18'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_15.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 13 ("Models with Memory").
+

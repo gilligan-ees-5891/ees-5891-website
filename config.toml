@@ -172,7 +172,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_
 
   [params.assignments]
     labs = false
-    homework = false
+    homework = true
     reading = true
 
   [params.ip]

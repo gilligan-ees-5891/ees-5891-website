@@ -1,0 +1,18 @@
+---
+title: INLA models
+due_date: '2022-11-08'
+assignment_type: Homework
+short_assignment_type: HW
+assignment_number: 11
+weight: 11
+slug: homework_11
+pubdate: '2022-07-31'
+date: '2022-11-08'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+---
+## Homework
+
+### Homework Exercises:
+

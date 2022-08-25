@@ -4,11 +4,26 @@ date: "2021-08-26T00:00:00"
 ---
 #### <a href="/files/EES_5891_Syllabus.pdf" target="_blank"><i class="fa fa-file-pdf-o" style="margin-right:0.25em;"></i> **Printable syllabus**</a>
 
-# **Course Description**
+# Contents
 
-## Basic Info:
+* [Overview](#desc)
+  * [Catalog description](#catalog-desc)
+  * [Prerequisites](#prereqs)
+  * [Narrative description](#narrative-desc)
+  * [Goals for the course](#goals)
+* [Course Structure](#structure)
+  * [Reading material](#reading)
+  * [Graded assignments](#graded-work)
+    * [Homework](#homework)
+    * [Research project](#project)
+    * [Basis of semester grade](#grades)
 
-#### Professor
+
+# **Overview of the Course** {#desc}
+
+## Basic Info: {#basic-info}
+
+#### Professor {#prof}
 
 {{< PROF_INFO >}}
 
@@ -18,11 +33,11 @@ date: "2021-08-26T00:00:00"
 {{< TA_INFO >}}
 {{< /IF_TA >}}
 
-#### Schedule
+#### Schedule {#schedule}
 
 {{% CLASS_MEETINGS %}}
 
-## Catalog Description
+## Catalog Description {#catalog-desc}
 
 **EES 5891-03 Bayesian Statistical Methods**
 The class will begin with an introduction to Bayesian statistics and then focus 
@@ -41,7 +56,7 @@ have data that has a nested structure (e.g., cities and counties within states
 or species within genera). Students will do projects applying Bayesian methods 
 to their own data sets.
 
-### Prerequisites
+### Prerequisites {#prereqs}
 
 You should be comfortable with differential and integral calculus and have 
 some previous experience with standard statistics. 
@@ -50,7 +65,7 @@ This course will be very mathematical and will make extensive use of the R
 software system, but I do not assume that you already know R or advanced 
 mathematics beyond calculus.
 
-## Narrative Description
+## Narrative Description {#narrative-desc}
 
 Bayesian statistics is a branch of statistics that has been around for almost
 300 years, but for most of that time, it was very difficult to apply to 
@@ -62,6 +77,7 @@ practical for research and applications.
 Bayesian analysis is widely used across a wide variety of research as well as
 practical applications. It is used to analyze results from high-energy 
 particle physics experiments to discover new subatomic particles. 
+There are many other applications in a wide variety of domains.
 It's used by geologists to improve estimates of mineral distributions and
 radon hazards. 
 It's used by biologists to identify and categorize variations in the genomes of 
@@ -107,7 +123,41 @@ You do not need to have any prior knowledge of computer programming, but I do
 expect that you are familiar with basic statistics and calculus 
 (both derivatives and integrals).
 
-# **Structure of the Course:**
+## Goals for the Course {#goals}
+
+By the end of the semester, you will:
+
+* Understand Bayes's theorem and how to apply it.
+* Understand problems with the traditional statistical emphasis on
+  null-hypothesis significance testing (NHST), why Bayesian approaches to
+  NHST don't solve these problems, and how Bayeian statistics offers
+  superior alternatives to NHST.
+* Understand how think about statistical models, how to choose an
+  appropriate model for your problems, and understand the tradeoffs between
+  different kinds of models.
+* Be able to design and conduct a comprehensive Bayesian analysis of data
+  from start to finish.
+* Understand how to choose appropriate priors for your Bayesian analyses
+  and how to test whether your choice of priors is sound.
+* Understand how to set up, perform, assess the validity of, and
+  interpret the results of Bayesian regression analysis.
+* Understand why Markov Chain Monte Carlo (MCMC) sampling is used in Bayesian
+  analysis, what the limits of MCMC are, and how to test your MCMC analyses
+  for validity.
+* Understand and be able to perform analyses using more complex
+  statistical models, such as interaction models, generalized linear models,
+  models of discrete (categorical and count) data.
+* Understand what multilevel or hierarchical models are, when to use them,
+  and how to interpret the results of a multilevel analysis.
+* Understand the Integrated Nested Laplace Approximation (INLA),
+  why you might use INLA instead of MCMC analysis, and what the limits of INLA
+  analysis are.
+* Understand several types of Bayesian geospatial analysis, including
+  Matern covariance models and conditional autoregressive (CAR) models.
+
+
+
+# **Structure of the Course:** {#structure}
 
 I divide the semester into three parts:
 
@@ -131,7 +181,7 @@ I divide the semester into three parts:
   Monte Carlo methods. 
 
 
-## Reading Material
+## Reading Material {#reading}
 
 There are two required textbooks and two optional textbooks:
 
@@ -159,8 +209,12 @@ There are two required textbooks and two optional textbooks:
 
 2. {{% LONG_INLA %}}
 
-   You can buy the printed version of this book or use the free 
-   [online e-book version]({{% INLA_URL %}}).
+   We will only use this book for a few weeks in the third part of the semester,
+   when we are studying geospatial methods.
+
+   The book is fairly expensive, but there is a free 
+   [online e-book version]({{% INLA_URL %}})
+   of this book that you can use, if you don't want to buy it.
   
    We will use this book in the third part of the semester, when we study 
    Bayesian geospatial methods. This book covers a method called the 
@@ -202,12 +256,17 @@ for reading about these powerful methods and how to use them.
 
 ## Class Web Site
 
-In addition to the {{% BRIGHTSPACE %}} web site, I have set up a server at 
-<https://ees5891.jgilligan.org>, 
-where I post the reading and homework assignments, 
-my slides from class, and other useful material.
+In addition to {{% BRIGHTSPACE %}}, I have set up a companion web site for this
+course at
+<https://ees5891.jgilligan.org>,
+where I post the reading and homework assignments,
+my slides from class, and other useful material. That web site will be the
+central place to keep up with material for the course during the semester.
+This web site will direct you to Brightspace if there is anything you need to
+find there.
 
-## Computer Software
+
+## Computer Software {#software}
 
 For this class, we will work in R, and I strongly recommend that you install
 the free version of RStudio Desktop for working with R. All the software we will
@@ -216,9 +275,9 @@ Mac, and Linux systems. You can find details at the
 [tools page]({{% TOOLS_PAGE_URL %}}) of the 
 {{% CLASS_WEB_SITE %}}
 
-# **Assignments**
+# **Assignments** {#assignments}
  
-### Overview of reading assignments
+### Overview of reading assignments {#reading-asgts}
 
 I will give out detailed reading that give specific pages to read for each class 
 and notes on important things you should understand.
@@ -227,32 +286,32 @@ for which the reading is assigned**,
 so you can participate in discussions of the 
 assigned material and ask questions if there are things you don't understand.
 
-## **Graded Work**
+## **Graded Work** {#graded-work}
 
-### Homework
+### Homework {#homework}
 
 Homework must be turned in at the beginning of class on the day it's due.
 
-### Projects
+### Project {#project}
 
 In the second half of the semester, you will do a research project, in which you
 will choose a data set that's interesting to you and apply Bayesian methods to 
 analyze it. You will present the results of your project in class during the
 last week of the semester and turn in a written report about your project.
 
-### Tests and Examinations
+### Tests and Examinations {#tests}
 
 There will not be any tests or examinations in this course. Your grade will be 
 based on class participation, homework, modeling projects, and in-class 
 presentations.
 
-## **Basis for Grading**
+## **Basis for Grading** {#grades}
 
 |                            |       |      |
 |:--------------------------:|------:|-----:|
 | Class participation        |  5%   |      |
-| Homework                   | 40%   |      |
-| Research Project           | 55%   |      |
+| Homework                   | 45%   |      |
+| Research Project           | 50%   |      |
 
 
 # **Final Note:**

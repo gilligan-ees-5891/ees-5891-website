@@ -74,7 +74,7 @@ format_reading_item <- function(df) {
 
 
 # calendar <- read_excel("../../Syllabus/Class Schedule.xlsx", 1)
-semester <- load_semester_db("../EES-3310-5310.sqlite3")
+semester <- load_semester_db("../EES-5891.sqlite3")
 
 is_fall_semester <- semester$calendar$date[[1]] %>% month() > 7
 
@@ -110,6 +110,9 @@ get_event <- function(class, exam, holiday) {
 schedule <- prepare_schedule(semester)
 if (! tibble::has_name(schedule, "key_holiday")) {
   schedule <- schedule %>% mutate(key_holiday = NA_character_)
+}
+if (! tibble::has_name(schedule, "key_exam")) {
+  schedule <- schedule %>% mutate(key_exam = NA_character_)
 }
 
 calendar <- schedule %>%
@@ -490,7 +493,6 @@ format_class_entry <- function(class_no) {
 \label{sec:NutsAndBolts}
 \subsection{Class Meetings}
 \ClassMeetings\\
-Laboratory: \LabMeetings
 \subsection{Professor}
 \label{sec:Professor}
 \ProfName\\
@@ -504,7 +506,7 @@ Laboratory: \LabMeetings
 %To book time during my office hours, send me an email
 %or make an appointment on line via Google calendar at
 %\url{http://bit.ly/o9ka5e}
-
+\iffalse
 \subsection{Teaching Assistant}
 \label{sec:TA}
 \TaName\\
@@ -517,11 +519,14 @@ Laboratory: \LabMeetings
 \noindent
 \TaTitle\ will be grading labs and homework, so address questions about your
 homework and lab grades to \TaAccusative.
+\fi
 
 \subsection{Email}
-If you want to communicate with Professor Gilligan or \TaTitle\ be sure to
-begin the subject line of your email with ``{\scshape EES~3310}'' or
-``{\scshape EES~5310}''. This helps assure
+If you want to communicate with Professor Gilligan
+% or \TaTitle\
+be sure to
+begin the subject line of your email with ``{\scshape EES~5891}''
+This helps assure
 that we will see your message quickly and respond to it.
 
 I have set my email reader to flag all messages like this as important, so I
@@ -530,125 +535,145 @@ This also assures that I do not mistake your email for spam. I typically
 receive over 100 emails per day, so if you do not follow these instructions,
 I may not notice your email.
 
+\subsection{Course web site}
+In addition to Brightspace, I have set up a companion web site for this
+course at
+\url{https://ees5891.jgilligan.org},
+where I post the reading and homework assignments,
+my slides from class, and other useful material. That web site will be the
+central place to keep up with material for the course during the semester.
+This web site will direct you to Brightspace if there is anything you need to
+find there.
+
 \medskip
 \clearpage
 \section[Description]{Course Description}
 \subsection{Catalog Description}
-Scientific principles and policy applications. Earth's past; evidence of human
-impact; future climate change; and economic, social, and ecological consequences.
-Economic, technological, and public policy responses. Repeat credit for 2110.
-Students who have earned credit for 2110 will earn only one credit hour for
-this course. Prerequisite: one of 1030, 1080, 1510, BSCI 1510, CHEM 1601,
-ECON 1010, ES 1401 or PHYS 1501, 1601, 1901. [4] (MNS)
+The class will begin with an introduction to Bayesian statistics and then focus
+on practical application of regression methods to data. We will use R together
+with the
+\href{https://mc-stan.org}{Stan software package} (\url{https://mc-stan.org})
+for Hamiltonian Monte Carlo methods
+and the \href{https://www.r-inla.org/}{R-INLA software package}
+for Integrated Nested Laplace Approximation (INLA) analysis
+(\url{https://www.r-inla.org/}).
+The course will combine practical applications of Bayesian methods to real
+(often messy) data with more philosophical discussions of Bayesian approaches
+to statistics and how to interpret results of statistical analyses.
+We will focus on regression methods, including hierarchical or
+multilevel regression modeling methods, which can be very powerful when you
+have data that has a nested structure (e.g., cities and counties within states
+or species within genera). Students will do projects applying Bayesian methods
+to their own data sets.
+
+\subsection{Prerequisites}
+You should be comfortable with differential and integral calculus and have
+some previous experience with standard statistics.
+
+This course will be very mathematical and will make extensive use of the R
+software system, but I do not assume that you already know R or advanced
+mathematics beyond calculus.
+
 \subsection{Narrative Description}
-This course will study earth's climate and the way it has changed throughout
-our planet's history. We will study:
-\begin{itemize}
-	\item Determinants of climate: What factors affect climate, how do we know
-	  this, and how certain are we?
-    \item Scientific evidence about past climates: What do we know, how do we
-    know it, and how certain are we?
-	\item Natural climate change in earth's history.
-	\item Effects of human activity on global climate in the last 200 years.
-	\item What do we know about future climate change and how will it affect the
-	quality of people's lives?
-	\item How do economists and political scientists assess the costs of climate
-	change and the value of policies to limit it?
-	\item What can we do to mitigate future global climate change or adapt to life
-	in a different climate?
-	\item What is happening politically, both in the U.S. and internationally, to
-	respond to climate change?
-\end{itemize}
+Bayesian statistics is a branch of statistics that has been around for almost
+300 years, but for most of that time, it was very difficult to apply to
+practical problems because the mathematical equations were too difficult to
+solve. In the last 30 years, as computers have become much faster and more
+powerful, new computational methods have emerged that make Bayesian statistics
+practical for research and applications.
+
+Bayesian analysis is widely used across a wide variety of research as well as
+practical applications. It is used to analyze results from high-energy
+particle physics experiments to discover new subatomic particles.
+There are many other applications in a wide variety of domains.
+It's used by geologists to improve estimates of mineral distributions and
+radon hazards.
+It's used by biologists to identify and categorize variations in the genomes of
+humans and other species.
+It's used extensively in medicine to analyze the results of clinical trials,
+to determine the pharmacokinetics of drug metabolism, and to assess the
+predictive value of tests for diseases such as cancer or COVID infection.
+It's used in political science and sociology to improve the
+accuracy of public opinion surveys and to understand patterns of voting.
+It's widely used in marketing to identify consumer preferences and
+improve the effectiveness of advertising.
+If you use Google, Amazon,
+Netflix, Stitchfix, or practically any large online platform for shopping or
+entertainment, advanced Bayesian methods form the basis of their
+recommendations.
+Bayesian analysis has also been applied effectively to law and criminology to
+assess the value of evidence in proving guilt or innocence.
+It has been applied to public health to estimate the prevalence of dieseases
+and tomake more effective treatment decisions when medical tests are uncertain.
+It is widely used in meteorology to make weather forecasts and in
+climate science to combine data from many different sources and come up with
+quantitative predictions and detailed understanding of their associated
+uncertainties.
+Bayesian methods are also widely used in computational applications, such as
+image analysis and reconstruction, computational text analysis, and natural
+language processing.
+One of the earliest practical applications of Bayesian textual analysis,
+in 1964, identified the anonymous authors of the Federalist Papers.
+More recent applications of Bayesian textual analysis are used to separate
+desired email from spam.
+
+Bayesian statistical methods are valuable because they provide a systematic
+way to combine what you already know about a problem with new data from
+experiments or observations, and the results of Bayesian analyses are more
+straightforward to interpret than conventional statistics.
+
+This course will provide a general introduction to Bayesian statistics and
+will combine practical instruction in how to do Bayesian data analysis and
+philosophical discussions about how to think about the assumptions that go into
+a Bayesian analysis and how to interpret the results that it produces.
+
+You do not need to have any prior knowledge of computer programming, but I do
+expect that you are familiar with basic statistics and calculus
+(both derivatives and integrals).
+
 
 \section[Goals]{Goals for the Course}
-My goals for this course are that at the end of the semester:
+By the end of the semester, you will:
 \begin{itemize}
-  \item You will have a solid quantitative understanding of the basic physical
-    and chemical principles that control the system and be able to apply that
-    knowledge to reasoning about the climate system and its response to
-    disturbances.
-  \item You will have working familiarity with a variety of computer models that
-    simulate various aspects of the climate system and be able to use those
-    models to explore the implications of scientific principles that are too
-    complex to calculate with pencil and paper.
-  \item You will have a solid scientific understanding of what scientists know,
-    what they don't know, and how they know what they know about how climate
-    works, how and why it has changed in the past, and how it may change in the
-    future.
-  \item You will be able to evaluate the evidence for and against the idea that
-    human activity is warming the planet and assess for yourself whether the
-    evidence is persuasive.
-  \item You will be familiar with the ways economists and policy analysts
-    approach the problem of climate change and public policies that respond to
-    it.
-  \item You will understand the history of scientific and political concern and
-    activity around global warming, the principal policy measures being
-    considered to address climate change, and their major strengths and
-    weaknesses.
-  \item You will have the tools and knowledge to make informed decisions about
-    what climate policies you support or oppose.
-\item In the laboratory, you will learn to:
-  \begin{itemize}
-    \item Use simple climate models to explore the dynamics of the climate
-      system.
-    \item Use open-source statistical tools to download and analyze real climate
-      data.
-    \item Follow established reproducible research practices.
-  \end{itemize}
+\item Understand Bayes's theorem and how to apply it.
+\item Understand problems with the traditional statistical emphasis on
+  null-hypothesis significance testing (NHST), why Bayesian approaches to
+  NHST don't solve these problems, and how Bayeian statistics offers
+  superior alternatives to NHST.
+\item Understand how think about statistical models, how to choose an
+  appropriate model for your problems, and understand the tradeoffs between
+  different kinds of models.
+\item Be able to design and conduct a comprehensive Bayesian analysis of data
+  from start to finish.
+\item Understand how to choose appropriate priors for your Bayesian analyses
+  and how to test whether your choice of priors is sound.
+\item Understand how to set up, perform, assess the validity of, and
+  interpret the results of Bayesian regression analysis.
+\item Understand why Markov Chain Monte Carlo (MCMC) sampling is used in Bayesian
+  analysis, what the limits of MCMC are, and how to test your MCMC analyses
+  for validity.
+\item Understand and be able to perform analyses using more complex
+  statistical models, such as interaction models, generalized linear models,
+  models of discrete (categorical and count) data.
+\item Understand what multilevel or hierarchical models are, when to use them,
+  and how to interpret the results of a multilevel analysis.
+\item Understand the Integrated Nested Laplace Approximation (INLA),
+  why you might use INLA instead of MCMC analysis, and what the limits of INLA
+  analysis are.
+\item Understand several types of Bayesian geospatial analysis, including
+  Matern covariance models and conditional autoregressive (CAR) models.
 \end{itemize}
 
-When you leave this course, you will not be qualified to work as a climate
-scientist, but you will be able to follow and critically evaluate news
-reporting about climate change and climate policy, debate intelligently and
-knowledgeably, and be an informed voter.
-
-I do not care whether you agree with me politically.
-I respect people who think for themselves.
-\textbf{What counts is whether you can present your own position clearly
-and support it with solid evidence and reasoned argument.}
 %
 %
 %
 %\clearpage
-\iftrue
+\iffalse
 \section{Important Dates:}
 Many of you have athletic and other commitments during the term and may travel
 for personal reasons. As you plan for your semester, particularly if you are
 purchasing nonrefundable airplane tickets, consult the syllabus.
 
-If you have away games that require you to miss a scheduled test or group
-laboratory activity, let me know well in advance.
-\begin{itemize}
-  \iffalse
-    \item The mid-term test is on
-      \textbf{\Sexpr{format_day_date_range_by_event_id(calendar,
-         c("MIDTERM_EXAM","MIDTERM_TEST"),abbr_month = FALSE,
-           abbr_wday = FALSE)}}.
-  \fi
-  \item On
-    %
-    \textbf{\Sexpr{format_day_date_by_key(semester$calendar, "ROLE_PLAY", "lab")}}
-    we will be doing a participatory role-playing
-    exercise in lab, where you will play out different kinds of policies
-    for reducing greenhouse gas emissions.
-    %
-    and on
-    %
-    \textbf{\Sexpr{format_day_date_by_key(semester$calendar, "ENERGY_GAME", "lab")}}
-    we will be playing a game in lab to simulate the challenge of converting
-    New York City to using clean energy
-    %
-    It is especially important for you to  be present for these labs.
-\item The midterm exam will be a take-home test of your knowledge about the
-    basic science of the climate system and climate change, and it will be
-    due on
-    \textbf{\Sexpr{format_day_date_by_key(semester$calendar, "MIDTERM_EXAM", "exam")}}
-\item The final exam will be in a take-home essay format and it is due at
-  \textbf{\TakeHomeExamEndTime~\TakeHomeExamDay,
-    \TakeHomeExamMonth~\TakeHomeExamDate}%
-  . You submit the final exam electronically, so you do not need to be on campus
-  for this.
-\end{itemize}
 \fi
 %
 %
@@ -657,99 +682,79 @@ laboratory activity, let me know well in advance.
 %
 \clearpage
 \section[Structure]{Structure of the Course:}
-I divide the semester into two parts:
+I divide the semester into three parts:
 \begin{enumerate}
-    \item \textbf{Scientific Principles of Climate}: For the first half of the
-    semester, we will focus on the scientific principles of climate and natural
-    climate change in earth's past. This will be very mathematical, using basic %'
-    algebra. We do not use calculus or other advanced math in this class, but
-    you should be comfortable with simple algebraic equations.
-    We will then look at climate change in the last two centuries and what might
-    happen over the next several centuries. We will emphasize examining the
-    scientific evidence to understand what it can and cannot tell us.
-    %
-    \item \textbf{Human Dimensions of Climate Change: Politics, Economics, etc.:}
-    For the second half of the semester, we will focus on the political,
-    economic, and social aspects of climate change and possible public policy
-    and technological responses.
+\item \textbf{Introduction to Bayes's Theorem and its Applications:}
+  The first part of the course introduces the basic concepts of Bayesian
+  statistics, using simplified approximations to calculate difficult
+  equations. This section will focus on linear regression methods.
+\item \textbf{Monte Carlo Methods:}
+  Next, we study Monte Carlo methods, which help us solve more difficult
+  problems that our earlier approximations are not powerful enough for.
+  This section will introduce statistical models of discrete data
+  (counts, categories, etc.), and generalized linear models. It will conclude
+  with multilevel statistical models, which can be very powerful methods for
+  working with large and complex data sets.
+\item \textbf{Geospatial Modeling:}
+  Finally, we will learn a different approach, called the Integrated
+  Nested Laplace Approximation (INLA), which is very well suited for
+  analyzing geospatial data that may be too difficult to analyze uding
+  Monte Carlo methods.
 \end{enumerate}
+
 %
 %
 %
-\subsection{Laboratory}
-The laboratory section of this course is very important.
-In the first half of the semester, you will use interactive computer models of
-the climate system to explore the implications of principles that we cover in
-class and in the reading, practice downloading and analyzing real climate data,
-and learning about best practices for reproducible research in order to make
-your work reliable, reproducible, and trustworthy.
-
-In the second half, you will use computational tools to explore the challenges
-of replacing fossil fuels with clean energy (renewable or nuclear), conduct
-quantitative economic analyses of different kinds of climate policies, and
-engage in role-playing exercises to simulate the way different climate policies
-work in practice.
-
-To make the laboratory sessions effective, it is essential that you show up on
-time and prepared for the labs.
-% I recommend that you attend the scheduled laboratory meetings on Zoom if you
-% can, but to accommodate students who will be taking the course asynchronously,
-% we will be recording the laboratory sessions so you can watch presentations
-% on your own schedule.
-
-\TaTitle\ and \ProfTitle\ will both have office hours
-when you can drop in and discuss the laboratories, and I recommend that you
-take advantage of our office hours to get help if you have difficulty with any
-part of the lab.
-
-\textbf{I recommend that you read all of the reading material for the lab
-before you come to lab.}
-You will get much more out of the labs if you are prepared.
-
 \subsection{Reading Material}
-There are three required textbooks and one recommended book.
+There are two required textbooks and two optional books.
 Supplementary reading on the Internet or in handouts will also be assigned
 during the term and posted on Brightspace.
 
 \subsubsection[Required Reading]{Required Reading Materials}
 \begin{itemize}
 	%
-	\item \LongArcher. Be sure you get the second edition because it is
-	      significantly different from the first.
-	\item \LongNordhaus
-	\item \LongPielke
+	\item \LongRethinking. This will be the principal textbook for the semester.
+	  Be sure you get the second edition because it is
+	  significantly different from the first.
+	\item \LongINLA. We will only use it for a few
+	  weeks in the third part of the semester when we study geospatial methods.
+	  The book is expensive, but there is a free web-based e-book version
+	  online at \INLAURL, which is identical to the printed book.
 \end{itemize}
-There is a companion web site to \emph{\Archer\/} at \ArcherURL, which includes
-%videos of the author's own lectures on the material and %
-interactive on-line computer models that we will use for some exercises in the
-book.
+There is a companion web site to \emph{\Rethinking\/} at \RethinkingWebSite,
+which has links a number of resources, including videos of the author's own
+lectures on the material.
 
-\subsubsection[Recommended Reading]{Recommended Reading Materials}
+For people who are familiar with R and like to work in the \texttt{tidyverse}
+dialect, there is a free companion e-book on the web at \TidyRethinkingBook,
+that has translated almost all the R code in the book into the \texttt{tidyverse}
+dialect of R.
+
+\subsubsection[Optional Books]{Optional Reading Materials}
 \begin{itemize}
-  \item \LongWickham. This book is also available as a free online edition at
-    \WickhamURL.
+  \item \LongDBDA. This book has a more elementary introduction to Bayesian
+    statistics, at an undergraduate level. It is very clear, but it
+    focuses almost entirely on Monte Carlo sampling and doesn't go as deeply
+    into other important aspects of Bayesian statistics as we will do in this
+    course.
+    It is a very useful resource to check out if Monte Carlo sampling seems
+    confusing. I have asked the Science \& Engineering library to put a copy on
+    reserve so you can read it there without needing to buy it.
+  \item \LongWickham. This book is a great introduction to the R statistical
+    programming language. It uses the \texttt{tidyverse} dialect of R,
+    developed by Hadley Wickham.
+    There is a free web-based ebook version at
+    \WickhamURL, so you won't need to buy a paper copy.
 \end{itemize}
 
 \subsubsection{Overview of Reading Materials}
 I will give out detailed reading that give specific pages to read for each
 class and notes on important things you should understand.
 \textbf{I expect you to complete the reading before you come to class
-  % or watch the recorded class session
-  on the day for which the reading is assigned},
-  so you can participate in discussions of the assigned material and ask
-  questions if there are things you don't understand.  %'
-
-While science aims to give correct answers to scientific questions, there are
-not right or wrong answers to questions of what is the best economic model with
-which to assess the costs of climate change or the best policy with which
-to respond to climate change, so I have chosen books and other reading material
-that present different points of view on the political and economic aspects.
-\iffalse
-
-\subsubsection[Optional Reading]{Optional Supplementary Reading Materials}
-See the ``External Links'' page on the course Brightspace site for links to
-optional supplementary materials that you can read on-line or download free.
-\fi
+% or watch the recorded class session
+on the day for which the reading is assigned},
+so you can participate in discussions of the assigned material and ask
+questions if there are things you don't understand.  %'
 
 %\clearpage
 \subsection{Graded Work}
@@ -758,14 +763,13 @@ optional supplementary materials that you can read on-line or download free.
 %
 \subsubsection[Grading]{Basis for Grading}
 <<r grading, include=F>>=
-grade_weights <- c(participation = 5, homework = 0, midterm = 10, lab = 55, final = 30)
+grade_weights <- c(participation = 5, homework = 45, project = 50)
 assert_that(sum(grade_weights) == 100)
 @
 \begin{center}
 	\begin{tabular}[t]{cr}
 		Class participation & \Sexpr{grade_weights["participation"]}\%\\
-%		Homework & \Sexpr{grade_weights["homework"]}\%\\
-		Mid-term exam & \Sexpr{grade_weights["midterm"]}\%\\
+		Homework & \Sexpr{grade_weights["homework"]}\%\\
 		Laboratory \& Homework & \Sexpr{grade_weights["lab"]}\%\\
 		Final exam   & \Sexpr{grade_weights["final"]}\%\\
 	\end{tabular}
@@ -787,19 +791,22 @@ in greater detail in future classes.
 %
 %
 %
-\iffalse
+\iftrue
 \subsubsection{Homework}
 Homework is due at the beginning of class on the day it is assigned.
-Late homework will be accepted for half-credit if I receive it before I post
-the answer key on Brightspace (usually a week after the assignment is due).
+% Late homework will be accepted for half-credit if I receive it before I post
+% the answer key on Brightspace (usually a week after the assignment is due).
 \fi
-\iffalse
+\iftrue
   \subsubsection{Projects}
-  You will do a few extended projects, which constitute policy analyses of
-  possible measures to reduce greenhouse gas emissions.
+  You will do an extended research project in the second half of the semester,
+  in which you will apply Bayesian methods to investigating a data set that
+  you choose. This could be data from your dissertation research or
+  another data set that interests you.
 \fi
 
 \subsubsection{Tests and Examinations}
+\iffalse
 \begin{itemize}
   \iffalse
     \item There will be one in-class midterm exam, on
@@ -831,6 +838,9 @@ the answer key on Brightspace (usually a week after the assignment is due).
       The final exam will be cumulative over all the material covered during
       the term.
 \end{itemize}
+\else
+  There will be no tests or exams in this course.
+\fi
 
 %\clearpage
 \section{Honor Code:}
@@ -845,7 +855,7 @@ This course, like all courses at Vanderbilt, is conducted under the Honor Code.
     \fi
     or from other classmates or friends.
 %
-  \item[Homework and Lab Assignments:] I encourage working together.
+  \item[Homework:] I encourage working together.
     In most lab assignments you will be explicitly told to work with a partner.
     I also encourage you to talk with other classmates, as well as friends and
     acquaintances outside of class. You may discuss assignments, compare notes
@@ -857,7 +867,8 @@ This course, like all courses at Vanderbilt, is conducted under the Honor Code.
     work through the steps yourself and express the answers in your own words.
     You may not simply copy someone else's answer.} %'
 %
-  \item[Tests and Exams:] Tests and exams are different from homework and labs:
+\iffalse
+    \item[Tests and Exams:] Tests and exams are different from homework and labs:
     \textbf{all work on tests and exams must be entirely your own}.
     \textbf{You may not work together with anyone or receive any help from
     anyone but me%
@@ -865,6 +876,12 @@ This course, like all courses at Vanderbilt, is conducted under the Honor Code.
     or \TaTitle
     \fi
     \ on exams and tests (this includes the take-home final exam)}.
+\fi
+    \item Research project: The research project will be conducted under the
+    same ethical principals that apply to publishing papers in scientific
+    journals. The work must be your own, but you may consult any other resources.
+    If anyone else makes a substantial contribution, you must list them and
+    their contributions in an Acknowledgements section.
 \end{description}
 
 If you ever
@@ -975,7 +992,9 @@ and the interactions of politics, ethics, religion, communication, and the
 environment.
 \fi
 
-Professor Gilligan is Associate Professor of Earth \& Environmental Sciences,
+Professor Gilligan is
+the Alexander Heard Distinguished Service Professor,
+Associate Professor of Earth \& Environmental Sciences,
 Associate Professor of Civil \& Environmental Engineering, and
 the director of the Vanderbilt Climate and Society Grand Challenge Initiative,
 which is working to integrate research, teaching, and public outreach about
@@ -1040,8 +1059,8 @@ starring Li Xin, Wang Yang, John Bellemer, and Lin Shu.
 \fi}
 
 \textbf{\scshape Important Note:} This schedule gives a rough indication of the
-reading for each day. See the assignment sheets posted on Brightspace for the
-detailed daily assignments.
+reading for each day. See the detailed daily assignments on the course web
+site at \url{https://ees5891.jgilligan.org}.
 
 \setlength{\aboverulesep}{0.2ex}
 \setlength{\belowrulesep}{0.2ex}
@@ -1051,14 +1070,13 @@ detailed daily assignments.
 \begin{center}
 <<r class_schedule, echo=F, results="asis">>=
 # one_line_events <- c("MIDTERM_TEST","MIDTERM_EXAM", short_holiday_keys)
-one_line_events <- c("MLK_DAY", "MIDTERM_TEST", "MIDTERM_EXAM")
+one_line_events <- c("Fall Break")
 
-finals <- bind_rows(final_exam, alt_final_exam, take_home_final_exam) %>% arrange(date)
-which_final <- tail(finals, 1)$event
-delete_final <- head(finals,-1)$event
 schedule <- calendar %>% arrange(date) %>%
   mutate(wday = str_c(wday(date, label = T, abbr=T), ".,"), month = str_c(month(date, label = T, abbr=T), "."),
-         day = day(date), reading = str_trim(reading), event = ifelse(is.na(event), "", event), foo = NA) %>%
+         day = day(date),
+         reading = str_replace_all(reading, "&", "\\\\&") %>% str_trim(),
+         event = ifelse(is.na(event), "", event), foo = NA) %>%
   select(wday, month, day, topic, reading, event, foo)
 
 events <- schedule$event
@@ -1076,7 +1094,7 @@ special_rows <- which(events %in% one_line_events)
 # schedule_break_row <- fall_break_row
 #
 # schedule_break_row <- with(schedule, which(month == "Mar." & day == 15))
-schedule_break_row <- max(long_holiday_rows)
+schedule_break_row <- max(short_holiday_rows)
 message("Break row = ", schedule_break_row)
 # schedule_break_row <- 30
 
@@ -1135,9 +1153,7 @@ if ( has_long_holiday && ! long_vac_on_first_page) {
     str_c("\\multicolumn{2}{l}{\\multirow{3}{*}{\\bfseries\\scshape\\Large ",
           long_holiday_name, "}} & \\\\%")
 }
-final_exam_row <- which(schedule_2$event == which_final)
-schedule_2$topic[final_exam_row] <- "\\multicolumn{2}{l}{\\bfseries\\scshape\\large Take-Home Final Exam Due} & \\\\%"
-schedule_2 <- schedule_2 %>% filter(! event %in% delete_final) %>% select(-event)
+schedule_2 <- schedule_2 %>% select(-event)
 
 schedule_2 %>%
   xtable(align = c("", "l@{~}", "c@{~}", "r", ">{\\raggedright}m{2.6in}",

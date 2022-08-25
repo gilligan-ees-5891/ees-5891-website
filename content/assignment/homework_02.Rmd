@@ -1,0 +1,38 @@
+---
+title: Bayesian thinking
+due_date: '2022-09-06'
+assignment_type: Homework
+short_assignment_type: HW
+assignment_number: 2
+weight: 2
+slug: homework_02
+pubdate: '2022-07-31'
+date: '2022-09-06'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+---
+## Homework
+
+### Preliminary Information
+
+This homework set introduces you to Bayeian statistics and the basic concepts we use in the Bayesian approach to thinking about statistics and statistical analysis.
+
+### Homework Exercises:
+
+
+
+**Self-study:** Work these exercises, but do not turn them in.
+
+* Exercises 2E1--2E4
+* Exercises 3E1--3E5
+
+**Turn in:** Work these exercises and turn them in.
+
+* Exercises 2M1--2M3, 2H1--2H2
+* Esercises 3M1--3M3, and 3M5
+
+**Optional:** The following exercises are optional. You can turn them in for extra credit.
+
+* Exercises 3H1--3H3
+

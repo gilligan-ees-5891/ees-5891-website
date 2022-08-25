@@ -1,0 +1,19 @@
+---
+title: Discrete statistical models
+class_date: '2022-10-04'
+class_number: 12
+weight: 12
+slug: reading_12
+pubdate: '2022-07-31'
+date: '2022-10-04'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_12.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 11 ("God Spiked the Integers").
+

@@ -1,0 +1,36 @@
+---
+title: Sampling
+class_date: '2022-09-01'
+class_number: 3
+weight: 3
+slug: reading_03
+pubdate: '2022-07-31'
+date: '2022-09-01'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_03.pdf
+---
+
+
+
+<div id="reading" class="section level2">
+<h2>Reading:</h2>
+<div id="required-reading-everyone" class="section level3">
+<h3>Required Reading (everyone):</h3>
+<ul>
+<li>Statistical Rethinking, Ch. 3 (“Sampling the Imaginary”).</li>
+</ul>
+</div>
+<div id="reading-notes" class="section level3">
+<h3>Reading Notes:</h3>
+<p>The concept of sampling is central to statistics. We use sampling in several ways in this book, and more generally in Bayesian statistics:</p>
+<ol style="list-style-type: decimal">
+<li><p>Central to the whole idea of statistics is that we want to draw inferences about a large population of individuals (people, animals or plants in nature, weather events, distribution of minerals in the ground, etc.) from a sample that’s much smaller than the population.</p>
+<p>Some of the most familiar examples are around public opinion polling, where political scientists try to estimate the sentiments of millions, even hundreds of millions of people from the answers a few hundred to a few thousand answer questions on a survey. There are many other applications: Geologists will try to estimate the hazard of radon gas coming from the ground based on samples collected at a few dozen sites across a state. Biologists will estimate the population of a species in an area from samples of a few individuals observed in the wild. Engineers will estimate the failure rate of a manufacturing line in a factory from a few samples collected and tested. Medical researchers will estimate the prevalence of a diseae and the effectiveness of a medicine in treating it from relatively small samples of people tested or treated.</p></li>
+<li><p>In Bayesian statistics, we often use sampling as an efficient way to approximate the values of difficult integrals that we can’t solve using analytical mathematics.</p></li>
+<li><p>In Bayesian statistics, we also use sampling to make predictions of the larger population from the inferences we drew from our sample of observed data. Sampling from the <em>posterior distribution</em> of probability allows us to not only make predictions, but to understand the uncertainty of our predictions in ways that we cannot when we use other approaches to statistical analysis.</p></li>
+<li><p>Section 3.3 also discusses ways that we can use sampling from the posterior to check how well our model describes our sampled data and to make sure that our analysis software doesn’t have bugs.</p></li>
+</ol>
+</div>
+</div>

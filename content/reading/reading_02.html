@@ -1,0 +1,36 @@
+---
+title: Rethinking statistics
+class_date: '2022-08-30'
+class_number: 2
+weight: 2
+slug: reading_02
+pubdate: '2022-07-31'
+date: '2022-08-30'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_02.pdf
+---
+
+
+
+<div id="reading" class="section level2">
+<h2>Reading:</h2>
+<div id="required-reading-everyone" class="section level3">
+<h3>Required Reading (everyone):</h3>
+<ul>
+<li>Statistical Rethinking, Ch. 1–2 (“The Golem of Prague” and “Small Worlds and Large Worlds”).</li>
+</ul>
+</div>
+<div id="reading-notes" class="section level3">
+<h3>Reading Notes:</h3>
+<p>This book has two kinds of optional sections that you don’t have to read, but which can enrich your experience of it (see p. xiv in the prologue):</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Rethinking sections</strong> are highlighted in blue and begin with “<strong>Rethinking:</strong>. These sections provide broader context for the material in the chapter, connecting it to other approaches to statistical analysis, provide historical background for where the concepts you’re studying came from, or warn you about ways that many people misunderstand the concepts in the chapter. These are good to read, but you can read them quickly, since they’re supplementary to the main material of the chapter. They’re particularly useful if you want a deeper understanding of the material.</p></li>
+<li><p><strong>Overthinking sections</strong> are printed in a smaller typeface, set off from the text with a heavy horizontal black line and begin with “<strong>Overthinking:</strong>”. You can skip these sections, but they’re useful if you want to get a deeper understanding of the detailed mathematics and computational methods we use. McElreath intends for you to skip these sections the first time you read the book, but they can be useful on second or later readings, when you have a clearer sense of how they fit into the broader context of the book.</p></li>
+</ol>
+<p>Chapter 1, “The Golem of Prague” is mostly a philosophical overview of why we need to rethink our approach to statistics, and also a roadmap of the book. It will give you a sense of the approach the book takes and how the different sections you will be reading will fit together.</p>
+<p>Chapter 2, “Small Worlds and Large Worlds” introduces the fundamental concepts of Bayesian statistics and statistical modeling. One reason I find Bayesian methods so useful is that they naturally encourage you to think about staitstical problems as mathematical models of the actual processes that generated your data. The chapter begins with a very nice example of how you can use a globe to estimate the fraction of the earth’s surface covered by water, and walks you through constructing a Bayesian statistical model. Section 2.3, “Components of the model” is very important in laying out the structure that a Bayesian model must have and section 2.4 (“Making the model go”) connects that structure to the formal statement of Bayes’s theorem (p. 37). Bayes’s theorem is very straightforward and simple, but applying it in the real world requires us to solve integrals that can be very difficult. The chapter then describes ways that we can use computational methods, such as grid sampling and Monte Carlo sampling to estimate the value of integrals that we can’t solve by mathematical analysis.</p>
+<p>As you read Chapter 2, think about the disctinction between “Small worlds” that describe the self-contained world of a statistical model and “Large worlds” in which we connect the small world of the model to the larger world in which we use the model.</p>
+</div>
+</div>

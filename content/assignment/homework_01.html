@@ -1,0 +1,154 @@
+---
+title: Set up R and RStudio
+due_date: '2022-08-30'
+assignment_type: Homework
+short_assignment_type: HW
+assignment_number: 1
+weight: 1
+slug: homework_01
+pubdate: '2022-07-31'
+date: '2022-08-30'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+---
+
+
+
+<div id="homework" class="section level2">
+<h2>Homework</h2>
+<div id="preliminary-information" class="section level3">
+<h3>Preliminary Information</h3>
+<p>Set up software: R, RStudio, R development environment, and R packages for Bayesian statistics.</p>
+</div>
+<div id="homework-exercises" class="section level3">
+<h3>Homework Exercises:</h3>
+<ul>
+<li><p>If you don’t have R installed on your computer, download and install R.
+If you have a version of R older than 4.2,
+you should update it to 4.2 or higher.</p>
+<p>To install or upgrade R, download R version 4.2.1
+from <a href="https://cran.rstudio.org">The Comprehensive R Archive Network</a></p>
+<ul>
+<li><strong>Windows:</strong>
+<ul>
+<li>Download and install the
+<a href="https://cran.rstudio.org/bin/windows/">“base distribution” of R 4.2.1</a>.</li>
+</ul></li>
+<li><strong>MacOS:</strong>
+<ul>
+<li>Download and install <a href="https://cran.rstudio.org/bin/macosx/">R version 4.2.1</a></li>
+</ul></li>
+<li><strong>Linux:</strong>
+<ul>
+<li>You should be able to install R from your Linux distribution’s package
+manager:
+<ul>
+<li><code>sudo apt-get install r-base r-base-dev</code> for Debian or Ubuntu</li>
+<li><code>sudo yum install R</code> or <code>sudo dnf install git</code> for Fedora,
+Red Hat, and related distributions.</li>
+<li>If you are using Ubuntu, there are
+<a href="https://cran.rstudio.org/bin/linux/ubuntu/fullREADME.html">advanced instructions</a>
+for configuring the package management system to use the very latest
+versions of R and its associated packages at
+<a href="https://cran.rstudio.org/bin/linux/ubuntu/fullREADME.html" class="uri">https://cran.rstudio.org/bin/linux/ubuntu/fullREADME.html</a>.
+This is optional and the default version of R should be fine for this
+class, as long as it is version 4.2 or higher.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>RStudio is a free editing and software development environment that makes it
+much easier to work with R. I strongly recommend that you install RStudio
+for this course.</p>
+<ul>
+<li><p>Go to the download page for <a href="https://www.rstudio.com/products/rstudio/download/#download">the free desktop edition of RStudio</a> and
+download the installer for your operating system. Windows, MacOS,
+and the Debian, Ubuntu, Fedora, RedHat, and openSUSE editions of
+Linux are all supported.</p>
+<p>There are other versions of RStudio (an expensive professional
+edition and a server edition).
+You want the <strong>free desktop edition</strong>.
+As of August 2022, the latest version is RStudio Desktop version
+2022.07.1+554.</p></li>
+<li><p>Run the installer.</p></li>
+<li><p>After the installer finishes running, run RStudio.</p>
+<ul>
+<li><p>When RStudio starts up, the lower left part of the screen should have
+a window that displays the R version, saying something like this:</p>
+<pre><code>R version 4.2.1 (2022-06-23) -- &quot;Funny-Looking Kid&quot;
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type &#39;license()&#39; or &#39;licence()&#39; for distribution details.
+
+R is a collaborative project with many contributors.
+Type &#39;contributors()&#39; for more information and
+&#39;citation()&#39; on how to cite R or R packages in publications.
+
+Type &#39;demo()&#39; for some demos, &#39;help()&#39; for on-line help, or
+&#39;help.start()&#39; for an HTML browser interface to help.
+Type &#39;q()&#39; to quit R.</code></pre>
+<p>The details will be different depending on your operating system, but
+if you see something like this, RStudio correctly found R on your
+computer.</p></li>
+<li><p>Configuring RStudio for additional optional software. There are a few other
+pieces of software that you may want to use this semester, but these
+are not required.</p>
+<p>If have installed the Git revision control system or the LaTeX
+typesetting software, you should configure RStudio to use them:</p></li>
+<li><p>If will use Git for software revision control with R, you should
+open the “Tools” menu, and click on the “Global Options” choice.</p>
+<ul>
+<li>Go to the “Git/SVN” tab and click “enable version control interface
+for RStudio projects”.
+If RStudio can find the git program on your computer,
+it will appear in the “git executable” field.
+If RStudio can’t find it, you can help it by browsing to the
+git program.</li>
+</ul></li>
+<li><p>If you have installed LaTeX on your computer,
+click on the SWeave tab, and select “knitr” for weaving
+<code>.Rnw</code> files, and choose <code>pdfLaTeX</code> for typesetting LaTeX
+files into PDF.</p></li>
+</ul></li>
+</ul></li>
+<li><p>After you have installed R and RStudio, you will need to install
+a number of software packges that extend R for Bayesian data analysis.</p>
+<p>The trickiest package to install is rstan. I recommend that you follow the
+<a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">detailed installation instructions</a>
+on the RStan web site. There are instructions for Mac, Windows, and Linux.</p>
+<p>Before you can install RStan, you will need to install a C++ compiler
+and related tools before you can use RStan.
+(Don’t worry, you won’t need to do any programming in C++.
+Stan writes the C++ code for you, based on your description of the statistical
+problem.)
+Follow the instructions at the rstan web page for
+<a href="https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac">Mac</a>
+or
+<a href="https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows">Windows</a>
+or
+<a href="https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux">Linux</a></p>
+<p>After you’ve done this, you can go to the
+<a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">main RStan installation instructions</a>
+and continue from there.</p>
+<p>If you run into difficulty, let me know and I will help you.</p></li>
+<li><p>This will be a lot easier. Open RStudio, go to the “Console” window in
+RStudio, and type</p>
+<pre class="r"><code>install.packages(c(&quot;devtools&quot;, &quot;pacman&quot;))
+library(pacman)
+p_install(tidyverse, coda, mvtnorm, daggity, shiny, shinystan,
+  bayesplot, brms, rprojroot, rmarkdown, knitr, ape, broom,
+  sf, flextable, ggdag, ggmcmc, ggrepel, ggthemes, loo,
+  patchwork, psych, rcartocolor, Rcpp, statebins, tidybayes,
+  viridis, viridisLite, wesanderson, force = FALSE)
+remotes::install_github(&quot;rmcelreath/rethinking&quot;)</code></pre>
+<p>This may take some time to run, but when it is done, you should be good to go.</p></li>
+</ul>
+</div>
+<div id="notes-on-homework" class="section level3">
+<h3>Notes on Homework:</h3>
+<p>This homework assignment is just to set up the software on your computer. There is nothing for you to turn in. Please ask me for help if you have trouble getting the software installed.</p>
+</div>
+</div>

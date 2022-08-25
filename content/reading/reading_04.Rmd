@@ -1,0 +1,19 @@
+---
+title: Geocentric Models
+class_date: '2022-09-06'
+class_number: 4
+weight: 4
+slug: reading_04
+pubdate: '2022-07-31'
+date: '2022-09-06'
+output:
+  blogdown::html_page:
+    md_extensions: +tex_math_single_backslash+compact_definition_lists
+pdf_url: /files/reading_asgts/reading_04.pdf
+---
+## Reading:
+
+### Required Reading (everyone):
+
+* Statistical Rethinking, Ch. 4 ("Geocentric Models").
+
