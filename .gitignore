@@ -26,6 +26,7 @@ Corel Auto-Preserve/
 *.bbl
 *-concordance.tex
 *.bak
+*.synctex.gz
 tmp*.tex
 *.knit.md
 *.lock~
