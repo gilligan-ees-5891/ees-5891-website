@@ -11,6 +11,10 @@ date: '2022-08-30'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+pdf_url: /files/homework_asgts/homework_01.pdf
 ---
 
 
@@ -139,10 +143,14 @@ RStudio, and type</p>
 <pre class="r"><code>install.packages(c(&quot;devtools&quot;, &quot;pacman&quot;))
 library(pacman)
 p_install(tidyverse, coda, mvtnorm, daggity, shiny, shinystan,
-  bayesplot, brms, rprojroot, rmarkdown, knitr, ape, broom,
-  sf, flextable, ggdag, ggmcmc, ggrepel, ggthemes, loo,
-  patchwork, psych, rcartocolor, Rcpp, statebins, tidybayes,
-  viridis, viridisLite, wesanderson, force = FALSE)
+for (p in c(&quot;tidyverse&quot;, &quot;coda&quot;, &quot;mvtnorm&quot;, &quot;dagitty&quot;, &quot;shiny&quot;, &quot;shinystan&quot;,
+            &quot;bayesplot&quot;, &quot;brms&quot;, &quot;rprojroot&quot;, &quot;rmarkdown&quot;, &quot;knitr&quot;, &quot;ape&quot;,
+            &quot;broom&quot;, &quot;sf&quot;, &quot;flextable&quot;, &quot;ggdag&quot;, &quot;ggmcmc&quot;, &quot;ggrepel&quot;,
+            &quot;ggthemes&quot;, &quot;loo&quot;, &quot;patchwork&quot;, &quot;psych&quot;, &quot;rcartocolor&quot;, &quot;Rcpp&quot;,
+            &quot;statebins&quot;, &quot;tidybayes&quot;, &quot;viridis&quot;, &quot;viridisLite&quot;,
+            &quot;wesanderson&quot;)) {
+  p_install(p, character.only = TRUE, force = FALSE)
+}
 remotes::install_github(&quot;rmcelreath/rethinking&quot;)</code></pre>
 <p>This may take some time to run, but when it is done, you should be good to go.</p></li>
 </ul>

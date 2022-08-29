@@ -11,6 +11,10 @@ date: '2022-09-27'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+pdf_url: /files/homework_asgts/homework_05.pdf
 ---
 ## Homework
 
