@@ -84,9 +84,9 @@ config_cred <- function(val, lbl, repo) {
 publish <- function(ssh = NULL, repo = ".") {
   init_git_tokens()
   repo = git2r::repository(repo)
+  remotes <- c("origin", "publish")
 
   if (is.null(ssh)) {
-    remotes <- c("origin", "publish")
     pattern <- "^git@([a-zA-Z][a-zA-Z0-9_\\-.]+):"
     ssh <- map_lgl(remotes, ~str_detect(git2r::remote_url(repo, .x),
                                         pattern)) %>%
@@ -94,7 +94,7 @@ publish <- function(ssh = NULL, repo = ".") {
   }
 
   if (length(ssh) < 2) {
-    ssh <- rep_len(ssh, 2)
+    ssh <- rep_len(ssh, 2) %>% set_names(remotes)
   }
 
   cred <- imap(ssh, config_cred, repo = repo)
