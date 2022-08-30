@@ -382,19 +382,28 @@ paper.
 <ul>
 <li>specify a number of points to sample your function at.</li>
 <li>Take evenly spaced values for each parameter (e.g., the proportion
-of water).</li>
+of water).
+<ul>
+<li class="fragment" data-fragment-index="1">This example uses one parameter and a one-dimensional grid for
+simplicity.</li>
+<li class="fragment" data-fragment-index="1">For models with more than one parameter, the grid has 2, 3, or
+more dimensions—one per parameter.</li>
 </ul>
 </li>
-<li>Calculate the value of the <em>prior</em> at each grid point</li>
-<li>Calculate the <em>likelihood</em> at each grid point</li>
-<li>Compute an <em>unstandardized posterior</em> by multiplying the
+</ul>
+</li>
+<li class="fragment" data-fragment-index="2">Calculate the value of the <em>prior</em> at each grid
+point</li>
+<li class="fragment" data-fragment-index="2">Calculate the <em>likelihood</em> at each grid point</li>
+<li class="fragment" data-fragment-index="3">Compute an <em>unstandardized posterior</em> by multiplying the
 <em>prior</em> and <em>posterior</em> at each grid point.</li>
-<li>Finally, standardize the <em>posterior</em> by dividing each value
-by the sum of all values in the <em>unstandardized posterior</em>.</li>
+<li class="fragment" data-fragment-index="3">Finally, standardize the <em>posterior</em> by dividing each
+value by the sum of all values in the <em>unstandardized
+posterior</em>.</li>
 </ol>
 <ul>
-<li>The more grid points you use, the more accurate your estimate will
-be, but the more computer power you’ll need.
+<li class="fragment" data-fragment-index="4">The more grid points you use, the more accurate your estimate
+will be, but the more computer power you’ll need.
 <ul>
 <li>For one parameter, a 1000 point grid is simple.</li>
 <li>For 2 parameters, a 1000 point grid for each of them means 1 million
@@ -480,7 +489,7 @@ sum of the samples.</li>
 <p>Now display a summary:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(globe_qa)</span></code></pre></div>
 <pre><code>##        mean        sd      5.5%     94.5%
-## p 0.6666674 0.1571336 0.4155376 0.9177973</code></pre>
+## p 0.6666761 0.1571315 0.4155496 0.9178027</code></pre>
 </section></section>
 </div>
   </div>
