@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Sampling the Imaginary</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Sampling the Imaginary</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #3:
+       Thursday, Sept. 1
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="prelude-sec" class="title-slide slide level1 center"><h1 class="center">Philosophical Prelude about Sampling</h1>
+
+</section><section id="dichotomies" class="slide level2"><h2>Dichotomies</h2>
+<ul>
+<li>This chapter has a lot of dichotomies:
+<ul>
+<li>Bayesian vs. non-Bayesian (<em>frequentist</em>) statistics</li>
+<li>Formulas (analytical math) vs. Frequencies (samples)</li>
+<li>Parametric vs. Non-parametric approaches.</li>
+</ul>
+</li>
+<li class="fragment">Dichotomies don’t mean one alternative is right and the other is
+wrong, or one is better than the other.
+<ul>
+<li>Newtonian vs. Lagrangian mechanics in physics</li>
+<li>Inclusive fitness vs. multilevel selection in evolutionary
+biology</li>
+<li>Bayesian vs. non-Bayesian statistics</li>
+</ul>
+</li>
+<li class="fragment">In each case, switching between the perspectives gives us a
+richer view of each, help us pick the right tool for a particular
+job.</li>
+</ul></section><section id="frequencies" class="slide level2"><h2>Formulas vs. Frequencies</h2>
+<ul>
+<li>Samples and natural frequencies can be more intuitive and easier to
+understand.</li>
+</ul>
+<blockquote>
+<p>Many scientists are uncomfortable with integral calculus, even though
+they have strong and valid intuitions about how to summarize data.
+Working with samples transforms a problem in calculus into a problem in
+data summary, into a frequency format problem.</p>
+<p>…</p>
+<p>An integral … can be a challenging calculus problem. But once you
+have samples from the probability distribution, it’s just a matter of
+counting values.</p>
+<p>— <em>Statistical Rethinking</em>, p. 51.</p>
+</blockquote>
+</section></section><section><section id="sampling-sec" class="title-slide slide level1 center"><h1 class="center">Sampling from the Posterior</h1>
+
+</section><section id="grid-sampling" class="slide level2 ninetyfive"><h2 class="ninetyfive">Grid Sampling</h2>
+<ul>
+<li>
+<p>There are two levels here:</p>
+<ol type="1">
+<li>Generate the posterior from grid-samples of the prior and
+posterior</li>
+<li>Draw a random sample of points from the grid-sampled posterior.</li>
+</ol>
+</li>
+<li>
+<p>Grid-sampled posterior for 9 tosses of the globe, with 6
+water:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">1000</span>) <span class="co"># grid from 0 to 1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">1000</span>) <span class="co"># uniform prior</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">6</span>, <span class="at">size =</span> <span class="dv">9</span>, <span class="at">prob=</span>p_grid)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> likelihood <span class="sc">*</span> prior <span class="co"># unstandardized</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> posterior <span class="sc">/</span> <span class="fu">sum</span>(posterior) <span class="co"># standardized</span></span></code></pre></div>
+</li>
+<li>
+<p>Now sample 10,000 points from the grid-sampled posterior</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="ot">=</span> <span class="dv">10000</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">sample</span>(p_grid, <span class="at">prob =</span> posterior, <span class="at">size =</span> n_samples, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</li>
+</ul></section><section id="sampled-posterior" class="slide level2"><h2>Sampled Posterior</h2>
+<p><img data-src="assets/fig/fig_3.1a-1.png"><img data-src="assets/fig/fig_3.1b-1.png"></p>
+</section><section id="analyzing-sampled-posterior" class="slide level2 ninety"><h2 class="ninety">Analyzing Sampled Posterior</h2>
+<ul>
+<li>What can we do with samples drawn from the posterior?</li>
+<li class="fragment">Summarize the posterior distribution
+<ul>
+<li>Percentile intervals (PI)</li>
+<li>Highest probability-density intervals (HPDI)</li>
+<li>Point estimates</li>
+</ul>
+</li>
+<li class="fragment">Simulate prediction
+<ul>
+<li>Designing models
+<ul>
+<li>Will your model be able to infer parameters from data?</li>
+</ul>
+</li>
+<li>Checking correctness of models and code
+<ul>
+<li>Does your model accurately describe the data?</li>
+</ul>
+</li>
+<li>Designing research
+<ul>
+<li>Will data from a planned project be sufficient to answer relevant
+questions?</li>
+</ul>
+</li>
+<li>Forecasting
+<ul>
+<li>What does your model imply about the future?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="probability-intervals" class="slide level2 eighty"><h2 class="eighty">Probability Intervals</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<strong>Probability Mass:</strong> The area under an interval of the
+posterior density curve.
+<ul>
+<li>Related to <em>cumulative probability</em>
+</li>
+</ul>
+</li>
+<li>
+<strong>Percentile Intervals</strong> contain a certain probability
+mass, with equal tails on either side
+<ul>
+<li>e.g., middle 80% of probability mass</li>
+</ul>
+</li>
+<li>
+<strong>Highest Probability-Density Intervals (HPDI)</strong>
+contain a certain probability mass located at the region of highest
+probability density.</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/density-intervals-1.png"></p>
+</div>
+</div>
+</section><section id="percentile-vs.-highest-probability-density-intervals" class="slide level2"><h2>Percentile vs. Highest Probability Density Intervals</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<strong>Percentile Intervals</strong> are symmetric, but may omit
+the highest probability density</li>
+<li>
+<strong>Highest Probability-Density Intervals (HPDI)</strong> Make
+sure to contain the highest density region, but may be unstable from one
+sample to another.</li>
+<li>If the posterior is reasonably smooth and symmetrical, these two
+intervals should be very similar.</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/pi-vs-hpdi-1.png"></p>
+</div>
+</div>
+</section><section id="point-estimates" class="slide level2"><h2>Point estimates</h2>
+<ul>
+<li>Extract a single point and ignore the rest of the distribution.
+<ul>
+<li class="fragment"><strong>MAP</strong> (maximum <em>a-posteriori</em>), the mode
+of the posterior</li>
+<li class="fragment"><strong>median</strong> of the posterior</li>
+<li class="fragment"><strong>mean</strong> of the posterior</li>
+</ul>
+</li>
+<li class="fragment">How would you choose what point estimate to use?</li>
+<li class="fragment">Loss function: What are the consequences of being wrong?
+<ul>
+<li class="fragment">Hurricane forecasting: Consequences are much worse if the wind
+is stronger than forecast, than if the wind is weaker.</li>
+</ul>
+</li>
+<li class="fragment">There’s no universal best method for point estimation. You need
+to choose a method to fit the specific problem you’re trying to
+solve.</li>
+</ul></section></section><section><section id="sampling-to-simulate-prediction" class="title-slide slide level1 center"><h1 class="center">Sampling to Simulate Prediction</h1>
+
+</section><section id="sampling-to-simulate-prediction-1" class="slide level2"><h2>Sampling to Simulate Prediction</h2>
+<ol type="1">
+<li>Model design: Will your model be able to produce good analysis from
+the kind of data you expect to get?
+<ul>
+<li>Working with <em>dummy data</em> can be very helpful.</li>
+</ul>
+</li>
+<li>Model checking and software validation: After you fit a model to
+real data, do you trust the fit?</li>
+<li>Research design: Will your research design produce enough data, and
+good enough data for your model to answer your research questions?</li>
+<li>Forecasting: Use your model to make predictions about the
+world.</li>
+</ol></section><section id="dummy-data" class="slide level2 seventyfive"><h2 class="seventyfive">Dummy Data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Before using your model on real data, always test it on dummy data.
+<ol type="1">
+<li>
+<p>Generate simulated data by sampling from a distribution with
+known parameters.</p>
+<p><strong>Example:</strong> Simulate 100,000 repetitions of an
+experiment with 9 tosses of a globe that’s 70% water.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dummy_w <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fl">1E5</span>, <span class="at">size =</span> <span class="dv">9</span>, <span class="at">prob =</span> <span class="fl">0.7</span>)</span></code></pre></div>
+</li>
+<li><p>Analyze the simulated data the same way you’d analyze your real
+data.</p></li>
+<li>
+<p>Compare the posterior estimates of the parameters to the actual
+values you used to simulate the data.</p>
+<ul>
+<li>Fit the 100,000 repetitions. How close are the estimates of <span class="math inline">\(p\)</span> to the true value (0.7)?</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/dummy_data-1.png"></p>
+</div>
+</div>
+</section><section id="using-samples-to-diagnose-model-fits" class="slide level2 eighty"><h2 class="eighty">Using Samples to Diagnose Model Fits</h2>
+<ul>
+<li>You have fit a model to real data</li>
+<li>You want to understand how well the model fits the data.</li>
+<li class="fragment"><strong>Posterior Predictive Distributions</strong>
+<ol type="1">
+<li>Sample from your posterior for the model parameters
+<ul>
+<li>
+<span class="math inline">\(p\)</span>, proportion of water</li>
+</ul>
+</li>
+<li>For each sample, use your model to simulate the data.
+<ul>
+<li>
+<code>rbinom(n, size = 9, prob = p)</code> to simulate n repetitions
+of 9 tosses with proportion <code>p</code>.</li>
+</ul>
+</li>
+<li>Combine the simulated experiments for different samples of the
+posterior to produce a <em>posterior predictive distribution</em>.</li>
+</ol>
+</li>
+</ul></section><section id="posterior-predictive-distribution" class="slide level2"><h2>Posterior Predictive Distribution</h2>
+<p><img data-src="assets/images/ppd.jpg" style="height:900px;" alt="Posterior Predictive Distribution, Fig. 3.6"></p>
+</section><section id="additional-diagnostics" class="slide level2 ninety"><h2 class="ninety">Additional Diagnostics</h2>
+<div class="columns">
+<div class="column ptop-2">
+<ul>
+<li>Maybe the problem wasn’t with your model but with your experiment.
+<ul>
+<li>If you don’t spin the globe enough when you toss it, there will be a
+correlation between the position when you tossed it and when you catch
+it.</li>
+<li>If your finger is in the middle of the Pacific Ocean when you toss
+it, it’s more likely you’ll catch it on water.</li>
+</ul>
+</li>
+<li>Check longest consecutive run of <strong>W</strong> or
+<strong>L</strong>
+<ul>
+<li>Experiment saw 3</li>
+</ul>
+</li>
+<li>Check number of switches between <strong>W</strong> and
+<strong>L</strong> in 9 tosses.
+<ul>
+<li>Experiment saw 6</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column bare ptop-2">
+<p><img data-src="assets/images/run-length.jpg" style="height:450px;" alt="Longest run length"><img data-src="assets/images/switches.jpg" style="height:450px;" alt="Number of switches"></p>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_03">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_03"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_03">https://ees5891.jgilligan.org/slides/class_03</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_03/ees_5891-03_class_03_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_03/ees_5891-03_class_03_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"]
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

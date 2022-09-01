@@ -10,6 +10,7 @@ lessons:
 - date: '2022-09-01'
   title: Sampling
   reading: /reading/reading_03
+  lecture: /slides/class_03
 - date: '2022-09-06'
   title: Geocentric Models
   reading: /reading/reading_04

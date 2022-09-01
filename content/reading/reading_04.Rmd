@@ -26,3 +26,14 @@ There is a time and place for very complicated and detailed mathematical modelin
 A big piece of this chapter concerns the Normal distribution. Even when data is not well described by Normal distributions, if we take a bunch of measurements and add them together or multiply them together, the result of the addition or multiplication will usually approximate a Normal distribution, especially when we are adding or multiplying a large number of measurements. This result comes from the _central limit theorem_ of statistics. 
 
 This chapter walks us through how to use both grid-sampling and quadratic approximations to analyze data using simple models: First, estimating normal distributions to describe the probability distribution of data. Then using linear regression models to measure the relationships between different measured variables, adding complexity to regression models by extending them from linear to quadratic or higher polynomial forme. And finally, using nonparametric regression methods, such as B-spline and cubic spline regression. All of these methods are valuable golems for you to have in your toolbox. I expect that fitting Gaussian models to statistical distributions and performing linear regression analysis is familiar to most of you, but I expect that few of you have seen nonparametric spline regression before, so I will spend a lot of time in class discussing that part of the chapter.
+
+Some important things to pay attention to in the chapter:
+
+* The difference between _probability mass_ and _probability density_ on p. 26.
+* The language for describing models on p. 27. Understand the different parts: Which variables are _data_, and which are _parameters_?  Note the notation of the "~" symbol for _stochastic relationships_ (see p. 78.
+* The importance of plotting both your data and your models, to understand what's going on and to check whether the model makes sense, as well as inspecting tables of marginal distributions (section 4.4.3 on pp. 98--110).
+* The importance of _standardizing_ variables for modeling, especially with nonlinear models (p. 111). Standardizing a variable means subtracting the mean and dividing by the standard deviation. 
+  $z = (x - \bar x) / \sigma_x$, where $z$ is the standardized variable, $x$ is the unstandardized variable, $\bar x$ is the mean of $x$, and $\sigma_x$ is the standard deviation.
+  * Standardizing variables has two advantages:
+    1. It helps statistical analysis algorithms perform better. Some algorithms don't work well if $x$ is very much larger than 1 or very much smaller than 1.
+    2. It helps you understand the results of your regression analyses. There are convenient rules of thumb for interpreting regression coeffiients when the variables have been standardized.
