@@ -1527,4 +1527,9 @@ h2.fifty {
   font-size: 50%;
 }
 
+div.bare > div.sourceCode,
+.reveal .bare pre.sourceCode {
+  margin: 0;
+}
+
 /*# sourceMappingURL=solarized_jg.css.map */

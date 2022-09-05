@@ -1289,3 +1289,8 @@ h2.t50,
 h2.fifty {
   font-size: 50%;
   }
+
+div.bare > div.sourceCode,
+.reveal .bare pre.sourceCode {
+  margin: 0;
+}
