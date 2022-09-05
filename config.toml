@@ -81,6 +81,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_
 #  picture = ""
   homepage = "https://www.jonathangilligan.org"
   twitter = "jg_environ"
+  youtube = "UCh3zZ5uI7oZBtpO6kflg_dg"
 
 # Menu Configuration
 [[menu.main]]

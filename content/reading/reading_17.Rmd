@@ -1,5 +1,5 @@
 ---
-title: More multilevel models
+title: Multilevel models, part 2
 class_date: '2022-10-25'
 class_number: 17
 weight: 17
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_17.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 14 ("Adventures in Covariance").
+* Statistical Rethinking, Ch. 13 ("Models with Memory").
 

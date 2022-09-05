@@ -1,5 +1,5 @@
 ---
-title: Generalized linear models
+title: Monte-Carlo sampling
 due_date: '2022-10-04'
 assignment_type: Homework
 short_assignment_type: HW

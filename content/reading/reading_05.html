@@ -1,5 +1,5 @@
 ---
-title: Many variables
+title: Many variables (part 1)
 class_date: '2022-09-08'
 class_number: 5
 weight: 5
@@ -19,7 +19,20 @@ pdf_url: /files/reading_asgts/reading_05.pdf
 <div id="required-reading-everyone" class="section level3">
 <h3>Required Reading (everyone):</h3>
 <ul>
-<li>Statistical Rethinking, Ch. 5 (“The Many Variables and The Superfluous Waffles”).</li>
+<li>Statistical Rethinking, Ch. 5 (“The Many Variables and The Superfluous Waffles”), section 5.1, pp. 123–144.</li>
 </ul>
+</div>
+<div id="reading-notes" class="section level3">
+<h3>Reading Notes:</h3>
+<p>This chapter gets at some very important issues with linear regression modeling (these same issues will apply to more complicated regression models we will study later). The chapter begins by introducing an illustrative example of the difference between correlation and causation. States with greater numbers of Waffle House restaurants have higher divorce rates, but the restaurants aren’t the cause of divorce. Rather, due to historical accidents, there is a spurious correlation between Waffle House restaurants and high divorce rates. In this chapter we examine different ways to try to explore correlations between multiple variables and try to figure out which correlations might be causal.</p>
+<p>There are several possibilities:</p>
+<ul>
+<li>Variable <em>A</em> has a direct causal influence on variable <em>B</em></li>
+<li>Variable <em>A</em> has a spurious relationship with variable <em>B</em>: they may be correlated, but this is because a third variable <em>C</em> has a causal effect on both <em>A</em> and <em>B</em>, but there is no direct link between <em>A</em> and <em>B</em>.</li>
+<li>Variable <em>A</em> has an indirect causal relationship with variable <em>B</em>: <em>A</em> has a causal effect on a third variable <em>C</em>, which has a causal effect on <em>B</em>.</li>
+</ul>
+<p>The book introduces a new kind of notation, the <em>Directed Acyclic Graph</em> (<em>DAG</em>), which represents causal relationships as arrows (<em>directed</em>), and it’s <em>acyclic</em>, meaning that there are no loops or cycles, where two variables have direct or indirect causal relationships on each other.
+The R library <code>dagitty</code> can draw <em>directed acyclic graphs</em> for you and it can also analyze causal relationships in DAGs. DAGs help us answer the question, <em>Is there any additional value in knowing a variable, once I already know all of the other predictor variables?</em></p>
+<p>The chapter shows us how to set up and analyze <em>multiple regression models</em> where the dependent variable we are trying to predict depends on many predictor variables. We also learn a number of plots, such as the residual plots in Fig. 5.4, which we can use to diagnose how well a model works for your data and to help us figure out the set of causal relationships that would best describe the data (that is, they help us figure out the DAG that best describes the relationships among a bunch of variables).</p>
 </div>
 </div>

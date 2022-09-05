@@ -1,5 +1,5 @@
 ---
-title: Geospatial modeling
+title: Working with messy data
 due_date: '2022-11-01'
 assignment_type: Homework
 short_assignment_type: HW

@@ -16,80 +16,81 @@ lessons:
   reading: /reading/reading_04
   assignment: homework_02
 - date: '2022-09-08'
-  title: Many variables
+  title: Many variables (part 1)
   reading: /reading/reading_05
 - date: '2022-09-13'
-  title: Designing statistical models
+  title: Many variables (part 2)
   reading: /reading/reading_06
   assignment: homework_03
 - date: '2022-09-15'
-  title: Regularization
+  title: Designing statistical models
   reading: /reading/reading_07
 - date: '2022-09-20'
-  title: Interactions
+  title: Regularization
   reading: /reading/reading_08
   assignment: homework_04
 - date: '2022-09-22'
-  title: Monte Carlo sampling
+  title: Interactions
   reading: /reading/reading_09
 - date: '2022-09-27'
-  title: Generalized linear models
+  title: Monte Carlo sampling
   reading: /reading/reading_10
   assignment: homework_05
 - date: '2022-09-29'
   title: Generalized linear models
   reading: /reading/reading_11
 - date: '2022-10-04'
-  title: Discrete statistical models
+  title: Generalized linear models
   reading: /reading/reading_12
   assignment: homework_06
 - date: '2022-10-06'
-  title: Mixture models
+  title: Discrete statistical models
   reading: /reading/reading_13
 - date: '2022-10-11'
-  title: Discussion of student projects
+  title: Mixture models
   reading: /reading/reading_14
   assignment: homework_07
 - date: '2022-10-13'
   title: Fall Break
 - date: '2022-10-18'
-  title: Multilevel models
+  title: Discussion of student projects
   reading: /reading/reading_15
   assignment: homework_08
 - date: '2022-10-20'
-  title: Multilevel models, part 2
+  title: Multilevel models
   reading: /reading/reading_16
+  assignment: project_proposal
 - date: '2022-10-25'
-  title: More multilevel models
+  title: Multilevel models, part 2
   reading: /reading/reading_17
   assignment: homework_09
 - date: '2022-10-27'
-  title: Messy data
+  title: More multilevel models
   reading: /reading/reading_18
 - date: '2022-11-01'
-  title: Geospatial data analysis
+  title: Messy data
   reading: /reading/reading_19
   assignment: homework_10
 - date: '2022-11-03'
-  title: Laplace approximations
+  title: Geospatial data analysis
   reading: /reading/reading_20
 - date: '2022-11-08'
-  title: Nested Laplace approximations
+  title: Laplace approximations
   reading: /reading/reading_21
   assignment: homework_11
 - date: '2022-11-10'
-  title: Matern models
+  title: Nested Laplace approximations
   reading: /reading/reading_22
 - date: '2022-11-15'
-  title: Conditional autoregressive models
+  title: Matern models
   reading: /reading/reading_23
   assignment: homework_12
 - date: '2022-11-17'
-  title: STAN Hamiltonian Monte Carlo sampler
+  title: Conditional autoregressive models
   reading: /reading/reading_24
   assignment: project_draft
 - date: '2022-11-22'
-  title: Programming in Stan
+  title: STAN Hamiltonian Monte Carlo sampler
   reading: /reading/reading_25
 - date: '2022-11-24'
   title: Thanksgiving Break

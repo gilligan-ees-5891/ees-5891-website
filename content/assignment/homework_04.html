@@ -1,5 +1,5 @@
 ---
-title: Statistical models
+title: Multivariable models
 due_date: '2022-09-20'
 assignment_type: Homework
 short_assignment_type: HW
@@ -23,5 +23,17 @@ pdf_url: /files/homework_asgts/homework_04.pdf
 <h2>Homework</h2>
 <div id="homework-exercises" class="section level3">
 <h3>Homework Exercises:</h3>
+<p><strong>Self-study:</strong> Work these exercises, but do not turn them in.</p>
+<ul>
+<li>Exercises 5E1–5E4</li>
+</ul>
+<p><strong>Turn in:</strong> Work these exercises and turn them in.</p>
+<ul>
+<li>5M3, 5M4, 5H3</li>
+</ul>
+</div>
+<div id="notes-on-homework" class="section level3">
+<h3>Notes on Homework:</h3>
+<p>Exercise 5E4 gets at a subtle point about independence of variables when you have indicators for categories. This connects to a subtle, but important point about <em>identifiability</em> in models. When you can infer the exact value of a variable from other variables, then including the exactly predictable variable in your models can create problems by making the models <em>non-identifiable</em>. A good example is if you have indicator variables <em>male</em> and <em>female</em> for biological sex (for simplicity, I am leaving out the possibility of intersex individuals). If you have a regression model <span class="math inline">\(y ~ \alpha + \beta_1 I_{\text{male}} + \beta_1 I_{\text{female}}\)</span>, then the model will predict the same result if you use parameters <span class="math inline">\(\alpha&#39; = \alpha + \delta\)</span>, <span class="math inline">\(\beta&#39;_1 = \beta_1 - \delta\)</span>, and <span class="math inline">\(\beta&#39;_2 = \beta_2 - \delta\)</span>. If you omit <span class="math inline">\(I_{\text{male}}\)</span> or <span class="math inline">\(I_{\text{female}}\)</span> from your model (but not both), you will have a model that works just as well (because <span class="math inline">\(I_{\text{male}} = 1 - I_{\text{female}}\)</span>, so the model will have just as much information), but the model will now be completely <em>identifiable</em> because we can’t get equivalent results by changing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. This is why the kind of analysis in this exercise, to check whether a model is fully identifiable, is important.</p>
 </div>
 </div>

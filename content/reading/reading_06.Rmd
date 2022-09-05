@@ -1,5 +1,5 @@
 ---
-title: Designing statistical models
+title: Many variables (part 2)
 class_date: '2022-09-13'
 class_number: 6
 weight: 6
@@ -15,5 +15,12 @@ pdf_url: /files/reading_asgts/reading_06.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 6 ("The Haunted DAG & The Causal Terror").
+* Statistical Rethinking, Ch. 5 ("The Many Variables and The Superfluous Waffles"), sections 5.2-5.4, pp. 144--158.
 
+### Reading Notes:
+
+We pick up where the last assignment left off: We look at _masked relationships_ in which multiple predictor variables influence the dependent outcome variable, but you can't see the relationship when you look at pairwise relations between either of the predictors and the outcome. This can happen when two predictors are correlated with each other, and they have opposite causal influences on the outcome variable. The book shows how to use plots, models, and DAGs to understand _masked relationships_.
+
+We also start to look at categorical variables that don't correspond to numbers. Examples of these include sex, developmental status (infant, juvenile, adult), geographic region (North America, South America, Africa, Europe, etc.), and so forth.
+
+By the end of the chapter, you should have a sense of how to analyze complicated relationships among multiple variables, including different kinds of variables.

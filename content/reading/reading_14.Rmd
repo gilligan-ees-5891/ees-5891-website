@@ -1,5 +1,5 @@
 ---
-title: Discussion of student projects
+title: Mixture models
 class_date: '2022-10-11'
 class_number: 14
 weight: 14
@@ -13,8 +13,7 @@ pdf_url: /files/reading_asgts/reading_14.pdf
 ---
 ## Reading:
 
-No new reading for today.
+### Required Reading (everyone):
 
-### Notes:
+* Statistical Rethinking, Ch. 12 ("Monsters and Mixtures").
 
-No reading for today. We will discuss the semester research projects.

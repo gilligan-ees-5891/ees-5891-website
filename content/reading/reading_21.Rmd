@@ -1,5 +1,5 @@
 ---
-title: Nested Laplace approximations
+title: Laplace approximations
 class_date: '2022-11-08'
 class_number: 21
 weight: 21

@@ -1,16 +1,20 @@
 ---
 title: Research project proposal
-due_date: '2022-10-16'
+due_date: '2022-10-20'
 assignment_type: Semester Project Assignment
 short_assignment_type: Assignment
-assignment_number: 13
-weight: 13
+assignment_number: 14
+weight: 101
 slug: project_proposal
 pubdate: '2022-07-31'
-date: '2022-10-16'
+date: '2022-10-20'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+pdf_url: /files/homework_asgts/project_proposal.pdf
 ---
 ## Homework
 
