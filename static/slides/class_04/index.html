@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Geocentric Models</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Geocentric Models</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #4:
+       Tuesday, September 6
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section id="announcement" class="title-slide slide level1"><h1>Announcement</h1>
+<ul>
+<li>Reading assignments changed
+<ul>
+<li>No new reading for Thursday
+<ul>
+<li>I will spend the class talking about using R and RStudio
+<ul>
+<li>
+<strong>Bring your laptop</strong> if you have one, so you can work
+along with me.</li>
+</ul>
+</li>
+<li>Get a head-start on reading for next week</li>
+</ul>
+</li>
+<li>For next week, I have split the reading for Chapter 5 into two days
+<ul>
+<li>Homework due next Tuesday is just from Chapter 4 (Geocentric
+models)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section><section id="big-picture-sec" class="title-slide slide level1 center"><h1 class="center">Big Picture</h1>
+
+</section><section id="model-chars" class="slide level2 eightyfive"><h2 class="eightyfive">Characteristics of Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Parametric regression models
+<ul>
+<li>Linear regression</li>
+<li>Polynomial regression</li>
+<li>Generalized linear models</li>
+<li>Nonlinear models</li>
+</ul>
+</li>
+<li>Nonparametric regression models
+<ul>
+<li>Spline models</li>
+<li>Locally-weighted regression</li>
+<li>Gaussian process models</li>
+<li>…</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="6"><strong>Comparison</strong>
+<ul>
+<li class="fragment" data-fragment-index="7">Which fits the data best?</li>
+<li class="fragment" data-fragment-index="8">Which would be best for interpolating?</li>
+<li class="fragment" data-fragment-index="9">Which would be best for extrapolating?</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column bare seventyfive">
+<ul>
+<li class="fragment" data-fragment-index="1">Parametric models:
+<ul>
+<li>
+<p>Linear</p>
+<div class="bare">
+<p><img data-src="assets/fig/lin-regr-1.png"></p>
+</div>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="2">Nonparametric
+<ul>
+<li class="fragment" data-fragment-index="3">
+<p>Locally weighted (LOWESS)</p>
+<div class="bare">
+<p><img data-src="assets/fig/lowess-1.png"></p>
+</div>
+</li>
+<li class="fragment" data-fragment-index="4">
+<p>Spline</p>
+<div class="bare">
+<p><img data-src="assets/fig/spline-1.png"></p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="overfitting" class="slide level2 eightyfive"><h2 class="eightyfive">Underfitting vs. Overfitting</h2>
+<div class="columns">
+<div class="column bare ninetyfive">
+<div class="bare">
+<p><img data-src="assets/fig/lin-regr-1-1.png"></p>
+</div>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/cubic-regr-1-1.png"></p>
+</div>
+</div>
+<div class="column bare ninetyfive">
+<div class="bare">
+<p><img data-src="assets/fig/lowess-1-1.png"></p>
+</div>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/spline-1-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="koch-gallagher" class="slide level2 eightyfive"><h2 class="eightyfive">Example from Physics</h2>
+<div class="columns">
+<div class="column ninetyfive">
+<ul>
+<li>Two physicists studying ionization of atoms by microwaves
+<ul>
+<li>The spectrum was very complicated</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="1">Tom Gallagher (University of Virginia)
+<ul>
+<li>Simple model with five parameters.
+<ul>
+<li>Fit the overall pattern very well, but did not attempt to fit every
+little bump and wiggle.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="2">Peter Koch (SUNY Stony Brook)
+<ul>
+<li>Complicated model:
+<ul>
+<li>Chaos theory, very hard to understand.</li>
+<li>Huge computational demands</li>
+<li>Fit all the details of the spectrum almost perfectly</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">Koch and Gallagher spent years fighting fiercely about whose
+approach to modeling was better.</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment" data-fragment-index="1">
+<p>Tom Gallagher</p>
+<p><img data-src="assets/images/tom-gallagher.png" style="height:350px;" alt="Tom Gallagher"></p>
+</li>
+<li class="fragment" data-fragment-index="2">
+<p>Peter Koch</p>
+<p><img data-src="assets/images/peter-koch.jpg" style="height:350px;" alt="Peter Koch"></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="central-limit-theorem" class="slide level2"><h2>Central Limit Theorem</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Take <em>N</em> independent measurements of a variable <em>x</em>
+<ul>
+<li>Some distribution with mean <span class="math inline">\(\mu\)</span>, variance <span class="math inline">\(\sigma^2\)</span>
+</li>
+</ul>
+</li>
+<li>In the limit of large <em>N</em>, The average will be normal with
+mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2 / N\)</span>
+</li>
+<li>This also works for:
+<ul>
+<li>Product of <span class="math inline">\(1 + x\)</span> for small
+<span class="math inline">\(x\)</span>
+</li>
+<li>
+<span class="math inline">\(\log(\text{product} (1 + x))\)</span>
+for larger <span class="math inline">\(x\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>1000 replicates of 16 samples each:</p>
+<div class="bare">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">runif</span>(<span class="dv">16</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p>mean: 0.50, var: 0.084</p>
+</div>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/plot_normal-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="model-lang-sec" class="title-slide slide level1 center"><h1 class="center">A Language for Models</h1>
+
+</section><section id="model-recipe" class="slide level2 eighty" data-transition="fade-out"><h2 class="eighty" data-transition="fade-out">A Recipe for Models</h2>
+<div class="columns">
+<div class="column">
+<ol type="1">
+<li>Recognize and categorize variables
+<ul>
+<li>
+<strong>Data:</strong> Observable variables (<span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>)</li>
+<li>
+<strong>Parameters:</strong> Latent (unobservable) variables (<span class="math inline">\(\mu\)</span>, <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\sigma\)</span>)</li>
+</ul>
+</li>
+<li>Define each variable
+<ul>
+<li>Functional relations between variables (<span class="math inline">\(\mu\)</span>)</li>
+<li>Probability distributions (<span class="math inline">\(y\)</span>,
+<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\sigma\)</span>)</li>
+</ul>
+</li>
+<li>Combine variables &amp; relations in a <em>joint generative
+model</em>
+<ul>
+<li>Analyze real observations (model fitting)</li>
+<li>Simulate hypothetical observations (predictions)</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="column">
+<ul>
+<li>Notation for models (example) <span class="math display">\[
+\begin{aligned}
+y      &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu    &amp;=    \alpha + \beta x \\
+\alpha &amp;\sim \text{Normal}(0, 10) \\
+\beta  &amp;\sim \text{Normal}(0, 10) \\
+\sigma &amp;\sim \text{Exponential(1)} \\
+\end{aligned}
+\]</span>
+</li>
+<li>“<span class="math inline">\(\sim\)</span>” means a
+<em>stochastic</em> (random <em>probabilistic</em>) relationship
+<ul>
+<li>
+<span class="math inline">\(x \sim \text{Normal}(0, 1)\)</span>
+means that <span class="math inline">\(x\)</span> is a
+<em>stochastic</em> variable, which is drawn at random from a Normal
+distribution.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="model-recipe-2" class="slide level2 eighty" data-transition="fade-in"><h2 class="eighty" data-transition="fade-in">More Model Terminology</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>In Bayesian terms:
+<ul>
+<li>stochastic relationships that define <em>parameters</em> are
+<em>priors</em> (<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>, <span class="math inline">\(\sigma\)</span>)</li>
+<li>stochastic relationships that define <em>observed variables</em> are
+<em>likelihoods</em> that contribute to calculating <em>posteriors</em>
+via Bayes’s theorem.</li>
+<li>When <em>parameters</em> (<span class="math inline">\(\beta_i\)</span>) are defined by <em>priors</em>
+that have their own <em>parameters</em> (<span class="math inline">\(\gamma\)</span>),
+<ul>
+<li>the <em>parameters</em> in the priors are <em>hyperparameters</em>
+(<span class="math inline">\(\gamma\)</span>),</li>
+<li>the priors for <em>hyperparamters</em> are
+<em>hyperpriors</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>Notation for models (example) <span class="math display">\[
+\begin{aligned}
+y       &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu     &amp;=    \alpha + \sum_i \beta_i x_i \\
+\alpha  &amp;\sim \text{Normal}(0, 10) \\
+\beta_i &amp;\sim \text{Normal}(\gamma, 1) \\
+\gamma  &amp;\sim \text{Normal}(0, 10) \\
+\sigma  &amp;\sim \text{Exponential(1)}
+\end{aligned}
+\]</span>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="height-sec" class="title-slide slide level1 center"><h1 class="center">Case Study: Height</h1>
+
+</section><section id="height-data" class="slide level2 eighty"><h2 class="eighty">Height Data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Anthropological data
+<ul>
+<li>!Kung San people</li>
+</ul>
+</li>
+<li class="fragment">R data structures:
+<ul>
+<li>1-dim: <code>vector</code>, <code>list</code>
+</li>
+<li>2-dim: <code>array</code>, <code>matrix</code>,
+<code>data.frame</code>, <code>tibble</code> (a kind of
+<code>data.frame</code>)</li>
+<li>n-dim: <code>array</code>, <code>matrix</code>
+</li>
+<li class="fragment"><code>data.frame</code>, <code>tibble</code>:
+<ul>
+<li>Like a spreadsheet or database:
+<ul>
+<li>Each column is a variable
+<ul>
+<li>height, weight, etc.</li>
+</ul>
+</li>
+<li>Each row is a set of related measurements
+<ul>
+<li>height, weight, etc. for a given person</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column ninetyfive">
+<div class="bare max-listing sixtyfive">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pacman)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">p_load</span>(tidyverse, tidybayes)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">p_load_gh</span>(<span class="fu">c</span>(<span class="st">"mcelreath/rethinking"</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"mjskay/tidybayes.rethinking"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Howell1)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(Howell1)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 4
+##   height weight   age  male
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+## 1   152.   47.8    63     1
+## 2   140.   36.5    63     0
+## 3   137.   31.9    65     0
+## 4   157.   53.0    41     1
+## 5   145.   41.3    51     0
+## 6   164.   63.0    35     1</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(d)</span></code></pre></div>
+<pre><code>##               mean         sd      5.5%     94.5%
+## height 138.2635963 27.6024476 81.108550 165.73500
+## weight  35.6106176 14.7191782  9.360721  54.50289
+## age     29.3443934 20.7468882  1.000000  66.13500
+## male     0.4724265  0.4996986  0.000000   1.00000
+##            histogram
+## height ▁▁▁▁▁▁▁▂▁▇▇▅▁
+## weight ▁▂▃▂▂▂▂▅▇▇▃▂▁
+## age        ▇▅▅▃▅▂▂▁▁
+## male      ▇▁▁▁▁▁▁▁▁▇</code></pre>
+</div>
+</div>
+</div>
+</section><section id="height-clean" class="slide level2 eighty"><h2 class="eighty">Cleaning data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Many children</li>
+<li>Focus on adults</li>
+<li class="fragment" data-fragment-index="1">Model: <span class="math display">\[
+\begin{align}
+h &amp;\sim \text{Normal}(\mu,\sigma) \\
+\mu &amp;\sim \text{Normal}(178, 20) \\
+\sigma &amp;\sim \text{Uniform}(0, 50)
+\end{align}
+\]</span>
+<ul>
+<li class="fragment" data-fragment-index="2">Where does Normal(178,20) come from?</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">If a <code>quap</code> model gives errors, you may need to give
+it a hint about where to start looking for the mode of the
+posterior.</li>
+</ul>
+</div>
+<div class="column ninetyfive">
+<div class="bare max-listing sixtyfive">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, age <span class="sc">&gt;=</span> <span class="dv">18</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(d2)</span></code></pre></div>
+<pre><code>##             mean         sd     5.5%     94.5%
+## height 154.59709  7.7423321 142.8750 167.00500
+## weight  44.99049  6.4567081  35.1375  55.76588
+## age     41.13849 15.9678551  20.0000  70.00000
+## male     0.46875  0.4997328   0.0000   1.00000
+##              histogram
+## height       ▁▃▇▇▅▇▂▁▁
+## weight         ▁▅▇▇▃▂▁
+## age    ▂▅▇▅▃▇▃▃▂▂▂▁▁▁▁
+## male        ▇▁▁▁▁▁▁▁▁▇</code></pre>
+</div>
+<div class="fragment bare mtop-1 max-listing sixtyfive" data-fragment-index="1">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flist <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    height <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    mu <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">178</span>, <span class="dv">20</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>mdl_0 <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist, <span class="at">data =</span> d2)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_0)</span></code></pre></div>
+<pre><code>##             mean        sd       5.5%      94.5%
+## mu    154.607114 0.4120362 153.948601 155.265628
+## sigma   7.732113 0.2914595   7.266304   8.197921</code></pre>
+</div>
+<div class="fragment bare mtop-1 max-listing sixtyfive" data-fragment-index="3">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fu">mean</span>(d2<span class="sc">$</span>height),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="fu">sd</span>(d2<span class="sc">$</span>height)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mdl_0a <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist, <span class="at">data =</span> d2, <span class="at">start =</span> start)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="height-linear" class="slide level2 eighty"><h2 class="eighty">Linear Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>We expect that height is related to other variables (weight, age,
+sex)
+<ul>
+<li class="fragment" data-fragment-index="1">Start by looking for an association with weight <span class="math display">\[
+\begin{align}
+h      &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu    &amp;=    \alpha + \beta (w - \bar w)     \\
+\alpha &amp;\sim \text{Normal}(178, 20)     \\
+\beta  &amp;\sim \text{Normal}(0, 10)       \\
+\sigma &amp;\sim \text{Uniform}(0,50)
+\end{align}
+\]</span> where <span class="math inline">\(h\)</span> is height and
+<span class="math inline">\(w\)</span> is weight</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare max-listing sixtyfive fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>wbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(d2<span class="sc">$</span>weight)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>flist_1a <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b <span class="sc">*</span> (weight <span class="sc">-</span> wbar),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">178</span>, <span class="dv">20</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="prior-choice" class="slide level2 eighty"><h2 class="eighty">Choosing Priors</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Our previous model has a prior for <span class="math inline">\(\beta\)</span> of Normal(0,50).
+<ul>
+<li>
+<span class="math inline">\(\beta\)</span> is the relationship
+between weight and height.</li>
+<li class="fragment" data-fragment-index="1">Is it really plausible that the slope is as likely to be
+negative as positive?</li>
+<li class="fragment" data-fragment-index="2">Plot some examples of the prior</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">Try a different prior:
+<ul>
+<li>Lognormal distribution
+<ul>
+<li>Good when the parameter must be positive <span class="math display">\[ \log(\beta) \sim \text{Normal(0,1)} \]</span>
+<code>b ~ dlnorm(0, 1)</code> `</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixty fragment" data-fragment-index="2">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>wbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(d2<span class="sc">$</span>weight)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">a =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">178</span>, <span class="dv">20</span>), <span class="at">b =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">10</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">nrow</span>(priors))) {</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  params <span class="ot">&lt;-</span> priors[i,]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  d_tmp <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d2, <span class="at">x =</span> weight, <span class="at">y =</span> params<span class="sc">$</span>a <span class="sc">+</span> params<span class="sc">$</span>b <span class="sc">*</span> (weight <span class="sc">-</span> wbar))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> d_tmp, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>         <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">272</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>, <span class="at">title =</span> <span class="st">"b ~ Normal(0, 10)"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<p><img data-src="assets/fig/prior-choice-1.png"><span class="fragment" data-fragment-index="3"><img data-src="assets/fig/prior-choice-2-1.png"></span></p>
+</div>
+</div>
+</div>
+</section><section id="finishing-our-model" class="slide level2 eighty"><h2 class="eighty">Finishing our model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Model: <span class="math display">\[
+\begin{align}
+h &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta (w - \bar w) \\
+\alpha &amp;\sim \text{Normal}(178, 20) \\
+\log(\beta) &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Uniform}(0, 50)
+\end{align}
+\]</span>
+</li>
+<li class="fragment" data-fragment-index="2">Check the variance-covariance matrix
+<ul>
+<li class="fragment" data-fragment-index="3">Off-diagonal elements are &lt; 0.001:
+<ul>
+<li>Very little covariance among the parameters. This is good.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixty fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>flist_lin <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b <span class="sc">*</span> (weight <span class="sc">-</span> wbar),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">178</span>, <span class="dv">20</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>lin_mdl <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist_lin, <span class="at">data =</span> d2)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">precis</span>(lin_mdl), <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##         mean   sd   5.5%  94.5%
+## a     154.60 0.27 154.17 155.03
+## b       0.90 0.04   0.84   0.97
+## sigma   5.07 0.19   4.77   5.38</code></pre>
+</div>
+<div class="bare mtop-1 max-listing sixty fragment" data-fragment-index="2">
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">vcov</span>(lin_mdl), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##           a     b sigma
+## a     0.073 0.000 0.000
+## b     0.000 0.002 0.000
+## sigma 0.000 0.000 0.037</code></pre>
+</div>
+</div>
+</div>
+</section></section><section><section id="checking-models" class="title-slide slide level1 center"><h1 class="center">Checking Models</h1>
+
+</section><section id="checking-fit" class="slide level2 eighty"><h2 class="eighty">Checking fit</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>post  <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(lin_mdl)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">summarize</span>(post, <span class="at">a =</span> <span class="fu">median</span>(a), <span class="at">b =</span> <span class="fu">median</span>(b))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>map_line <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">weight =</span> <span class="fu">range</span>(d2<span class="sc">$</span>weight), </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">height =</span> map<span class="sc">$</span>a <span class="sc">+</span> map<span class="sc">$</span>b <span class="sc">*</span> (weight <span class="sc">-</span> wbar))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d2, <span class="fu">aes</span>(<span class="at">x =</span> weight, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> map_line, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<p><img data-src="assets/fig/plot-lin-mdl-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="fit-subsets-of-data" class="slide level2 eighty"><h2 class="eighty">Fit Subsets of Data</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(N) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  dN <span class="ot">&lt;-</span> <span class="fu">slice_head</span>(d2, <span class="at">n =</span> N)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  mN <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist_lin, <span class="at">data =</span> dN)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mN, <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dN, <span class="fu">aes</span>(<span class="at">x =</span> weight, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">1.5</span> <span class="sc">/</span> <span class="fu">log</span>(N))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">20</span>)) {</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    map <span class="ot">&lt;-</span> post[i,]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    map_line <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">weight =</span> <span class="fu">range</span>(d2<span class="sc">$</span>weight), </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">height =</span> map<span class="sc">$</span>a <span class="sc">+</span> map<span class="sc">$</span>b <span class="sc">*</span> (weight <span class="sc">-</span> wbar))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> map_line, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>, <span class="at">title =</span> <span class="fu">str_c</span>(<span class="st">"N = "</span>, N))</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  p</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">f</span>(<span class="dv">10</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">f</span>(<span class="dv">50</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">f</span>(<span class="dv">150</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">f</span>(<span class="fu">nrow</span>(d2))</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<p><img data-src="assets/fig/post-pred-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="compatibility-intervals" class="slide level2 eighty"><h2 class="eighty">Compatibility Intervals</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">weight =</span> <span class="fu">seq</span>(<span class="dv">25</span>, <span class="dv">70</span>, <span class="dv">1</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(lin_mdl, new_data, <span class="at">value =</span> <span class="st">"height"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>post_sum <span class="ot">&lt;-</span> post <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(weight, .row) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">lower =</span> <span class="fu">quantile</span>(height, <span class="fl">0.055</span>), </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fu">quantile</span>(height, <span class="fl">0.945</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">height =</span> <span class="fu">mean</span>(height)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">slice_head</span>(post, <span class="at">n =</span> <span class="dv">100</span>), <span class="fu">aes</span>(<span class="at">x =</span> weight, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.02</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d2, <span class="fu">aes</span>(<span class="at">x =</span> weight, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data =</span> post_sum, <span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">stat =</span> <span class="st">"Identity"</span>, </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+</div>
+<ul>
+<li>The top graph shows samples of 100 points drawn from the posterior
+predictions</li>
+<li>The bottom shows the actual data together with the best-fit line,
+and the 89% compatibility interval for the line</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<p><img data-src="assets/fig/compat-int-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="checking-predictions" class="slide level2 eighty"><h2 class="eighty">Checking predictions</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">predicted_draws</span>(lin_mdl, new_data, <span class="at">value =</span> <span class="st">"height"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>post_sum <span class="ot">&lt;-</span> post <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(weight, .row) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">lower =</span> <span class="fu">quantile</span>(height, <span class="fl">0.055</span>), </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fu">quantile</span>(height, <span class="fl">0.945</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">height =</span> <span class="fu">mean</span>(height)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d2, <span class="fu">aes</span>(<span class="at">x =</span> weight, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data =</span> post_sum, <span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">stat =</span> <span class="st">"Identity"</span>, </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight"</span>, <span class="at">y =</span> <span class="st">"height"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>p2</span></code></pre></div>
+</div>
+<ul>
+<li>The graph shows the actual data together with the best-fit line, and
+the 89% compatibility interval for the predictions of where we will see
+data points.
+<ul>
+<li>89% of the observed data should lie within this interval.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<p><img data-src="assets/fig/pred-check-1.png"></p>
+</div>
+</div>
+</div>
+</section></section><section><section id="polynomial-models" class="title-slide slide level1 center"><h1 class="center">Polynomial Models</h1>
+
+</section><section id="beyond-linear-models" class="slide level2 eighty"><h2 class="eighty">Beyond Linear Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Sometimes linear models aren’t good enough.
+<ul>
+<li>If we include children, height is no longer a linear function of
+weight.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="1">Polynomial models (quadratic, cubic, etc.) may be better.</li>
+<li class="fragment" data-fragment-index="2">High powers of variables can get large, so
+<strong>standardize</strong> your data <span class="math display">\[ x_s
+= \frac{x - \bar x}{\sigma_x},\]</span> where <span class="math inline">\(\bar x\)</span> is the mean of <span class="math inline">\(x\)</span> and <span class="math inline">\(\sigma_x\)</span> is the standard deviation.</li>
+</ul>
+<div class="bare mtop-1 max-listing sixtyfive fragment" data-fragment-index="3">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>d_std <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, <span class="at">ws =</span> (weight <span class="sc">-</span> <span class="fu">mean</span>(weight)) <span class="sc">/</span> <span class="fu">sd</span>(weight))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_std, <span class="fu">aes</span>(<span class="at">x =</span> ws, <span class="at">y =</span> height)) <span class="sc">+</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">fill =</span> <span class="st">"darkgreen"</span>, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"weight (std)"</span>, <span class="at">y =</span> <span class="st">"height"</span>)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive fragment" data-fragment-index="3">
+<p><img data-src="assets/fig/full-kung-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="polynomial-regression" class="slide level2 eighty"><h2 class="eighty">Polynomial Regression</h2>
+<div class="columns">
+<div class="column eightyfive">
+<ul>
+<li>
+<p>Model:</p>
+<div class="eighty">
+<p><span class="math display">\[
+\begin{align}
+h &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta_1 w_s + \beta_2 w_s^2 \\
+\alpha &amp;\sim \text{Normal}(178,20) \\
+\beta_1 &amp;\sim \text{Log-Normal}(0,1) \\
+\beta_2 &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Uniform}(0,50)
+\end{align}
+\]</span></p>
+</div>
+<ul>
+<li>For computational efficiency, make a new variable <span class="math inline">\(ws2 = ws^2\)</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing sixtyfive">
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>d_std <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, <span class="at">ws =</span> (weight <span class="sc">-</span> <span class="fu">mean</span>(weight)) <span class="sc">/</span> <span class="fu">sd</span>(weight),</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">ws2 =</span> ws<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>flist_lin_s <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b <span class="sc">*</span> ws,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">178</span>, <span class="dv">20</span>),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">50</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>lin_mdl_s <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist_lin_s, <span class="at">data =</span> d_std)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>flist_quad_s <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b1 <span class="sc">*</span> ws <span class="sc">+</span> b2 <span class="sc">*</span> ws2,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">178</span>, <span class="dv">20</span>),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  b1 <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  b2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">50</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>quad_mdl_s <span class="ot">&lt;-</span> <span class="fu">quap</span>(flist_quad_s, <span class="at">data =</span> d_std)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(quad_mdl_s)</span></code></pre></div>
+<pre><code>##             mean        sd       5.5%      94.5%
+## a     146.058287 0.3689854 145.468577 146.647997
+## b1     21.732530 0.2888988  21.270814  22.194246
+## b2     -7.803573 0.2741922  -8.241785  -7.365361
+## sigma   5.774713 0.1764832   5.492659   6.056767</code></pre>
+</div>
+</div>
+</div>
+</section><section id="different-polynomials" class="slide level2 eighty"><h2 class="eighty">Different polynomials</h2>
+<p><img data-src="assets/fig/plot-poly-1.png"></p>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_04">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_04"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_04">https://ees5891.jgilligan.org/slides/class_04</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_04/ees_5891-03_class_04_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_04/ees_5891-03_class_04_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"]
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

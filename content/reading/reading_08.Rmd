@@ -1,5 +1,5 @@
 ---
-title: Regularization
+title: Designing statistical models
 class_date: '2022-09-20'
 class_number: 8
 weight: 8
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_08.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 7 ("Ulysses' Compass").
+* Statistical Rethinking, Ch. 6 ("The Haunted DAG & The Causal Terror").
 

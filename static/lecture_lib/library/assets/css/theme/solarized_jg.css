@@ -391,6 +391,10 @@ body {
   box-shadow: none;
 }
 
+.reveal .max-listing pre {
+  width: 100%;
+}
+
 .reveal code {
   font-family: "Anonymous Pro", monospace;
   color: #268bd2;
@@ -1435,7 +1439,9 @@ h1.t100,
 h1.hundred,
 h2.t100,
 h2.hundred,
-div.hundred {
+div.hundred,
+.hundred pre,
+.t100 pre {
   font-size: 100% !important;
 }
 
@@ -1444,7 +1450,9 @@ div.hundred {
 h1.t95,
 h1.ninetyfive,
 h2.t95,
-h2.ninetyfive {
+h2.ninetyfive,
+.ninetyfive pre,
+.t95 pre {
   font-size: 95%;
 }
 
@@ -1453,7 +1461,9 @@ h2.ninetyfive {
 h1.t90,
 h1.ninety,
 h2.t90,
-h2.ninety {
+h2.ninety,
+.ninety pre,
+.t90 pre {
   font-size: 90%;
 }
 
@@ -1462,7 +1472,9 @@ h2.ninety {
 h1.t85,
 h1.eightyfive,
 h2.t85,
-h2.eightyfive {
+h2.eightyfive,
+.eightyfive pre,
+.t85 pre {
   font-size: 85%;
 }
 
@@ -1471,14 +1483,18 @@ h2.eightyfive {
 h1.t80,
 h1.eighty,
 h2.t80,
-h2.eighty {
+h2.eighty,
+.eighty pre,
+.t80 pre {
   font-size: 80%;
 }
 
 .reveal .t75,
 .reveal .seventyfive,
 h1.t75 h1.seventyfive,
-h2.t75 h2.seventyfive {
+h2.t75 h2.seventyfive,
+.seventyfive pre,
+.t75 pre {
   font-size: 75%;
 }
 
@@ -1487,7 +1503,9 @@ h2.t75 h2.seventyfive {
 h1.t70,
 h1.seventy,
 h2.t70,
-h2.seventy {
+h2.seventy,
+.seventy pre,
+.t70 pre {
   font-size: 70%;
 }
 
@@ -1496,7 +1514,9 @@ h2.seventy {
 h1.t65,
 h1.sixtyfive,
 h2.t65,
-h2.sixtyfive {
+h2.sixtyfive,
+.sixtyfive pre,
+.t65 pre {
   font-size: 65%;
 }
 
@@ -1505,7 +1525,9 @@ h2.sixtyfive {
 h1.t60,
 h1.sixty,
 h2.t60,
-h2.sixty {
+h2.sixty,
+.sixty pre,
+.t60 pre {
   font-size: 60%;
 }
 
@@ -1514,7 +1536,9 @@ h2.sixty {
 h1.t55,
 h1.fiftyfive,
 h2.t55,
-h2.fiftyfive {
+h2.fiftyfive,
+.fiftyfivee pre,
+.t55 pre {
   font-size: 55%;
 }
 
@@ -1523,7 +1547,9 @@ h2.fiftyfive {
 h1.t50,
 h1.fifty,
 h2.t50,
-h2.fifty {
+h2.fifty,
+.fifty pre,
+.t50 pre {
   font-size: 50%;
 }
 

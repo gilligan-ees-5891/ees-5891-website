@@ -1,5 +1,5 @@
 ---
-title: Messy data
+title: More multilevel models
 class_date: '2022-11-01'
 class_number: 19
 weight: 19
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_19.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 15 ("Missing Data and Other Opportunities").
+* Statistical Rethinking, Ch. 14 ("Adventures in Covariance").
 

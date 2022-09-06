@@ -1,5 +1,5 @@
 ---
-title: Geospatial data analysis
+title: Messy data
 class_date: '2022-11-03'
 class_number: 20
 weight: 20
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_20.pdf
 
 ### Required Reading (everyone):
 
-* Bayesian Inference with INLA.
+* Statistical Rethinking, Ch. 15 ("Missing Data and Other Opportunities").
 

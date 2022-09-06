@@ -1,5 +1,5 @@
 ---
-title: Mixture models
+title: Discrete statistical models
 class_date: '2022-10-11'
 class_number: 14
 weight: 14
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_14.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 12 ("Monsters and Mixtures").
+* Statistical Rethinking, Ch. 11 ("God Spiked the Integers").
 
