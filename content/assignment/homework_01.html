@@ -142,17 +142,35 @@ and continue from there.</p>
 RStudio, and type</p>
 <pre class="r"><code>install.packages(c(&quot;devtools&quot;, &quot;pacman&quot;))
 library(pacman)
-p_install(tidyverse, coda, mvtnorm, daggity, shiny, shinystan,
-for (p in c(&quot;tidyverse&quot;, &quot;coda&quot;, &quot;mvtnorm&quot;, &quot;dagitty&quot;, &quot;shiny&quot;, &quot;shinystan&quot;,
-            &quot;bayesplot&quot;, &quot;brms&quot;, &quot;rprojroot&quot;, &quot;rmarkdown&quot;, &quot;knitr&quot;, &quot;ape&quot;,
-            &quot;broom&quot;, &quot;sf&quot;, &quot;flextable&quot;, &quot;ggdag&quot;, &quot;ggmcmc&quot;, &quot;ggrepel&quot;,
-            &quot;ggthemes&quot;, &quot;loo&quot;, &quot;patchwork&quot;, &quot;psych&quot;, &quot;rcartocolor&quot;, &quot;Rcpp&quot;,
-            &quot;statebins&quot;, &quot;tidybayes&quot;, &quot;viridis&quot;, &quot;viridisLite&quot;,
-            &quot;wesanderson&quot;)) {
+for (p in c(&quot;tidyverse&quot;, &quot;ape&quot;, &quot;bayesplot&quot;, &quot;brms&quot;,
+            &quot;broom&quot;, &quot;coda&quot;, &quot;dagitty&quot;, &quot;flextable&quot;,
+            &quot;ggdag&quot;, &quot;ggformula&quot;, &quot;ggmcmc&quot;, &quot;ggrepel&quot;,
+            &quot;ggthemes&quot;, &quot;knitr&quot;, &quot;loo&quot;, &quot;mvtnorm&quot;,
+            &quot;patchwork&quot;, &quot;posterior&quot;, &quot;psych&quot;,
+            &quot;rcartocolor&quot;, &quot;Rcpp&quot;, &quot;rmarkdown&quot;,
+            &quot;rprojroot&quot;, &quot;sf&quot;, &quot;shiny&quot;, &quot;shinystan&quot;,
+            &quot;statebins&quot;, &quot;tidybayes&quot;, &quot;viridis&quot;,
+            &quot;viridisLite&quot;, &quot;wesanderson&quot;)) {
   p_install(p, character.only = TRUE, force = FALSE)
 }
-remotes::install_github(&quot;rmcelreath/rethinking&quot;)</code></pre>
+remotes::install_github(&quot;rmcelreath/rethinking&quot;)
+remotes::install_github(&quot;mjskay/tidybayes.rethinking/&quot;)</code></pre>
 <p>This may take some time to run, but when it is done, you should be good to go.</p></li>
+<li><p>You will also need to install the <code>cmdstanr</code> package to run the <code>rethinking</code>
+package.</p>
+<p>The first step is to start a fresh R session or in RStudio open the “Session”
+menu and choose “Restart R”. Then type this in the console window:</p>
+<pre><code>install.packages(&quot;cmdstanr&quot;, repos = c(&quot;https://mc-stan.org/r-packages/&quot;,
+                 getOption(&quot;repos&quot;)))</code></pre>
+<p>Next, type this:</p>
+<pre><code>library(cmdstanr)
+check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)</code></pre>
+<p>If this works without error, you should finally type this:</p>
+<pre><code>install_cmdstan(cores = 2)</code></pre>
+<p>If you are having difficulty installing <code>cmdstanr</code>, check
+<a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html">the documentation</a>
+at the
+<a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html"><code>cmdstanr</code> web site</a>.</p></li>
 </ul>
 </div>
 <div id="notes-on-homework" class="section level3">

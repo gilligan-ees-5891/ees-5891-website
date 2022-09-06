@@ -175,12 +175,19 @@ a number of software packges that extend R for Bayesian data analysis.
   ```
   install.packages("pacman")
   library(pacman)
-  p_install("devtools", "tidyverse", "coda", "mvtnorm", "dagitty", 
-            "bayesplot", "ggformula", "posterior",
-            "knitr", "rmarkdown", "patchwork",
-            characteronly=TRUE, force=FALSE)
-  
-  
+  install.packages(c("devtools", "pacman"))
+  library(pacman)
+  for (p in c("tidyverse", "ape", "bayesplot", "brms", 
+    "broom", "coda", "dagitty", "flextable", 
+    "ggdag", "ggformula", "ggmcmc", "ggrepel",  
+    "ggthemes", "knitr", "loo", "mvtnorm", 
+    "patchwork", "posterior", "psych", 
+    "rcartocolor", "Rcpp", "rmarkdown", 
+    "rprojroot", "sf", "shiny", "shinystan",
+    "statebins", "tidybayes", "viridis", 
+    "viridisLite", "wesanderson")) {
+      p_install(p, character.only = TRUE, force = FALSE)
+    }
   remotes::install_github("rmcelreath/rethinking")
   remotes::install_github("mjskay/tidybayes.rethinking/")
   ```

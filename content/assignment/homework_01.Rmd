@@ -139,18 +139,44 @@ Set up software: R, RStudio, R development environment, and R packages for Bayes
   ```r
   install.packages(c("devtools", "pacman"))
   library(pacman)
-  p_install(tidyverse, coda, mvtnorm, daggity, shiny, shinystan,
-  for (p in c("tidyverse", "coda", "mvtnorm", "dagitty", "shiny", "shinystan",
-              "bayesplot", "brms", "rprojroot", "rmarkdown", "knitr", "ape",
-              "broom", "sf", "flextable", "ggdag", "ggmcmc", "ggrepel",
-              "ggthemes", "loo", "patchwork", "psych", "rcartocolor", "Rcpp",
-              "statebins", "tidybayes", "viridis", "viridisLite",
-              "wesanderson")) {
+  for (p in c("tidyverse", "ape", "bayesplot", "brms",
+              "broom", "coda", "dagitty", "flextable",
+              "ggdag", "ggformula", "ggmcmc", "ggrepel",
+              "ggthemes", "knitr", "loo", "mvtnorm",
+              "patchwork", "posterior", "psych",
+              "rcartocolor", "Rcpp", "rmarkdown",
+              "rprojroot", "sf", "shiny", "shinystan",
+              "statebins", "tidybayes", "viridis",
+              "viridisLite", "wesanderson")) {
     p_install(p, character.only = TRUE, force = FALSE)
   }
   remotes::install_github("rmcelreath/rethinking")
+  remotes::install_github("mjskay/tidybayes.rethinking/")
   ```
   This may take some time to run, but when it is done, you should be good to go.
+* You will also need to install the `cmdstanr` package to run the `rethinking`
+  package.
+
+  The first step is to start a fresh R session or in RStudio open the "Session"
+  menu and choose "Restart R". Then type this in the console window:
+  ```
+  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/",
+                   getOption("repos")))
+  ```
+  Next, type this:
+  ```
+  library(cmdstanr)
+  check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
+  ```
+  If this works without error, you should finally type this:
+  ```
+  install_cmdstan(cores = 2)
+  ```
+
+  If you are having difficulty installing `cmdstanr`, check
+  [the documentation](https://mc-stan.org/cmdstanr/articles/cmdstanr.html)
+  at the
+  [`cmdstanr` web site](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
 
 ### Notes on Homework:
 
