@@ -13,6 +13,7 @@ specialized Bayesian analysis packages written for R
   * [Installing {{< R_LOGO >}}](#installing-r "Installing R")
   * [Installing {{< RSTUDIO_LOGO >}}](#installing-rstudio "Installing RStudio")
   * [Installing R packages for Bayesian statistics](#installing-r-packages)
+  * [Update: installing `cmdstanr` and additional tools](#installing-cmdstanr)
 * [Optional tools](#optional-tools "Optional tools you may want to install")
   * [Installing the tinytex package](#installing-latex "Installing the tinytex package for making PDFs from RMarkdown")
   * [Installing git for software revision management](#installing-git "Installing Git for revision management")
@@ -127,7 +128,13 @@ a number of software packges that extend R for Bayesian data analysis.
   or 
   [Windows](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows)
   or
-  [Linux](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux)
+  [Linux](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux).
+  
+  If you're having trouble installing the C++ toolchain on MacOS, try the
+  instructions on 
+  [installing the R Compiler Tools for RCpp](https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/) 
+  from the 
+  [coatless professor](https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/)
   
   After you've done this, you can go to the 
   [main RStan installation instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
@@ -135,15 +142,63 @@ a number of software packges that extend R for Bayesian data analysis.
   
   If you run into difficulty, let me know and I will help you.
   
+* `cmdstanr`
+  This is another package you will need to install to run the `rethinking` 
+  package.
+  
+  The first step is to start a fresh R session or in RStudio open the "Session"
+  menu and choose "Restart R". Then type this in the console window:
+  ```
+  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", 
+                   getOption("repos")))
+  ```
+  Next, type this:
+  ```
+  library(cmdstanr)
+  check_cmdstan_toolchain(fix = TRUE, quiet = TRUE)
+  ```
+  If this works without error, you should finally type this:
+  ```
+  install_cmdstan(cores = 2)
+  ```
+  
+  If you are having difficulty installing `cmdstanr`, check 
+  [the documentation](https://mc-stan.org/cmdstanr/articles/cmdstanr.html)
+  at the 
+  [`cmdstanr` web site](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
+
+  
 * Other R packages
 
   This will be a lot easier. Open RStudio, go to the "Console" window in
   RStudio, and type
   ```
-  install.packages(c("devtools", "tidyverse", "coda", "mvtnorm", "daggity"))
+  install.packages("pacman")
+  library(pacman)
+  p_install("devtools", "tidyverse", "coda", "mvtnorm", "dagitty", 
+            "bayesplot", "ggformula", "posterior",
+            "knitr", "rmarkdown", "patchwork",
+            characteronly=TRUE, force=FALSE)
+  
+  
   remotes::install_github("rmcelreath/rethinking")
+  remotes::install_github("mjskay/tidybayes.rethinking/")
   ```
   Now you should be good to go.
+
+### Update: installing `cmdstanr` and additional tools {#installing-cmdstanr}
+
+If you have already installed R and RStudio and `rstan`, following the 
+instructions in the previous section at the beginning of the semester, 
+you may still need to install some additional tools. I've added this section
+to guide you through the additional tools.
+
+Just go to the previous section where it says "cmdstanr" and 
+follow the instructions there and at "Other R Packages".
+
+If you haven't installed 
+
+
   
 ## Optional Tools: {#optional-tools}
   
