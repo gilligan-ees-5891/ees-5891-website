@@ -173,8 +173,6 @@ a number of software packges that extend R for Bayesian data analysis.
   This will be a lot easier. Open RStudio, go to the "Console" window in
   RStudio, and type
   ```
-  install.packages("pacman")
-  library(pacman)
   install.packages(c("devtools", "pacman"))
   library(pacman)
   for (p in c("tidyverse", "ape", "bayesplot", "brms", 
