@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Review of R and RStudio</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Review of R and RStudio</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #5:
+       Thursday, September 08, 2022
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section id="announcement" class="title-slide slide level1 center"><h1 class="center">Announcement</h1>
+<ul>
+<li>I have updated the instructions for configuring R and downloading
+necessary packages (in Homework #1 and on the “Tools” page of the web
+site).</li>
+<li>The <code>rethinking</code> package now uses <code>cmdstanr</code>
+as its default for Monte Carlo sampling , instead of <code>rstan</code>.
+<code>cmdstanr</code> is more reliable and up to date;
+<code>rstan</code> is being phased out.</li>
+</ul></section><section><section id="overview-of-rstudio" class="title-slide slide level1 center"><h1 class="center">Overview of Rstudio</h1>
+
+</section><section id="rstudio-window-layout" class="slide level2 seventy"><h2 class="seventy">RStudio Window layout</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Project oriented
+<ul>
+<li>A project is a directory with a group of related files (R, data,
+etc.)</li>
+<li class="fragment">A project can be managed with <code>git</code> for revision
+control</li>
+<li class="fragment">Create a new project:
+<ul>
+<li>Create a new directory for a project</li>
+<li>Create a project in an existing directory</li>
+<li>Download a project from GitHub or another external source, using
+<code>git</code>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Online help and cheatsheets</li>
+<li class="fragment">Window layout
+<ul>
+<li>Four panes:
+<ol type="1">
+<li>Editor pane (edit R scripts, text files, etc.)</li>
+<li>Console and Terminal pane (interactively run R commands, etc.)</li>
+<li>Files, Plots, Packages, Help, etc.
+<ul>
+<li>You can export plots to the clipboard or files.</li>
+</ul>
+</li>
+<li>Environment, History, Git, etc.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/rstudio-screenshot.png" style="height:900px;" alt="Screenshot of RStudio"></p>
+</div>
+</div>
+</section></section><section><section id="r-lang-sec" class="title-slide slide level1 center"><h1 class="center">R Language</h1>
+
+</section><section id="r-language" class="slide level2 eighty"><h2 class="eighty">R Language</h2>
+<ul>
+<li>R is flexible</li>
+<li>Two approaches
+<ul>
+<li>Base R
+<ul>
+<li>Very flexible and powerful</li>
+<li>Sometimes confusing and verbose</li>
+<li>Nothing special about data framse (<code>data.frame</code>)</li>
+</ul>
+</li>
+<li>Tidyverse (<code>library(tidyverse)</code>)
+<ul>
+<li>Unified philosophy of data analysis
+<ul>
+<li>Canonical reference: <a href="https://r4ds.had.co.nz">R for Data
+Science</a>
+</li>
+<li>Oriented toward <code>data.frame</code>s (and
+<code>tibbles</code>)</li>
+<li>Principles of “Tidy Data”</li>
+<li>Consistent approach makes it easy to figure out how to do what you
+want to do.</li>
+<li>Download extensive cheatsheets via RStudio help menu.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="graphics" class="slide level2 eighty"><h2 class="eighty">Graphics</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Base R
+<ul>
+<li>
+<p><code>plot</code> command</p>
+<div class="bare max-listing eighty">
+<pre><code>plot(x, y) # plot y vs. x with points
+plot(x, y, type = "l") # plot with a line
+plot(height ~ weight, data = df) # with a data.frame</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column eighty">
+<ul>
+<li>Tidyverse/<code>ggplot2</code> (<code>library(tidyverse)</code> or
+<code>library(ggplot2)</code>)
+<ul>
+<li>
+<p><code>ggplot</code> command</p>
+<div class="bare max-listing eighty">
+<pre><code>data(Howell1)
+ggplot(Howell1, aes(x = weight, y = height)) + 
+  geom_point() +
+  labs(x = "weight (kg)", y = "height (cm)", 
+    title = "!Kung San height and weight")
+ggplot(Howell1, aes(x = weight, y = height)) + 
+  geom_point(aes(shape = male, size = age),
+             "color = "magenta") +
+  labs(x = "weight (kg)", y = "height (cm)", 
+    title = "!Kung San height and weight")</code></pre>
+</div>
+</li>
+<li class="fragment">
+<p>Philosophy: Grammar of Graphics</p>
+<ul>
+<li>online manual <a href="https://ggplot2-book.org/" class="uri">https://ggplot2-book.org/</a>
+</li>
+<li>data, mapping (aesthetics), layers (geometries), scales,
+coordinates, facets, and themes</li>
+<li>You can combine and adjust these different parts separately.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="data" class="slide level2 eighty"><h2 class="eighty">Data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Base R
+<ul>
+<li>Separate 1-dimensional lists or vectors of data</li>
+<li>2D (or higher) arrays: <code>data.frame</code>, <code>array</code>,
+<code>matrix</code>
+</li>
+<li>Index rows and columns <code>Howell1[107, 3]</code>
+<ul>
+<li>
+<code>Howell1[107,]</code> for all columns of the row</li>
+<li>
+<code>Howell1[,"height"]</code> for all rows of the “height”
+column</li>
+<li>
+<code>Howell1[c(1,3,5),10:15]</code> to get rows 1, 3, and 5 of
+columns 10–15.</li>
+<li><code>Howell1["age" &gt;= 18, c("height", "weight")]</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>Tidyverse (<code>library(tidyverse)</code>)
+<ul>
+<li><p><code>data.frame</code></p></li>
+<li><p><code>tibble</code> (an enhanced
+<code>data.frame</code>)</p></li>
+<li>
+<p>Select columns:</p>
+<div class="bare max-listing eighty">
+<pre><code>select(Howell1, height, weight, age)
+select(Howell1, -male, -age)</code></pre>
+</div>
+<ul>
+<li>
+<p>Select all columns that start with “<code>foo_</code>” but don’t
+end with “<code>bar</code>”</p>
+<div class="bare max-listing eighty">
+<pre><code>select(my_data, starts_with("foo_"), 
+       -ends_with("bar"))</code></pre>
+</div>
+</li>
+</ul>
+</li>
+<li>
+<p>Select rows:</p>
+<div class="bare max-listing eighty">
+<pre><code>filter(Howell1, age &gt;= 18, male)</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="tidyverse-data-manipulations" class="slide level2 eighty"><h2 class="eighty">Tidyverse Data Manipulations</h2>
+<ul>
+<li>
+<p>Modifying data: <code>mutate</code></p>
+<pre><code>mutate(Howell1, hgt_std = (height - mean(height)) / sd(height),
+                wt_std = (weight - mean(weight)) / sd(weight))</code></pre>
+</li>
+<li>
+<p>Summarizing data</p>
+<pre><code>summarize(d, height = mean(height), weight = mean(weight))
+d_tmp &lt;- group_by(d, male)
+d_tmp &lt;- summarize(d_tmp, height = mean(height), 
+                   weight = mean(weight))
+d_tmp &lt;- ungroup(d_tmp)</code></pre>
+</li>
+<li>
+<p>Pivot tables: <code>pivot_longer</code>,
+<code>pivot_wider</code></p>
+<ul>
+<li>Example using <code>relig_income</code> data</li>
+</ul>
+</li>
+</ul></section><section id="pipe-operator" class="slide level2 eighty"><h2 class="eighty">Pipe operator</h2>
+<ul>
+<li>
+<p>It can get confusing to combine multiple commands</p>
+<pre><code>ungroup(summarize(group_by(filter(Howell1, age &gt;= 18), male), 
+  height = mean(height), weight = mean(weight)))</code></pre>
+</li>
+<li>
+<p>Pipe commands allow us to break this up:</p>
+<pre><code>Howell1 %&gt;% filter(age &gt;= 18) %&gt;%
+  group_by(male) %&gt;%
+  summarize(height = mean(height), weight = mean(weight)) %&gt;%
+  ungroup()</code></pre>
+</li>
+<li>
+<p>The pipe operator <code>%&gt;%</code> sends it input (what’s on
+the left) to the first argument of the function on the right.</p>
+<ul>
+<li>
+<code>Howell1 %&gt;% filter(age &gt;= 18)</code> is the same as
+<code>filter(Howell1, age &gt;= 18)</code>
+</li>
+<li>
+<code>Howell1 %&gt;% filter(age &gt;= 18) %&gt;% group_by(male)</code>
+is the same as
+<code>group_by(filter(Howell1, age &gt;= 18), male)</code>
+</li>
+</ul>
+</li>
+</ul></section><section id="sampling-from-models" class="slide level2 seventyfive"><h2 class="seventyfive">Sampling from models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Base R</p>
+<div class="bare max-listing eighty">
+<pre><code>mdl &lt;- quap(alist(
+  height ~ dnorm(mu, sigma),
+  mu &lt;- a + b * weight,
+  a ~ dnorm(178,20),
+  b ~ dlnorm(0,1)
+  sigma ~ dunif(0,50)
+  ), data = d2)
+w_lst &lt;- data.frame(weight = seq(30, 70, by = 5))</code></pre>
+</div>
+<ul>
+<li>
+<p>Sample from posterior predictive distribution for data (e.g.,
+<code>height</code>):</p>
+<div class="bare max-listing eighty">
+<pre><code>extract.samples(mdl, 1000)</code></pre>
+</div>
+</li>
+<li>
+<p>Sample from posterior of model link (<code>mu</code>):</p>
+<div class="bare max-listing eighty">
+<pre><code>link(mdl, w_list)</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Tidyverse (<code>library(tidyverse)</code>)</p>
+<div class="bare max-listing eighty">
+<pre><code>library(tidybayes)
+library(tidybayes.rethinking)</code></pre>
+</div>
+<ul>
+<li>
+<p>Sample from posterior predictive distribution for data (e.g.,
+<code>height</code>):</p>
+<div class="bare max-listing eighty">
+<pre><code>predicted_draws(w_lst, mdl, ndraws = 1000, 
+                value = "height")
+add_predicted_draws(mdl, w_lst, ndraws = 1000, 
+                    value = "height")</code></pre>
+</div>
+</li>
+<li>
+<p>Sample from posterior of model link (<code>mu</code>):</p>
+<div class="bare max-listing eighty">
+<pre><code>linpred_draws(w_lst, mdl, ndraws = 1000, 
+              value = "height")
+add_linpred_draws(mdl, w_lst, ndraws = 1000, 
+                  value = "height")</code></pre>
+</div>
+</li>
+</ul>
+</li>
+<li><p><code>add_</code> versions are the same, but reverse the order of
+the first two arguments (model object and new data).</p></li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="spline-sec" class="title-slide slide level1 center"><h1 class="center">Splines</h1>
+
+</section><section id="splines" class="slide level2 eighty"><h2 class="eighty">Splines</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Originally from mechanical drafting splines</li>
+<li>Arbitrary smooth curve</li>
+<li>Complexity:
+<ul>
+<li>Physical splines: “ducks” or “whales”</li>
+<li>Mathematical splines: “knots”</li>
+</ul>
+</li>
+<li>Splines are a special case of a class of models called
+<em>generalized additive models</em> (GAMs).</li>
+</ul>
+</div>
+<div class="column bare">
+<p><img data-src="assets/images/draughting-spline.jpg" style="width:825px;" alt="draughting spline"></p>
+<p><img data-src="assets/images/draughting-spline-2.png" style="width:825px;" alt="draughting spline"></p>
+<div class="credit">
+<p>(Photos: <a href="https://www.core77.com/posts/55368/When-Splines-Were-Physical-Objects">Rain
+Noe, When Splines Were Physical Objects</a>)</p>
+</div>
+</div>
+</div>
+</section><section id="splines-in-statistical-regression" class="slide level2 seventyfive"><h2 class="seventyfive">Splines in Statistical Regression</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Cherry blossom data
+<ul>
+<li>Over 1000 years of historical records for timing of full-blossoming
+of cherry trees
+<ul>
+<li>
+<a href="https://doi.org/10.1007/s00484-009-0272-x">Y. Aono &amp; S.
+Saito, Int. J. Biometeorology <strong>54</strong>, 211 (2010)</a>.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">No changes for most of history, but pronounced trend in 20th
+century (global warming).</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="4">Spline regression:
+<ul>
+<li>
+<em>Basis splines</em>: for the <span class="math inline">\(i\)</span>th point, <span class="math inline">\(x_i\)</span> <span class="math display">\[
+\mu_i = \alpha + \sum_{j = 1}^{n_{\text{knots}}} w_j B_{i,j} \\
+\]</span> <span class="math inline">\(n_{\text{knots}}\)</span> = #
+knots, <span class="math inline">\(w_j\)</span> = weight for knot <span class="math inline">\(j\)</span>, <br><span class="math inline">\(B_{i,j}\)</span> = <span class="math inline">\(i\)</span>th row of <span class="math inline">\(j\)</span>th basis function (matrix with one row
+for each <span class="math inline">\(x\)</span> value, and <span class="math inline">\(n_{\text{knots}}\)</span> columns).</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare max-listing sixtyfive fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(cherry_blossoms)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> cherry_blossoms</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(d, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## 'data.frame': 1215 obs. of 5 variables:
+##               mean     sd   5.5%   94.5%       histogram
+## year       1408.00 350.88 867.77 1948.23   ▇▇▇▇▇▇▇▇▇▇▇▇▁
+## doy         104.54   6.41  94.43  115.00        ▁▂▅▇▇▃▁▁
+## temp          6.14   0.66   5.15    7.29        ▁▃▅▇▃▂▁▁
+## temp_upper    7.19   0.99   5.90    8.90 ▁▂▅▇▇▅▂▂▁▁▁▁▁▁▁
+## temp_lower    5.10   0.85   3.79    6.37 ▁▁▁▁▁▁▁▃▅▇▃▂▁▁▁</code></pre>
+</div>
+<div class="bare max-listing sixtyfive fragment" data-fragment-index="2">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> doy)) <span class="sc">+</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">600</span>, <span class="dv">2200</span>, <span class="at">by =</span> <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Day of year"</span>, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Timing of cherry blossoms in Kyoto"</span>)</span></code></pre></div>
+<p><img src="assets/fig/cherry-blossom-plot-1.png" style="margin-top:1rem;"></p>
+</div>
+</div>
+</div>
+</section><section id="linear-basis-spline" class="slide level2"><h2>Linear Basis Spline</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Linear basis functions <span class="math inline">\(B_j(x)\)</span>
+<ul>
+<li>5 knots</li>
+<li>Piecewise linear</li>
+<li>At most 2 functions are nonzero for any <span class="math inline">\(x\)</span>.</li>
+</ul>
+</li>
+<li>Model fits weights <span class="math inline">\(w_j\)</span> for each
+basis function</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/linear-basis-spline.png" style="height:900px;" alt="Linear basis splines: fig. 4.12"></p>
+</div>
+</div>
+</section><section id="cubic-basis-spline" class="slide level2 eighty"><h2 class="eighty">Cubic Basis Spline</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>15 knots
+<ul>
+<li>Equal # of years with data between knots.</li>
+</ul>
+</li>
+<li>Cubic functions</li>
+<li>Only 3 have nonzero values for any <span class="math inline">\(x\)</span>.</li>
+</ul>
+<div class="bare max-listing seventy fragment mtop-1">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, <span class="sc">!</span> <span class="fu">is.na</span>(doy)) <span class="co"># omit missing values</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>n_knots <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>knot_list <span class="ot">&lt;-</span> <span class="fu">quantile</span>(d2<span class="sc">$</span>year, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">probs=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="at">length.out =</span> n_knots))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create basis function matrix</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">bs</span>(d2<span class="sc">$</span>year, <span class="at">knots =</span> knot_list[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,n_knots)],</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">degree =</span> <span class="dv">3</span>, <span class="at">intercept =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> B <span class="sc">%*%</span> w, <span class="co"># %*% is matrix multiplication</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">100</span>, <span class="dv">10</span>),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    w <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  ), </span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">list</span>(<span class="at">D =</span> d2<span class="sc">$</span>doy, <span class="at">B =</span> B),</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">list</span>(<span class="at">w =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">ncol</span>(B)))</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/images/cubic-basis-spline.png" style="height:900px;" alt="Cubic basis splines: fig. 4.12"></p>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_05">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_05"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_05">https://ees5891.jgilligan.org/slides/class_05</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_05/ees_5891-03_class_05_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_05/ees_5891-03_class_05_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"]
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

@@ -19,6 +19,7 @@ lessons:
 - date: '2022-09-08'
   title: R Review
   reading: /reading/reading_05
+  lecture: /slides/class_05
 - date: '2022-09-13'
   title: Many variables (part 1)
   reading: /reading/reading_06
