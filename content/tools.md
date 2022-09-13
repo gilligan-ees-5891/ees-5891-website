@@ -187,7 +187,7 @@ a number of software packges that extend R for Bayesian data analysis.
       p_install(p, character.only = TRUE, force = FALSE)
     }
   remotes::install_github("rmcelreath/rethinking")
-  remotes::install_github("mjskay/tidybayes.rethinking/")
+  remotes::install_github("mjskay/tidybayes.rethinking")
   ```
   Now you should be good to go.
 

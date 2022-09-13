@@ -151,7 +151,7 @@ Set up software: R, RStudio, R development environment, and R packages for Bayes
     p_install(p, character.only = TRUE, force = FALSE)
   }
   remotes::install_github("rmcelreath/rethinking")
-  remotes::install_github("mjskay/tidybayes.rethinking/")
+  remotes::install_github("mjskay/tidybayes.rethinking")
   ```
   This may take some time to run, but when it is done, you should be good to go.
 * You will also need to install the `cmdstanr` package to run the `rethinking`

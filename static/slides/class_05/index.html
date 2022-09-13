@@ -97,7 +97,7 @@ code span.wa { font-style: italic; } /* Warning */
     <h3 class="author">Jonathan Gilligan</h3>
     <h3 class="date">
       Class #5:
-       Thursday, September 08, 2022
+       Thursday, September 08
       2022
     </h3>
 	<!-- end title slide -->
@@ -692,7 +692,10 @@ basis function</li>
   );
 </script><script>
 var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
-                TeX: {extensions: ["color.js", "mhchem.js"]
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
                   },
                 "HTML-CSS" : {scale: 100 }};
 </script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
