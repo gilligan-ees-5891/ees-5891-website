@@ -160,7 +160,7 @@ sex.</li>
 </section><section id="standardize-data" class="slide level2 eighty"><h2 class="eighty">Standardize Data</h2>
 <div class="columns">
 <div class="column">
-<div class="bare eighty max-listing">
+<div class="bare seventy mbot-2 max-listing">
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(WaffleDivorce)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> WaffleDivorce <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
@@ -183,7 +183,9 @@ D_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
 </ul>
 </div>
 <div class="column">
-<div class="bare eighty max-listing">
+<div class="columns">
+<div class="column">
+<div class="bare seventy max-listing">
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mdl_A <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
@@ -192,6 +194,10 @@ D_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare seventy max-listing">
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mdl_M <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
@@ -200,6 +206,8 @@ D_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d)</span></code></pre></div>
+</div>
+</div>
 </div>
 <p><img data-src="assets/fig/plot-m5.1-1.png"></p>
 </div>
@@ -219,7 +227,7 @@ variable.</p></li>
 <p><img data-src="assets/fig/dag-1-1.png"><img data-src="assets/fig/dag-2-1.png"></p>
 </div>
 </li>
-<li><p>Which is it?</p></li>
+<li class="fragment"><p>Which is it?</p></li>
 </ul>
 </li>
 </ul>
@@ -322,7 +330,7 @@ D_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
 <div class="columns">
 <div class="column" style="width:66%;">
 <div class="bare max-listing seventy">
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">coeftab</span>(mdl_A, mdl_M, mdl_multi), <span class="at">par =</span> <span class="fu">c</span>(<span class="st">"bA"</span>, <span class="st">"bM"</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftab_plot</span>(<span class="fu">coeftab</span>(mdl_A, mdl_M, mdl_multi), <span class="at">par =</span> <span class="fu">c</span>(<span class="st">"bA"</span>, <span class="st">"bM"</span>))</span></code></pre></div>
 <p><img data-src="assets/fig/plot-models-1.png"></p>
 </div>
 <ul>
@@ -400,7 +408,7 @@ imaginary experiments.
 </li>
 </ul></section><section id="predictor-residual-plots" class="slide level2 eighty"><h2 class="eighty">Predictor Residual Plots</h2>
 <div class="columns">
-<div class="column">
+<div class="column" style="width:40%;">
 <ul>
 <li>Predict <em>M</em> from <em>A</em>
 </li>
@@ -420,25 +428,16 @@ imaginary experiments.
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">select</span>(d, D, A, M, Loc)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>notable_states <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"WY"</span>, <span class="st">"ND"</span>, <span class="st">"ME"</span>, <span class="st">"HI"</span>, <span class="st">"DC"</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(mdl_MA, new_data, </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">value =</span> <span class="st">"mu"</span>, <span class="at">ndraws =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Loc, D, A, M) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(mu)) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
-<ul>
-<li class="fragment">New function <code>left_join</code> (also
-<code>right_join</code>, <code>inner_join</code>,
-<code>full_join</code>):
-<ul>
-<li>Take 2 data frames and match the rows using a shared column.</li>
-<li>Combine the other columns for the matching rows.</li>
-<li>This aligns <code>estimate</code> with <code>D</code> for the same
-<code>A</code>.</li>
-</ul>
-</li>
-</ul>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  mdl_MA, new_data, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="st">"mu"</span>, <span class="at">ndraws =</span> <span class="dv">100</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Loc, D, A, M) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">estimate =</span> <span class="fu">mean</span>(mu)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
 </div>
 </div>
-<div class="column">
+<div class="column" style="width:59%;">
 <div class="bare seventy max-listing">
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -448,10 +447,11 @@ imaginary experiments.
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> A, <span class="at">yend =</span> estimate), <span class="at">size =</span> <span class="fl">0.25</span>, </span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Loc <span class="sc">%in%</span> notable_states),</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">label =</span> Loc), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">nudge_x =</span> <span class="fl">0.01</span>, <span class="at">nudge_y =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age at marriage (std)"</span>, <span class="at">y =</span> <span class="st">"Marriage rate (std)"</span>) <span class="sc">+</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">label =</span> Loc), <span class="at">size =</span> <span class="dv">5</span>, </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nudge_x =</span> <span class="fl">0.01</span>, <span class="at">nudge_y =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age at marriage (std)"</span>, <span class="at">y =</span> <span class="st">"Marriage rate (std)"</span>) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img data-src="assets/fig/plot_MA-1.png"></p>
 </div>
 </div>
@@ -471,21 +471,13 @@ imaginary experiments.
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d2</span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(mdl_resid, <span class="fu">select</span>(d2, resid),</span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>post_MA <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(mdl_resid, <span class="fu">select</span>(d2, resid),</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ndraws =</span> <span class="dv">1000</span>, <span class="at">value =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(resid) <span class="sc">%&gt;%</span> </span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(estimate), </span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower =</span> <span class="fu">quantile</span>(estimate, <span class="fl">0.055</span>),</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fu">quantile</span>(estimate, <span class="fl">0.945</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d2, <span class="fu">aes</span>(<span class="at">x =</span> resid, <span class="at">y =</span> D)) <span class="sc">+</span> </span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymax =</span> upper, <span class="at">ymin =</span> lower),</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> post, <span class="at">stat =</span> <span class="st">"Identity"</span>, <span class="at">color =</span> <span class="st">"black"</span>, </span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Marriage rate residuals"</span>, <span class="at">y =</span> <span class="st">"Divorce rate (std)"</span>)</span></code></pre></div>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
 </div>
 </div>
 <div class="column">
@@ -493,10 +485,16 @@ imaginary experiments.
 <p><img data-src="assets/fig/plot_resid-1.png"></p>
 </div>
 <ul>
-<li>Look for structre in the residuals.
+<li>Look for structure in the residuals.
 <ul>
-<li>Is the trend line consistent with being flat?</li>
-<li>Is there evident curvature in the data points?</li>
+<li>Is the trend line consistent with being flat?
+<ul>
+<li class="fragment">Marriage rate residuals?</li>
+<li class="fragment">Age at marriage residuals?</li>
+<li class="fragment">The error in marriage rate isn’t correlated with divorce rate,
+but the error in age at marriage is.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -620,7 +618,7 @@ variables.</li>
 <div class="bare mtop-1 seventy max-listing">
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>A, <span class="fu">colMeans</span>(s<span class="sc">$</span>M), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"manipulated A"</span>, <span class="at">ylab =</span> <span class="st">"counterfactual M"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s<span class="sc">$</span>D, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>A)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s<span class="sc">$</span>M, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>A)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>( <span class="st">"Total counterfactual effect of A on M"</span>)</span></code></pre></div>
 </div>
 </div>
@@ -636,11 +634,11 @@ variables.</li>
 <div class="bare seventy max-listing">
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">M =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">30</span>), <span class="at">A =</span> <span class="dv">0</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(mdl_cf, <span class="at">data =</span> sim_dat, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"M"</span>, <span class="st">"D"</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(mdl_cf, <span class="at">data =</span> sim_dat, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"D"</span>))</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>M, <span class="fu">colMeans</span>(s<span class="sc">$</span>D), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>M, <span class="fu">colMeans</span>(s), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"manipulated M"</span>, <span class="at">ylab =</span> <span class="st">"counterfactual D"</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s<span class="sc">$</span>D, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>A)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>M)</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>( <span class="st">"Total counterfactual effect of M on D"</span>)</span></code></pre></div>
 </div>
 </div>

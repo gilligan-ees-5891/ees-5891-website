@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Many Variables (Part 2)</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Many Variables (Part 2)</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #7:
+       Thursday, September 15
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="review" class="title-slide slide level1 center"><h1 class="center">Review</h1>
+
+</section><section id="dags" class="slide level2 eighty" data-transition="fade-out"><h2 class="eighty" data-transition="fade-out">DAGs</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li class="fragment" data-fragment-index="1">DAGs
+<ul>
+<li class="fragment" data-fragment-index="2">DAGs are theoretical. They don’t know about data</li>
+<li class="fragment" data-fragment-index="3">DAGs make predictions from hypotheses about causal
+relationships:
+<ul>
+<li><strong>Contitional independencies</strong></li>
+<li class="fragment" data-fragment-index="4">Test predictions, falsify incorrect hypotheses.</li>
+<li class="fragment" data-fragment-index="5">How to test predictions:
+<ul>
+<li>Compare posteriors of single- and multiple-regression models</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="7">The graph shows information about the <em>posterior</em> of the
+model:
+<ul>
+<li>
+<strong>Point:</strong> maximum a-posterior estimate</li>
+<li>
+<strong>Line:</strong> 95% percentile interval of posterior</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column fragment" data-fragment-index="6">
+<ul>
+<li><p><code>mdl_A</code>: <span class="math inline">\(\mu = \alpha +
+\beta_A A\)</span></p></li>
+<li><p><code>mdl_M</code>: <span class="math inline">\(\mu = \alpha +
+\beta_M M\)</span></p></li>
+<li>
+<p><code>mdl_multi</code>: <span class="math inline">\(\mu = \alpha
++ \beta A A + \beta_M M\)</span></p>
+<p><img data-src="assets/fig/plot-models-1.png"></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="testing-causality-hypotheses" class="slide level2 eighty" data-transition="fade-in"><h2 class="eighty" data-transition="fade-in">Testing Causality
+Hypotheses</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>The graph shows information about the <em>posterior</em> of the
+model:
+<ul>
+<li>
+<strong>Point:</strong> maximum a-posterior estimate</li>
+<li>
+<strong>Line:</strong> 95% percentile interval of posterior</li>
+</ul>
+</li>
+<li class="fragment"><strong>Conditional independencies</strong>
+<ul>
+<li class="fragment">Look at the parameter for one predictor.
+<ul>
+<li>When you add information about the other predictor, does the
+parameter change?
+<ul>
+<li class="fragment">If it becomes consistent with zero, then the <em>dependent</em>
+variable (outcome) is <em>conditionally independent</em> of it.</li>
+<li class="fragment">It doesn’t <em>cause</em> the dependent variable to change.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li><p><code>mdl_A</code>: <span class="math inline">\(\mu = \alpha +
+\beta_A A\)</span></p></li>
+<li><p><code>mdl_M</code>: <span class="math inline">\(\mu = \alpha +
+\beta_M M\)</span></p></li>
+<li>
+<p><code>mdl_multi</code>: <span class="math inline">\(\mu = \alpha
++ \beta A A + \beta_M M\)</span></p>
+<p><img data-src="assets/fig/plot-models-1.png"></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="diagnostic-plots" class="slide level2"><h2>Diagnostic Plots</h2>
+<ul>
+<li class="fragment">Predictor Residual Plots
+<ul>
+<li>Provide information about the structure of a model
+<ul>
+<li>Don’t address causality or quality of fit.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Posterior Predictive Plots
+<ul>
+<li>Provide information about how well the structure of the model
+matches the data
+<ul>
+<li>Patterns in the mismatches may give insight into improving the
+model.</li>
+</ul>
+</li>
+<li>Doesn’t say anything about causality</li>
+</ul>
+</li>
+<li class="fragment">Counterfactual plots
+<ul>
+<li>Tell us about causality</li>
+</ul>
+</li>
+</ul></section></section><section><section id="counterfactural-models" class="title-slide slide level1 center"><h1 class="center">Counterfactural Models</h1>
+
+</section><section id="counterfactural-models-1" class="slide level2 seventyfive"><h2 class="seventyfive">Counterfactural Models</h2>
+<div class="columns">
+<div class="column" style="width:65%;">
+<ul>
+<li>
+<p>Counterfactual models:</p>
+<ul>
+<li class="fragment">Explore what the model would look like with data very different
+to what you actually observe.</li>
+<li class="fragment">What happens if no one gets married before they’re 35?</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Process:</p>
+<ol type="1">
+<li>Pick a variable to manipulate (the <em>intervention
+variable</em>)</li>
+<li>Define a range of values for it</li>
+<li>For each value, use the causal model to simulate values for other
+variables.</li>
+</ol>
+</li>
+<li class="fragment">
+<p>Simulate the causal model where <em>A</em> influences
+<em>M</em> and <em>D</em> and <em>M</em> also influences <em>D</em>.</p>
+<div class="bare seventy max-listing">
+<p><img data-src="assets/fig/dag-1-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="column" style="width:33%;">
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mdl_cf <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM <span class="sc">*</span> M <span class="sc">+</span> bA <span class="sc">*</span> A,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    M <span class="sc">~</span> <span class="fu">dnorm</span>(mu_M, sigma_M),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    mu_M <span class="ot">&lt;-</span> aM <span class="sc">+</span> baM <span class="sc">*</span> A,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    aM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    baM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    sigma_M <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="manipulating-the-counterfactual-model" class="slide level2 eighty"><h2 class="eighty">Manipulating the Counterfactual Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare seventy max-listing">
+<p><img data-src="assets/fig/plot-cf-mdl-a-1.png"></p>
+</div>
+<div class="bare seventy max-listing">
+<p><img data-src="assets/fig/plot-cf-mdl-b-1.png"></p>
+</div>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Prepare counterfactual</p>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">A =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">30</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(mdl_cf, <span class="at">data =</span> sim_dat, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"M"</span>, <span class="st">"D"</span>))</span></code></pre></div>
+</div>
+</li>
+<li>
+<p>Plot effect of <em>A</em> on <em>D</em>, including indirect
+effect through <em>M</em></p>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>A, <span class="fu">colMeans</span>(s<span class="sc">$</span>D), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"manipulated A"</span>, <span class="at">ylab =</span> <span class="st">"counterfactual D"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s<span class="sc">$</span>D, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>A)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>( <span class="st">"Total counterfactual effect of A on D"</span>)</span></code></pre></div>
+</div>
+</li>
+<li>
+<p>Plot effect of <em>A</em> on <em>M</em></p>
+<div class="bare mtop-1 seventy max-listing">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>A, <span class="fu">colMeans</span>(s<span class="sc">$</span>M), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"manipulated A"</span>, <span class="at">ylab =</span> <span class="st">"counterfactual M"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s<span class="sc">$</span>M, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>A)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>( <span class="st">"Total counterfactual effect of A on M"</span>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="more-counterfactual-manipulations" class="slide level2 eighty"><h2 class="eighty">More Counterfactual Manipulations</h2>
+<div class="columns">
+<div class="column">
+<div class="bare seventy max-listing">
+
+</div>
+<div class="bare seventy max-listing">
+<p><img data-src="assets/fig/plot-cf-mdl-c-1.png"></p>
+</div>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Set <em>A</em> to 0 and calculate the direct effect of <em>M</em>
+on <em>D</em>:</p>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">M =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">30</span>), <span class="at">A =</span> <span class="dv">0</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(mdl_cf, <span class="at">data =</span> sim_dat, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"D"</span>))</span></code></pre></div>
+</div>
+<ul>
+<li>
+<p>Manipulating <em>M</em> directly breaks the causal link with
+<em>A</em>:</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/broken-dag-1.png"></p>
+</div>
+</li>
+</ul>
+</li>
+<li>
+<p>Plot the results:</p>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>M, <span class="fu">colMeans</span>(s), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"manipulated M"</span>, <span class="at">ylab =</span> <span class="st">"counterfactual D"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>M)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>( <span class="st">"Total counterfactual effect of M on D"</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment"><p>When we break the causality between <em>A</em> and
+<em>M</em>, the direct effect of <em>M</em> on <em>D</em> is very
+small.</p></li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="masked-relationships" class="title-slide slide level1 center"><h1 class="center">Masked Relationships</h1>
+
+</section><section id="masked-relationships-1" class="slide level2 eighty"><h2 class="eighty">Masked Relationships</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Hypothesis:
+<ul>
+<li>Primates with larger brains produce higher-calorie milk so infant
+brains grow faster.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="1">Data:
+<ul>
+<li>Load data on characteristics of milk in different primate species.
+<ul>
+<li>
+<code>kcal.per.g</code>: Kilocalories energy per kg milk</li>
+<li>
+<code>mass</code>: female body mass (kg)</li>
+<li>
+<code>neocortex.perc</code>: percent of total brain-mass that is
+neocortex</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="2">Standardize data
+<ul>
+<li>Note: we standardize the log of mass.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">Clean data
+<ul>
+<li>
+<em>complete-case analysis:</em> Remove rows with missing
+values</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column lefttext">
+<div class="bare seventy max-listing fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(milk)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> milk</span></code></pre></div>
+</div>
+<div class="bare mtop-1 seventy max-listing fragment" data-fragment-index="2">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">K =</span> <span class="fu">standardize</span>(kcal.per.g),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">standardize</span>(neocortex.perc),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">M =</span> <span class="fu">standardize</span>(<span class="fu">log</span>(mass))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div class="bare mtop-1 seventy max-listing fragment" data-fragment-index="3">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dcc <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(d, K, N, M)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="simple-regression" class="slide level2 eighty"><h2 class="eighty">Simple Regression</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li><p>Model <span class="math display">\[
+\begin{align}
+K   &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta_N N \\
+\alpha &amp;\sim \text{Normal}(0, 1) \\
+\beta_N &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\  
+\end{align}
+\]</span></p></li>
+<li class="fragment" data-fragment-index="1">
+<p>Plot prior predictive distributions for variables.</p>
+<ul>
+<li class="fragment" data-fragment-index="2">Prior predictions look absurd.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3"><p>Choose better priors: <span class="math display">\[
+\begin{align}
+\alpha &amp;\sim \text{Normal}(0, 0.2) \\
+\beta_N &amp;\sim \text{Normal}(0, 0.5) \\
+\end{align}
+\]</span></p></li>
+</ul>
+</div>
+<div class="column">
+<div class="bare seventy max-listing fragment" data-fragment-index="2">
+
+</div>
+<div class="bare seventy max-listing fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/milk-prior-pred-1.png"></p>
+</div>
+<div class="bare seventy max-listing fragment" data-fragment-index="4">
+<p><img data-src="assets/fig/milk-prior-pred-2-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="examine-model" class="slide level2 eighty"><h2 class="eighty">Examine Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_milk, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##       mean   sd  5.5% 94.5%
+## a     0.04 0.15 -0.21  0.29
+## bN    0.13 0.22 -0.22  0.49
+## sigma 1.00 0.16  0.74  1.26</code></pre>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="1">Both <em>a</em> and <em>bN</em> are consistent with zero. There
+isn’t a strong relationship between <em>N</em> and <em>K</em>.</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare seventy max-listing fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/plot-post-1-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="try-a-different-model" class="slide level2 eighty"><h2 class="eighty">Try A Different Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Model <span class="math display">\[
+\begin{align}
+K   &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta_M M \\
+\alpha &amp;\sim \text{Normal}(0, 1) \\
+\beta_M &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\  
+\end{align}
+\]</span></p>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_milk_2, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##        mean   sd  5.5% 94.5%
+## a      0.05 0.15 -0.20  0.29
+## bM    -0.28 0.19 -0.59  0.03
+## sigma  0.95 0.16  0.70  1.20</code></pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare seventy max-listing fragment" data-fragment-index="2">
+
+</div>
+<div class="bare seventy max-listing fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/plot-post-2-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="compare-models-using-counterfactuals" class="slide level2 eighty"><h2 class="eighty">Compare Models using Counterfactuals</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Model <span class="math display">\[
+\begin{align}
+K   &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta_M M + \beta_N N \\
+\alpha &amp;\sim \text{Normal}(0, 1) \\
+\beta_M &amp;\sim \text{Normal}(0, 1) \\
+\beta_N &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\  
+\end{align}
+\]</span>
+</li>
+<li class="fragment" data-fragment-index="2"><em>M</em> and <em>N</em> have opposite effects, so they cancel
+out.
+<ul>
+<li class="fragment"><strong>Masking</strong>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare seventy max-listing fragment" data-fragment-index="1">
+<p><img data-src="assets/fig/plot-post-compare-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="multiple-regression-model" class="slide level2 eighty"><h2 class="eighty">Multiple Regression Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Model <span class="math display">\[
+\begin{align}
+K   &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta_M M + \beta_N N \\
+\alpha &amp;\sim \text{Normal}(0, 1) \\
+\beta_M &amp;\sim \text{Normal}(0, 1) \\
+\beta_N &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\  
+\end{align}
+\]</span>
+</li>
+</ul>
+<div class="bare seventy max-listing">
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_milk_3, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##        mean   sd  5.5% 94.5%
+## a      0.07 0.13 -0.15  0.28
+## bM    -0.70 0.22 -1.06 -0.35
+## bN     0.68 0.25  0.28  1.07
+## sigma  0.74 0.13  0.53  0.95</code></pre>
+</div>
+</div>
+<div class="column">
+<div class="bare seventy max-listing fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftab_plot</span>(<span class="fu">coeftab</span>(mdl_M, mdl_N, mdl_multi), </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"bM"</span>, <span class="st">"bN"</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/unnamed-chunk-4-1.png"></p>
+</div>
+<ul>
+<li class="fragment">This is the opposite of what we saw for divorce rates.</li>
+<li class="fragment">The parameters for each predictor are consistent with zero for
+the single-predictor models</li>
+<li class="fragment">When we include both predictors, the association with each is
+stronger.</li>
+</ul>
+</div>
+</div>
+</section><section id="interpreting-result" class="slide level2"><h2>Interpreting Result</h2>
+<ul>
+<li>There are 3 possible DAGs</li>
+</ul>
+<div class="bare mright-1">
+<p><img data-src="assets/fig/dag-1-1.png"><img data-src="assets/fig/dag-2-1.png"><img data-src="assets/fig/dag-3-1.png"></p>
+</div>
+<ul>
+<li class="fragment">U is a variable that we didn’t observe (sometimes called a
+<strong>latent variable</strong>)
+<ul>
+<li class="fragment">We will look at latent variables in more detail in Chapter
+6.</li>
+</ul>
+</li>
+<li class="fragment">Figuring out which diagram is the right one is
+<strong>hard</strong>.
+<ul>
+<li class="fragment">All three have the same <em>conditionali
+independencies</em>.</li>
+<li class="fragment">Data alone won’t solve this.
+<ul>
+<li class="fragment">Use scientific knowledge can rule out absurd possibilities.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_07">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_07"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_07">https://ees5891.jgilligan.org/slides/class_07</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_07/ees_5891-03_class_07_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_07/ees_5891-03_class_07_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

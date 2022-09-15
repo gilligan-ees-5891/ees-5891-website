@@ -28,6 +28,7 @@ lessons:
 - date: '2022-09-15'
   title: Many variables (part 2)
   reading: /reading/reading_07
+  lecture: /slides/class_07
 - date: '2022-09-20'
   title: Designing statistical models
   reading: /reading/reading_08
