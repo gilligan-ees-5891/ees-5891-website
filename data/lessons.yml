@@ -33,6 +33,7 @@ lessons:
   title: Designing statistical models
   reading: /reading/reading_08
   assignment: homework_04
+  lecture: /slides/class_08
 - date: '2022-09-22'
   title: Regularization
   reading: /reading/reading_09
