@@ -332,9 +332,9 @@ probable.</li>
 <div class="bare mtop-1 seventy">
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(milk)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> milk</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>K <span class="ot">&lt;-</span> <span class="fu">standardize</span>( d<span class="sc">$</span>kcal.per.g )</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>F <span class="ot">&lt;-</span> <span class="fu">standardize</span>( d<span class="sc">$</span>perc.fat )</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>L <span class="ot">&lt;-</span> <span class="fu">standardize</span>( d<span class="sc">$</span>perc.lactose )</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>K <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>kcal.per.g)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>F <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>perc.fat)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>L <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>perc.lactose)</span></code></pre></div>
 <ul>
 <li>Make a pairwise correlation plot</li>
 </ul>
@@ -361,7 +361,7 @@ probable.</li>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        bF <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_milk, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##        mean   sd  5.5% 94.5%
@@ -489,7 +489,13 @@ treat.</li>
 <div class="columns">
 <div class="column">
 <ul>
-<li><p>DAG</p></li>
+<li>
+<p>DAG <img data-src="assets/fig/fungus-dag-1.png"></p>
+<pre><code>## Implied Conditional Independencies</code></pre>
+<pre><code>## F _||_ H_0
+## H_0 _||_ T
+## H_1 _||_ T | F</code></pre>
+</li>
 <li><p>Conditioning on <em>F</em> induces a <em>D-separation</em>
 (<em>directional</em> separation) between <em>T</em> and
 <em>H1</em>.</p></li>
@@ -498,16 +504,16 @@ treat.</li>
 </div>
 <div class="column fragment">
 <div class="bare mtop-1 max-listing seventy">
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mdl_fungus_2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        h1 <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        mu <span class="ot">&lt;-</span> h0 <span class="sc">*</span> p,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        p <span class="ot">&lt;-</span> a <span class="sc">+</span> bt<span class="sc">*</span>treatment,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dlnorm</span>( <span class="dv">0</span> , <span class="fl">0.2</span> ),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        bt <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.5</span> ),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d )</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_fungus_2, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mdl_fungus_2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        h1 <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        mu <span class="ot">&lt;-</span> h0 <span class="sc">*</span> p,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        p <span class="ot">&lt;-</span> a <span class="sc">+</span> bt<span class="sc">*</span>treatment,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        bt <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_fungus_2, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##       mean   sd 5.5% 94.5%
 ## a     1.38 0.03 1.34  1.42
 ## bt    0.08 0.03 0.03  0.14
@@ -523,8 +529,9 @@ treat.</li>
 <p><img data-src="assets/fig/fungus-moisture-dag-1.png"></p>
 </div>
 </li>
-<li class="fragment"><p>Fungus does not influence plant growth.</p></li>
-<li class="fragment"><p>Moisture influences both plant growth and fungus</p></li>
+<li class="fragment"><p>Fungus <em>F</em> does not influence plant growth.</p></li>
+<li class="fragment"><p>Moisture <em>M</em> influences both plant growth <em>H1</em>
+and fungus <em>F</em></p></li>
 <li class="fragment"><p>Fitting our original model falsely implies that treatment
 benefits plants.</p></li>
 <li class="fragment"><p>This is a kind of <em>collider</em> effect.</p></li>
@@ -556,7 +563,7 @@ doesn’t change.</p></li>
 <li>
 <p>Load data</p>
 <div class="bare mtop-1 max-listing seventy">
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sim_happiness</span>( <span class="at">seed=</span><span class="dv">1977</span> , <span class="at">N_years=</span><span class="dv">1000</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sim_happiness</span>(<span class="at">seed=</span><span class="dv">1977</span>, <span class="at">N_years=</span><span class="dv">1000</span>)</span></code></pre></div>
 </div>
 </li>
 <li class="fragment" data-fragment-index="2">
@@ -572,9 +579,9 @@ variable.</li>
 <p>Clean the data: Select adults and convert age to a variable
 that goes from 0 to 1, and create a marriage index:</p>
 <div class="bare mtop-1 seventy max-listing">
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d[ d<span class="sc">$</span>age<span class="sc">&gt;</span><span class="dv">17</span> , ] <span class="co"># only adults</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>A <span class="ot">&lt;-</span> ( d2<span class="sc">$</span>age <span class="sc">-</span> <span class="dv">18</span> ) <span class="sc">/</span> ( <span class="dv">65</span> <span class="sc">-</span> <span class="dv">18</span> )</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>mid <span class="ot">&lt;-</span> d2<span class="sc">$</span>married <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d[ d<span class="sc">$</span>age<span class="sc">&gt;</span><span class="dv">17</span>, ] <span class="co"># only adults</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>A <span class="ot">&lt;-</span> (d2<span class="sc">$</span>age <span class="sc">-</span> <span class="dv">18</span>) <span class="sc">/</span> (<span class="dv">65</span> <span class="sc">-</span> <span class="dv">18</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>mid <span class="ot">&lt;-</span> d2<span class="sc">$</span>married <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
 </div>
 </li>
 <li class="fragment" data-fragment-index="6"><p>The model says that people become unhappy as they get
@@ -586,15 +593,15 @@ older</p></li>
 <p><img data-src="assets/fig/happy-plot-grid-1.png"></p>
 </div>
 <div class="bare mtop-1 seventy max-listing fragment" data-fragment-index="5">
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mdl_happy <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    happiness <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[mid] <span class="sc">+</span> bA <span class="sc">*</span> A,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    a[mid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d2)</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_happy, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mdl_happy <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    happiness <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[mid] <span class="sc">+</span> bA <span class="sc">*</span> A,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    a[mid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d2)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_happy, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##        mean   sd  5.5% 94.5%
 ## bA    -0.75 0.11 -0.93 -0.57
 ## sigma  0.99 0.02  0.95  1.03</code></pre>
@@ -629,15 +636,15 @@ likely to be unhappy.</li>
 </div>
 <div class="column">
 <div class="bare mtop-1 seventy max-listing fragment" data-fragment-index="1">
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mdl_happy_2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        happiness <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ),</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1</span> ),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        bA <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">2</span> ),</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    ) , <span class="at">data=</span>d2 )</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_happy_2, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mdl_happy_2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        happiness <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d2)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_happy_2, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##       mean   sd  5.5% 94.5%
 ## a     0.00 0.08 -0.12  0.12
 ## bA    0.00 0.13 -0.21  0.21
@@ -691,7 +698,242 @@ likely to be unhappy.</li>
 <ul>
 <li class="fragment">All causal DAGs are build of combinations of these four
 patterns.</li>
-</ul></section></section>
+</ul></section><section id="example-haunted-dag" class="slide level2 seventy"><h2 class="seventy">Example: Haunted DAG</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>How do parents’ <em>P</em> and grandparents’ <em>G</em>
+educational attainment influence educational attainment of children
+<em>C</em>?</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/haunted-dag-1-1.png"></p>
+</div>
+</li>
+<li class="fragment">
+<p>But there are unmeasured effects here, such as the character
+of the neighborhood.</p>
+<ul>
+<li class="fragment"><p>Grandparents moved into the neighborhood after they finished
+school,</p></li>
+<li class="fragment">
+<p>Parents and children grew up in the neighborhood and are
+affected by it.</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/haunted-dag-2-1.png"></p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 seventy max-listing fragment">
+<p><img data-src="assets/fig/haunted-plot-1.png"></p>
+</div>
+<div class="bare mtop-1 ninety">
+<ul>
+<li class="fragment">There is a no correlation between <em>G</em> and <em>C</em> in
+each neighborhood
+<ul>
+<li>This is the correct answer.</li>
+</ul>
+</li>
+<li class="fragment">But when we don’t account for the neighborhood effect, the
+collider bias makes it look like there’s a negative correlation
+<ul>
+<li>more educated grandparents have less educated grandchildren</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="backdoor-effects" class="slide level2 eighty"><h2 class="eighty">Backdoor Effects</h2>
+<div class="columns">
+<div class="column" style="width:44%;">
+<ul>
+<li><p>In the age and happiness example, conditioning on the marriage
+variable created bias,</p></li>
+<li class="fragment">
+<p>But in the grandparent, parent, and children example, we
+needed to condition on the neighborhood to avoid bias.</p>
+<ul>
+<li>How can we tell when to condition on a variable?</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Consider this DAG:</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/draw-dag-two-roads-1.png"></p>
+</div>
+</li>
+<li class="fragment"><p>How does <em>X</em> affect <em>Y</em>?</p></li>
+</ul>
+</div>
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">
+<p>Backdoor paths:</p>
+<div class="bare ninety">
+<ol type="1">
+<li><span class="math inline">\(X \leftarrow U \leftarrow A \rightarrow
+C \rightarrow Y\)</span></li>
+<li><span class="math inline">\(X \leftarrow U \rightarrow B \leftarrow
+C \rightarrow Y\)</span></li>
+</ol>
+</div>
+</li>
+<li class="fragment">
+<p>Which backdoor path is open?</p>
+<ol type="1">
+<li>This path is open because it has no internal collider</li>
+<li>This path is closed because <span class="math inline">\(B\)</span>
+is a collider.
+<ul>
+<li class="fragment">If we condition on <span class="math inline">\(B\)</span>, it
+will open the backdoor and introduce a collider effect.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li class="fragment">
+<p>Closing backdoors:</p>
+<div class="bare ninetyfive">
+<ul>
+<li>We don’t observe <span class="math inline">\(U\)</span>, so we can’t
+condition on it.</li>
+<li>To close the backdoor path #1, condition on <span class="math inline">\(A\)</span> or <span class="math inline">\(C\)</span>.</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="automated-analysis" class="slide level2 eighty"><h2 class="eighty">Automated Analysis</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Define the DAG</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dag_two_roads <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="st">U [unobserved]</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="st">X -&gt; Y</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="st">X &lt;- U &lt;- A -&gt; C -&gt; Y</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="st">U -&gt; B &lt;- C</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment">
+<p>Optionally, draw the DAG diagram</p>
+<div class="bare ptop-1 max-listing seventy">
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(dag_two_roads) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="at">x =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">0</span>, <span class="at">X =</span> <span class="dv">0</span>, <span class="at">A =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="dv">1</span>, <span class="at">C =</span> <span class="dv">2</span>, <span class="at">Y =</span> <span class="dv">2</span>),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="at">y =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">0</span>, <span class="at">X =</span> <span class="dv">1</span>, <span class="at">A =</span> <span class="sc">-</span> <span class="fl">0.5</span>, <span class="at">B =</span> <span class="fl">0.5</span>, <span class="at">C =</span> <span class="dv">0</span>, <span class="at">Y =</span> <span class="dv">1</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">drawdag</span>(dag_two_roads)</span></code></pre></div>
+<p><img data-src="assets/fig/draw-dag-two-roads-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Analyze to identify which variables to condition on</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(dag_two_roads, <span class="at">exposure =</span> <span class="st">"X"</span>, <span class="at">outcome =</span> <span class="st">"Y"</span>)</span></code></pre></div>
+<pre><code>## { C }
+## { A }</code></pre>
+</div>
+<ul>
+<li class="fragment">Condition on <em>A</em> or <em>C</em>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="backdoors-in-waffle-house-and-divorce" class="slide level2 seventyfive"><h2 class="seventyfive">Backdoors in Waffle-House and Divorce</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Waffle-House and Divorce</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dag_waffles <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="st">A -&gt; D</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="st">A -&gt; M -&gt; D</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="st">A &lt;- S -&gt; M</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="st">S -&gt; W -&gt; D</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/draw-dag-waffles-1.png"></p>
+</div>
+<p><em>S</em> = state, <em>W</em> = waffle-house restaurants,
+<br><em>A</em> = median age at marriage, <em>M</em> = marriage rate,
+<br>and <em>D</em> = divorce rate.</p>
+</li>
+<li class="fragment">
+<p>Identify which variables to condition on</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(dag_waffles, <span class="at">exposure=</span><span class="st">"W"</span>, <span class="at">outcome=</span><span class="st">"D"</span>)</span></code></pre></div>
+<pre><code>## { A, M }
+## { S }</code></pre>
+</div>
+<ul>
+<li class="fragment">What does this mean?</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Backdoors:</p>
+<div class="bare mtop-1 ninety">
+<ol type="1">
+<li><span class="math inline">\(W \leftarrow S \rightarrow M \rightarrow
+D\)</span></li>
+<li><span class="math inline">\(W \leftarrow S \rightarrow A \rightarrow
+D\)</span></li>
+<li><span class="math inline">\(W \leftarrow S \rightarrow A \rightarrow
+M \rightarrow D\)</span></li>
+</ol>
+</div>
+<ul>
+<li class="fragment">All of these pass through <em>S</em>.</li>
+<li class="fragment">To close the backdoors, either
+<ul>
+<li>Condition on <em>S</em>, or</li>
+<li>Condition on both <em>A</em> and <em>M</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Further analysis: <em>conditional independencies</em></p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">impliedConditionalIndependencies</span>(dag_waffles)</span></code></pre></div>
+<pre><code>## A _||_ W | S
+## D _||_ S | A, M, W
+## M _||_ W | S</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>If we condition on <em>S</em>, then <em>A</em> and <em>M</em> should
+both be independent of <em>W</em>
+</li>
+<li>If we simultaneously condition on <em>A</em>, <em>M</em>, and
+<em>W</em>, then <em>D</em> should be independent of <em>S</em>.</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section></section>
 </div>
   </div>
   <!--

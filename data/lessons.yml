@@ -37,6 +37,7 @@ lessons:
 - date: '2022-09-22'
   title: Regularization
   reading: /reading/reading_09
+  lecture: /slides/class_09
 - date: '2022-09-27'
   title: Interactions
   reading: /reading/reading_10

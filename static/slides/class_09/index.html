@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Ulysses’ Compass: Regularization</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Ulysses’ Compass: Regularization</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #9:
+       Thursday, September 22
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="examples-of-confounders" class="title-slide slide level1 center"><h1 class="center">Examples of confounders</h1>
+
+</section><section id="example-haunted-dag" class="slide level2 seventy"><h2 class="seventy">Example: Haunted DAG</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>How do parents’ <em>P</em> and grandparents’ <em>G</em>
+educational attainment influence educational attainment of children
+<em>C</em>?</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/haunted-dag-1-1.png"></p>
+</div>
+</li>
+<li class="fragment">
+<p>But there are unmeasured effects here, such as the character
+of the neighborhood.</p>
+<ul>
+<li class="fragment"><p>Grandparents moved into the neighborhood after they finished
+school,</p></li>
+<li class="fragment">
+<p>Parents and children grew up in the neighborhood and are
+affected by it.</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/haunted-dag-2-1.png"></p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 seventy max-listing fragment">
+<p><img data-src="assets/fig/haunted-plot-1.png"></p>
+</div>
+<div class="bare mtop-1 ninety">
+<ul>
+<li class="fragment">There is a no correlation between <em>G</em> and <em>C</em> in
+each neighborhood
+<ul>
+<li>This is the correct answer.</li>
+</ul>
+</li>
+<li class="fragment">But when we don’t account for the neighborhood effect, the
+collider bias makes it look like there’s a negative correlation
+<ul>
+<li>more educated grandparents have less educated grandchildren</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="backdoor-effects" class="slide level2 eighty"><h2 class="eighty">Backdoor Effects</h2>
+<div class="columns">
+<div class="column" style="width:44%;">
+<ul>
+<li><p>In the age and happiness example, conditioning on the marriage
+variable created bias,</p></li>
+<li class="fragment">
+<p>But in the grandparent, parent, and children example, we
+needed to condition on the neighborhood to avoid bias.</p>
+<ul>
+<li>How can we tell when to condition on a variable?</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Consider this DAG:</p>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/draw-dag-two-roads-1.png"></p>
+</div>
+</li>
+<li class="fragment"><p>How does <em>X</em> affect <em>Y</em>?</p></li>
+</ul>
+</div>
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">
+<p>Backdoor paths:</p>
+<div class="bare ninety">
+<ol type="1">
+<li><span class="math inline">\(X \leftarrow U \leftarrow A \rightarrow
+C \rightarrow Y\)</span></li>
+<li><span class="math inline">\(X \leftarrow U \rightarrow B \leftarrow
+C \rightarrow Y\)</span></li>
+</ol>
+</div>
+</li>
+<li class="fragment">
+<p>Which backdoor path is open?</p>
+<ol type="1">
+<li>This path is open because it has no internal collider</li>
+<li>This path is closed because <span class="math inline">\(B\)</span>
+is a collider.
+<ul>
+<li class="fragment">If we condition on <span class="math inline">\(B\)</span>, it
+will open the backdoor and introduce a collider effect.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li class="fragment">
+<p>Closing backdoors:</p>
+<div class="bare ninetyfive">
+<ul>
+<li>We don’t observe <span class="math inline">\(U\)</span>, so we can’t
+condition on it.</li>
+<li>To close the backdoor path #1, condition on <span class="math inline">\(A\)</span> or <span class="math inline">\(C\)</span>.</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="automated-analysis" class="slide level2 eighty"><h2 class="eighty">Automated Analysis</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Define the DAG</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dag_two_roads <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">U [unobserved]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">X -&gt; Y</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">X &lt;- U &lt;- A -&gt; C -&gt; Y</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">U -&gt; B &lt;- C</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment">
+<p>Optionally, draw the DAG diagram</p>
+<div class="bare ptop-1 max-listing seventy">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(dag_two_roads) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">x =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">0</span>, <span class="at">X =</span> <span class="dv">0</span>, <span class="at">A =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="dv">1</span>, <span class="at">C =</span> <span class="dv">2</span>, <span class="at">Y =</span> <span class="dv">2</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">y =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">0</span>, <span class="at">X =</span> <span class="dv">1</span>, <span class="at">A =</span> <span class="sc">-</span> <span class="fl">0.5</span>, <span class="at">B =</span> <span class="fl">0.5</span>, <span class="at">C =</span> <span class="dv">0</span>, <span class="at">Y =</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">drawdag</span>(dag_two_roads)</span></code></pre></div>
+<p><img data-src="assets/fig/draw-dag-two-roads-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Analyze to identify which variables to condition on</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(dag_two_roads, <span class="at">exposure =</span> <span class="st">"X"</span>, <span class="at">outcome =</span> <span class="st">"Y"</span>)</span></code></pre></div>
+<pre><code>## { C }
+## { A }</code></pre>
+</div>
+<ul>
+<li class="fragment">Condition on <em>A</em> or <em>C</em>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="backdoors-in-waffle-house-and-divorce" class="slide level2 seventyfive"><h2 class="seventyfive">Backdoors in Waffle-House and Divorce</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Waffle-House and Divorce</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dag_waffles <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">A -&gt; D</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">A -&gt; M -&gt; D</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">A &lt;- S -&gt; M</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">S -&gt; W -&gt; D</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/draw-dag-waffles-1.png"></p>
+</div>
+<p><em>S</em> = state, <em>W</em> = waffle-house restaurants,
+<br><em>A</em> = median age at marriage, <em>M</em> = marriage rate,
+<br>and <em>D</em> = divorce rate.</p>
+</li>
+<li class="fragment">
+<p>Identify which variables to condition on</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(dag_waffles, <span class="at">exposure=</span><span class="st">"W"</span>, <span class="at">outcome=</span><span class="st">"D"</span>)</span></code></pre></div>
+<pre><code>## { A, M }
+## { S }</code></pre>
+</div>
+<ul>
+<li class="fragment">What does this mean?</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Backdoors:</p>
+<div class="bare mtop-1 ninety">
+<ol type="1">
+<li><span class="math inline">\(W \leftarrow S \rightarrow M \rightarrow
+D\)</span></li>
+<li><span class="math inline">\(W \leftarrow S \rightarrow A \rightarrow
+D\)</span></li>
+<li><span class="math inline">\(W \leftarrow S \rightarrow A \rightarrow
+M \rightarrow D\)</span></li>
+</ol>
+</div>
+<ul>
+<li class="fragment">All of these pass through <em>S</em>.</li>
+<li class="fragment">To close the backdoors, either
+<ul>
+<li>Condition on <em>S</em>, or</li>
+<li>Condition on both <em>A</em> and <em>M</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Further analysis: <em>conditional independencies</em></p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">impliedConditionalIndependencies</span>(dag_waffles)</span></code></pre></div>
+<pre><code>## A _||_ W | S
+## D _||_ S | A, M, W
+## M _||_ W | S</code></pre>
+</div>
+<div class="fragment">
+<ul>
+<li>If we condition on <em>S</em>, then <em>A</em> and <em>M</em> should
+both be independent of <em>W</em>
+</li>
+<li>If we simultaneously condition on <em>A</em>, <em>M</em>, and
+<em>W</em>, then <em>D</em> should be independent of <em>S</em>.</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="bayess-theorem-and-ockhams-razor" class="title-slide slide level1 center"><h1 class="center">Bayes’s Theorem and Ockham’s Razor</h1>
+
+</section><section id="bayess-theorem-and-ockhams-razor-1" class="slide level2 eighty"><h2 class="eighty">Bayes’s Theorem and Ockham’s Razor</h2>
+<div class="bare mtop-1">
+<blockquote>
+<p>Everything should be made as simple as possible, but no simpler<br>—
+Einstein</p>
+</blockquote>
+</div>
+<ul>
+<li class="fragment"><strong>Ockham’s razor:</strong> <em>Models with fewer
+hypotheses are to be preferred</em>
+<ul>
+<li class="fragment">But we also prefer models that make better predictions</li>
+</ul>
+</li>
+<li class="fragment">How do we find the right balance between simplicity and
+completeness?
+<ul>
+<li>
+<em>Overfitting</em> versus <em>underfitting</em>
+</li>
+<li>
+<em>Confounding:</em> Incorrect causal relationships can produce
+better predictions.</li>
+</ul>
+</li>
+<li class="fragment">Bayesian methods allow us to take a systematic formal approach
+to finding the best balance,
+<ul>
+<li>But we need some additional tools</li>
+</ul>
+</li>
+<li class="fragment">Tools for finding a good balance:
+<ul>
+<li class="fragment"><strong>Regularization:</strong> Use a <em>regularizing
+prior</em> to avoid overfitting
+<ul>
+<li>Also called <em>penalized likelihood</em>.</li>
+</ul>
+</li>
+<li class="fragment"><strong>Cross-validation</strong> and <strong>information
+criteria</strong>
+<ul>
+<li>
+<strong>Cross-validation:</strong> Fit parameters to part of your
+data and predict the rest.</li>
+<li>
+<strong>Information criteria:</strong> Use <em>information
+theory</em> to measure how much value additional complexity adds.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="overfitting" class="slide level2 eighty"><h2 class="eighty">Overfitting</h2>
+<ul>
+<li>
+<strong>Correlation:</strong> <span class="math inline">\(R^2\)</span> <span class="math display">\[
+R^2 = \frac{\text{var}(\text{data}) - \text{var}(\text{residuals})}
+           {\text{var}(\text{data})}
+    = 1 - \frac{\text{var}(\text{residuals})}{\text{var}(\text{data})}
+\]</span>
+<ul>
+<li>
+<span class="math inline">\(R^2\)</span> increases the more
+parameters you add. Favors extreme overfitting.
+<ul>
+<li class="fragment">Adding parameters almost always improves fit to current
+data</li>
+<li class="fragment"><strong>Overfitting</strong> happens when improving the fit to
+current data makes predictions of new data worse.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="example" class="slide level2 eighty"><h2 class="eighty">Example</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Data: relationship between brain volume and body mass for 7 hominin
+species.</li>
+</ul>
+<p><img data-src="assets/fig/plot-hominin-1.png"></p>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Fit 6 models:
+<ol>
+<li><span class="math inline">\(\mu = \alpha + \beta M\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_1 M + \beta_2
+M^2\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_1 M + \beta_2 M^2 +
+\beta_3 M^3\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_1 M + \beta_2 M^2 +
+\beta_3 M^3 + \beta_4 M^4\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_1 M + \beta_2 M^2 +
+\cdots + \beta_5 M^5\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_1 M + \beta_2 M^2 +
+\cdots + \beta_6 M^6\)</span></li>
+</ol>
+</li>
+<li class="fragment">Quality of fit:
+<ol>
+<li>Model # 1 : <em>R</em><sup>2</sup> = 0.495</li>
+<li>Model # 2 : <em>R</em><sup>2</sup> = 0.541</li>
+<li>Model # 3 : <em>R</em><sup>2</sup> = 0.677</li>
+<li>Model # 4 : <em>R</em><sup>2</sup> = 0.805</li>
+<li>Model # 5 : <em>R</em><sup>2</sup> = 0.988</li>
+<li>Model # 6 : <em>R</em><sup>2</sup> = 1.000</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="examining-models" class="slide level2 eighty"><h2 class="eighty">Examining models</h2>
+<p><img data-src="assets/fig/hominin_model_plots-1.png"></p>
+</section><section id="underfitting-vs.-overfitting" class="slide level2 eighty"><h2 class="eighty">Underfitting vs. Overfitting</h2>
+<ul>
+<li>Sensitivity to dropping one measurement:</li>
+</ul>
+<p><img data-src="assets/fig/hominin-drop-1-1.png"></p>
+</section></section><section><section id="information-theory" class="title-slide slide level1 center"><h1 class="center">Information Theory</h1>
+
+</section><section id="entropy-accuracy" class="slide level2 eighty"><h2 class="eighty">Entropy &amp; Accuracy</h2>
+<ul>
+<li>There isn’t a universal, objective standard for judging the best
+balance of overfitting and underfitting.</li>
+<li class="fragment">But there are systematic procedures for arriving at the best
+balance
+<ol type="1">
+<li class="fragment">Pick a <strong>target:</strong> what you want the model to do
+well at.</li>
+<li class="fragment">Develop a measurement of <strong>deviance:</strong> How close
+does model come to the <em>target</em>?</li>
+</ol>
+</li>
+<li class="fragment">We use <em>information theory</em> to develop a systematic way
+of measuring <em>deviance</em>.
+<ul>
+<li class="fragment">What will matter is only the <em>deviance</em> of
+<em>out-of-sample</em> predictions.</li>
+</ul>
+</li>
+</ul></section><section id="assessing-accuracy" class="slide level2 eighty"><h2 class="eighty">Assessing Accuracy</h2>
+<ul>
+<li>Weather prediction:
+<ul>
+<li>On average, it rains 30% of the time and is sunny the rest of the
+time.</li>
+<li class="fragment">A naive model would predict 30% chance of rain every day
+<ul>
+<li class="fragment">This model would be <em>well-calibrated</em> but fairly
+useless.</li>
+</ul>
+</li>
+<li class="fragment">A model that says it never rains will be correct 70% of the
+time.</li>
+</ul>
+</li>
+<li class="fragment">Do we care more about some kinds of errors than others?
+<ul>
+<li>It’s worse not to have an umbrella when it rains than to carry one
+and not need it.</li>
+</ul>
+</li>
+<li class="fragment"><strong>Joint likelihood:</strong> probability of getting day 1
+right <em>and</em> day 2 right <em>and</em> day 3 right …
+<ul>
+<li>
+<strong>Log scoring rule:</strong> The log of the joint probability
+is the sum of the logs of the individual probabilities.</li>
+</ul>
+</li>
+<li class="fragment">So we use the log of the probability to score accuracy.</li>
+</ul></section><section id="infomation" class="slide level2 eighty"><h2 class="eighty">Infomation</h2>
+<ul>
+<li>
+<strong>Information</strong> is the <em>reduction in uncertainty
+when we learn an outcome</em>.
+<ul>
+<li>
+<strong>Information entropy:</strong> If there are <span class="math inline">\(n\)</span> possible events with probabilities
+<span class="math inline">\(p_1 \dots p_n\)</span>, then <span class="math display">\[H(p) = - \sum_{i = 1}^n p_i \log(p_i)\]</span>
+<ul>
+<li class="fragment">Example: if <span class="math inline">\(p_{\text{sun}} =
+0.7\)</span> and <span class="math inline">\(p_{\text{rain}} =
+0.3\)</span>, then <span class="math inline">\(H(p) = - (0.7 \log(0.7) +
+0.3 \log(0.3) = 0.61\)</span>.</li>
+<li class="fragment">In another place, where <span class="math inline">\(p_{\text{rain}} = 0.01\)</span> and <span class="math inline">\(p_{\text{sun}} = 0.99\)</span>, <span class="math inline">\(H(p) = 0.06\)</span>.
+<ul>
+<li class="fragment">Because there is so much more certainty about the weather on an
+average day, you learn a lot less from new data.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="divergence" class="slide level2 eighty"><h2 class="eighty">Divergence</h2>
+<ul>
+<li>
+<em>Information entropy</em> measures uncertainty about the world
+(data).</li>
+<li>
+<em>Divergence</em> compares what we know about the world from data
+to what our model predicts.
+<ul>
+<li class="fragment"><strong>Divergence:</strong> is the <em>additional uncertainty
+in using probabilities from one distribution to describe another
+distribution</em>.
+<ul>
+<li class="fragment">The uncertainty in using observed data to make predictions about
+new data</li>
+</ul>
+</li>
+<li class="fragment">Kullback-Liebler divergence: <span class="math display">\[D_{\text{KL}} = \sum_i p_i(\log(p_i) - \log(q_i))
+  = \sum_i \left(\frac{p_i}{q_i}\right),\]</span> <span class="math inline">\(p_i\)</span> are the true probabilities, <span class="math inline">\(q_i\)</span> are our model’s estimates of the
+probabilities.
+<ul>
+<li class="fragment">If the model probabilities are correct, then <span class="math inline">\(q_i = p_i\)</span> and <span class="math inline">\(D_{\text{KL}} = 0\)</span>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="measuring-divergence" class="slide level2 eighty"><h2 class="eighty">Measuring divergence</h2>
+<ul>
+<li>The point of making a model is that we don’t know the true
+probabilities <span class="math inline">\(p_i\)</span>, and we want to
+estimate them with the model’s <span class="math inline">\(q_i\)</span>,
+so how can we measure the divergence?</li>
+<li class="fragment">We can’t measure <span class="math inline">\(p_i\)</span>, but
+we can still use divergence to compare two models <span class="math inline">\(q\)</span> and <span class="math inline">\(r\)</span>: <span class="math display">\[
+\begin{align}
+D_q &amp;= \sum_i p_i (\log(p_i) - \log(q_i)) \\
+D_r &amp;= \sum_i p_i (\log(p_i) - \log(r_i)) \\
+D_q - D_r &amp;= \sum_i p_i (\log(p_i) - \log(q_i)) - p_i (\log(p_i) -
+\log(r_i)) \\
+          &amp;= \sum_i p_i (\log(r_i) - \log(q_i))
+\end{align}
+\]</span>
+</li>
+</ul></section><section id="divergence-and-entropy" class="slide level2 seventyfive"><h2 class="seventyfive">Divergence and Entropy</h2>
+<ul>
+<li class="fragment">The difference in divergence between two models <span class="math inline">\(q\)</span> and <span class="math inline">\(r\)</span> is <span class="math display">\[
+D_q - D_r = \sum_i p_i (\log(r_i) - \log(q_i))
+\]</span>
+</li>
+<li class="fragment">We can approximate this as <span class="math display">\[ S(r) -
+S(q), \]</span> where <span class="math display">\[ S(q) = \sum_i
+\log(q_i) \]</span>
+</li>
+<li class="fragment">Use the function <code>lppd()</code> from the
+<code>rethinking</code> package to calculate the log-point
+wise-predictive density from a <code>quap</code> model.
+<code>lppd(mdl, n = 1E4)</code> will calculate the log of the posterior
+probability of the model at 10,000 points. You can then use
+<code>sum()</code> to add these up and calculate the entropy <span class="math inline">\(S(\texttt{mdl})\)</span>
+</li>
+<li class="fragment">We generally define <strong>deviance</strong> as <span class="math inline">\(-2 S(q)\)</span>.
+<ul>
+<li>Larger values of deviance are worse.</li>
+</ul>
+</li>
+</ul></section><section id="using-entropy-to-test-models" class="slide level2 eighty"><h2 class="eighty">Using Entropy to Test Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<em>Training data</em> vs. <em>test data</em>:
+<ul>
+<li>Divide your data into two parts.
+<ul>
+<li>Use the <em>training data</em> to train your models</li>
+<li>Use your models to predict the <em>test data</em>
+</li>
+<li>Compare the KL-divergence of the models using the test data
+predictions.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Example:
+<ul>
+<li>Generate data using a process with 3 parameters
+<ul>
+<li>
+<em>Training</em> set with <em>N</em> samples</li>
+<li>
+<em>Test</em> set with <em>N</em> examples</li>
+</ul>
+</li>
+<li>Fit models with 1 to 5 parameters, using <em>training</em>
+data.</li>
+<li>Measure deviance:
+<ul>
+<li>
+<em>In-sample</em> (<em>training</em> data)</li>
+<li>
+<em>Out-of-sample</em> (<em>test</em> data)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/fig_7_6.png" alt="Figure 7.6"></p>
+<div class="fragment">
+<ul>
+<li>Minimum in-sample deviance for 5 parameters</li>
+<li>Minimum out-of-sample deviance for 3 parameters</li>
+<li>Deviance estimates are more reliable for larger <em>N</em> (number
+of measurements)</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section><section><section id="regularization" class="title-slide slide level1 center"><h1 class="center">Regularization</h1>
+
+</section><section id="regularizing-priors" class="slide level2 eighty"><h2 class="eighty">Regularizing Priors</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Alternate approach: <em>regularizing priors</em>
+<ul>
+<li><p>Widely used in Machine Learning</p></li>
+<li class="fragment"><p>Making the model worse at fitting <em>training data</em> can
+make it better at predicting <em>test data</em>.</p></li>
+<li class="fragment">
+<p>Regularizing prior</p>
+<div class="bare">
+<p><img data-src="assets/images/regularizing_prior.png" style="height:400px;" alt="Regularizing Prior"></p>
+<p>Normal prior for <span class="math inline">\(\beta\)</span>
+parameters: <br>dashed: Normal(0,1), thin: Normal(0,0.5), <br>and
+thick: Normal(0,0.2).</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment bare">
+<p><img data-src="assets/images/regularized_fits.png" alt="Regularized regressions"></p>
+</div>
+<ul>
+<li class="fragment">When there is a lot of data (<em>N</em> = 100), the regularizing
+priors keep the out-of-sample deviance small, even with many
+parameters.</li>
+<li class="fragment">Regularizing priors tend to force unnecessary parameters to
+small (near-zero) values.</li>
+<li class="fragment">Fancier regularizing priors set a threshold and push parameters
+to be either far from zero or else very close to zero.</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="predicting-predictive-accuracy" class="title-slide slide level1 center"><h1 class="center">Predicting Predictive Accuracy</h1>
+
+</section><section id="cross-validation" class="slide level2 eighty"><h2 class="eighty">Cross-Validation</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>How can we get a sense of how well our model will work with
+out-of-sample predictions?</li>
+<li class="fragment">We started by splitting our data in half: <em>training</em> and
+<em>test</em> data.</li>
+<li class="fragment">Sometimes it’s not efficient to split our data in half.</li>
+<li class="fragment">Can we do better?</li>
+<li class="fragment"><em>k</em>-fold cross-validation:
+<ul>
+<li class="fragment">Split data into <span class="math inline">\(k\)</span> equal
+parts (example: <span class="math inline">\(k\)</span> = 5)
+<ul>
+<li>For each part <span class="math inline">\(i\)</span> (called a
+“fold”), fit the model to the other <span class="math inline">\(k-1\)</span> parts and then predict part <span class="math inline">\(i\)</span>.</li>
+<li>Repeat this for all <span class="math inline">\(k\)</span>
+parts.</li>
+<li>Use all <span class="math inline">\(k\)</span> folds to assess model
+performance</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Leave-one-out cross-validation (LOOCV):
+<ul>
+<li>An extreme form of <em>K</em>-fold cross-validation, where
+<em>k</em> = <em>N</em>, the size of the data.</li>
+<li>For each data point, fit the model to all the others and then
+predict that one point.</li>
+</ul>
+</li>
+<li class="fragment">Problem: If you have <em>N</em> observations, then you have to
+fit your model <em>N</em> times. If <em>N</em> is large, this can be
+very slow.</li>
+<li class="fragment">Pareto-Smoothed Importance Sampling (PSIS) is a fancy technique
+that lets us estimate LOOCV while we fit the model one time, without
+actually having to do real cross-validation.</li>
+</ul>
+</div>
+</div>
+</section><section id="information-criteria" class="slide level2 eighty"><h2 class="eighty">Information Criteria</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>As an alternative to cross-validation, use information theory to
+estimate the out-of-sample KL divergence.</li>
+<li class="fragment" data-fragment-index="1">Examine the differences between in-sample and out-of-sample
+divergence in the figure
+<ul>
+<li class="fragment" data-fragment-index="2">The difference is roughly twice the number of parameters.
+<ul>
+<li class="fragment" data-fragment-index="3">In general, for relatively flat priors, the overfitting penalty
+is about twice the number of parameters.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="4">Akaike Information Criterion (AIC) <span class="math display">\[ \text{AIC} = D_{\text{train}} + 2p = -2
+\text{lppd} + 2p, \]</span> where <code>lppd</code> is the
+log-pointwise-predictive density (basically a sample of the
+posterior).</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare fragment" data-fragment-index="1">
+<p><img data-src="assets/images/regularized_fits.png" alt="KL-divergence with regularizing priors"></p>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="5">Conditions for validity:
+<ul>
+<li>Priors are flat, or dominated by likelihood (data).</li>
+<li>Posterior distribution is approximately Gaussian for each
+parameter.</li>
+<li>The sample size <em>N</em> is much greater than the number of
+parameters <em>k</em>.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="other-information-criteria" class="slide level2 seventy"><h2 class="seventy">Other Information Criteria</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>AIC is only valid under these conditions:
+<ul>
+<li>Priors are flat, or dominated by likelihood (data).</li>
+<li>Posterior distribution is approximately Gaussian for each
+parameter.</li>
+<li>The sample size <em>N</em> is much greater than the number of
+parameters <em>k</em>.</li>
+</ul>
+</li>
+<li class="fragment">Flat priors are usually not a good choice.</li>
+<li class="fragment">DIC (Deviance Information Criteria) works with informative
+priors, but the other two criteria still apply.</li>
+<li class="fragment">Watanabe-Akaike Information Criteria (WAIC, also called Widely
+Applicable Information Criterion) is more broadly applicable.
+<ul>
+<li class="fragment">We won’t go into details of calculating WAIC. The rethinking
+package will do it for us, and so will most other Bayesian analysis
+packages.</li>
+</ul>
+</li>
+<li class="fragment">General principle:
+<ul>
+<li>For all the information criteria we’re examining, the smaller (more
+negative) they are, the better the model performs.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare fragment">
+<p><img data-src="assets/images/comparison.png" alt="Comparison of different criteria for goodness of fit"></p>
+<ul>
+<li>Comparison of different measures</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section><section><section id="how-to-compare-models" class="title-slide slide level1 center"><h1 class="center">How to Compare Models</h1>
+
+</section><section id="comparison-vs.-selection" class="slide level2 eighty"><h2 class="eighty">Comparison vs. Selection</h2>
+<ul>
+<li>Many people use CV, PSIS, Deviance, or Information Criteria to
+select models
+<ul>
+<li class="fragment">Use whatever model has the smallest score</li>
+</ul>
+</li>
+<li class="fragment">This is not wise. It only looks at what model is smallest, but
+doesn’t consider how great the differences are between models.
+<ul>
+<li class="fragment">This is like only looking at the mode (maximum) of the posterior
+and ignoring the rest of it.</li>
+<li class="fragment">The width the posterior matters too. It tells us about how
+uncertain the estimate is.</li>
+</ul>
+</li>
+<li class="fragment">When we compare models, look at how great the differences are
+between them.</li>
+<li class="fragment">Remember that these criteria tell us about predictive power, but
+we have seen that predictive power doesn’t tell us about causality.
+<ul>
+<li class="fragment">Backdoor paths can have useful information, even though it’s not
+causal.
+<ul>
+<li class="fragment">But backdoor predictions only work if we don’t interfere with
+the system.
+<ul>
+<li>In other words, if the future is just like the past.</li>
+</ul>
+</li>
+<li class="fragment">In the plant-growth model, knowing about the fungus was a better
+predictor of plant growth than knowing about the anti-fungus treatment
+<ul>
+<li>but knowing about the fungus doesn’t help us predict the effect of
+treating a field.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="example-using-waic" class="slide level2 eighty" data-transition="fade-out"><h2 class="eighty" data-transition="fade-out">Example Using WAIC</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Plant growth experiment:
+<ul>
+<li>
+<p>DAG</p>
+<div class="bare">
+<p><img data-src="assets/fig/fungus-dag-1.png"></p>
+</div>
+<p><em>H~0</em> = height before, <em>H<sub>1</sub></em> = height after,
+<em>T</em> = anti-fungal treatment, <em>F</em> = fungus</p>
+</li>
+<li>
+<p>Three models:</p>
+<ol type="1">
+<li><span class="math inline">\(\mu ~ \text{log-Normal}(0,
+0.25)\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_T T\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_T T + \beta_F
+F\)</span></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy fragment">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">WAIC</span>(mdl_TF), <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##     WAIC    lppd penalty std_err
+## 1 361.45 -177.17    3.55   14.17</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">compare</span>(mdl_0, mdl_T, mdl_TF, <span class="at">func =</span> WAIC), <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##          WAIC    SE dWAIC   dSE pWAIC weight
+## mdl_TF 361.81 14.26  0.00    NA  3.74      1
+## mdl_T  402.65 11.20 40.84 10.44  2.58      0
+## mdl_0  405.91 11.65 44.10 12.22  1.58      0</code></pre>
+</div>
+<ul>
+<li class="fragment">Best predictions on top</li>
+<li class="fragment">“d” variables are differences from the best model.</li>
+<li class="fragment">pWAIC is prediction penalty (estimate of <em>out-of-sample</em>
+vs. <em>in-sample</em>)</li>
+<li class="fragment">weight gives the relative support for each model, given the
+data.
+<ul>
+<li>Useful for model-averaging</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="example-using-waic-1" class="slide level2 eighty" data-transition="fade-in"><h2 class="eighty" data-transition="fade-in">Example Using WAIC</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Plant growth experiment:
+<ul>
+<li>
+<p>DAG</p>
+<div class="bare">
+<p><img data-src="assets/fig/fungus-dag-1.png"></p>
+</div>
+<p><em>H~0</em> = height before, <em>H<sub>1</sub></em> = height after,
+<em>T</em> = anti-fungal treatment, <em>F</em> = fungus</p>
+</li>
+<li>
+<p>Three models:</p>
+<ol type="1">
+<li><span class="math inline">\(\mu = \alpha + \beta_T T\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_F F\)</span></li>
+<li><span class="math inline">\(\mu = \alpha + \beta_T T + \beta_F
+F\)</span></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">compare</span>(mdl_0, mdl_T, mdl_TF, <span class="at">func =</span> WAIC), <span class="at">cex=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/model-result-plot-1.png"></p>
+</div>
+<ul>
+<li class="fragment">Plot:
+<ul>
+<li>Line is range of estimated out-of-sample deviance</li>
+<li>Gray point is best estimate of out-of-sample deviance</li>
+<li>Black point is in-sample deviance</li>
+<li>Light lines over models are differences from best model</li>
+</ul>
+</li>
+<li class="fragment">TF model is clearly the best for predictions
+<ul>
+<li>We can’t tell which of the others is better</li>
+</ul>
+</li>
+<li class="fragment">TF model has post-treatment confounder
+<ul>
+<li>WAIC can’t tell us about causation</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/NA/class_09">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/NA/class_09"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/NA/class_09">https://ees5891.jgilligan.org/NA/class_09</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/NA/class_09/ees_5891-03_class_09_slides.pdf" target="_blank">https://ees5891.jgilligan.org/NA/class_09/ees_5891-03_class_09_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
