@@ -23,5 +23,120 @@ pdf_url: /files/homework_asgts/homework_05.pdf
 <h2>Homework</h2>
 <div id="homework-exercises" class="section level3">
 <h3>Homework Exercises:</h3>
+<p><strong>Self-study:</strong> Work these exercises, but do not turn them in.</p>
+<ul>
+<li>Exercises 6E1, 6E3, 6E4</li>
+<li>Exercises 7E1, 7E3, 7E4</li>
+</ul>
+<p><strong>Turn in:</strong> Work these exercises and turn them in.</p>
+<ul>
+<li>Exercises 6M2–6M3</li>
+<li>Exercises 7M2–7M6</li>
+</ul>
+<p><strong>Optional:</strong> The following exercises are optional. You can turn them in for extra credit.</p>
+<ul>
+<li>Exercise 6H1</li>
+</ul>
+</div>
+<div id="notes-on-homework" class="section level3">
+<h3>Notes on Homework:</h3>
+</div>
+<div id="exercise-7m3" class="section level3">
+<h3>Exercise 7M3:</h3>
+<p>For exercise 7M3, I recommend using the hominin model 7.4 in section
+7.1:</p>
+<p>First, create the data (code 7.1 and 7.2), and then use model 7.4 from
+code 7.8, on p. 198. Make several variations, in which you change
+the standard deviation on the prior for <code>b</code> from 10 to smaller values,
+such as 5, 2, 1, 0.5, 0.1, and 0.01.</p>
+<pre><code>lst_7.1 &lt;- alist(
+brain_std ~ dnorm(mu, exp(log_sigma)),
+mu &lt;- a + b[1] * mass_std + b[2] * mass_std^2 +
+      b[3] * mass_std^3 + b[4] * mass_std^4,
+a ~ dnorm(0.5, 1),
+b ~ dnorm(0, 10),
+log_sigma ~ dnorm(0, 1)
+)
+
+lst_7.1a &lt;- alist(
+brain_std ~ dnorm(mu, exp(log_sigma)),
+mu &lt;- a + b[1] * mass_std + b[2] * mass_std^2 +
+      b[3] * mass_std^3 + b[4] * mass_std^4,
+a ~ dnorm(0.5, 1),
+b ~ dnorm(0, 5),
+log_sigma ~ dnorm(0, 1)
+)</code></pre>
+<p>and so forth, for smaller and smaller values of the standard deviation on the
+prior for <code>b</code>.</p>
+<p>Then fit each model to the data like this:</p>
+<pre><code>mdl_7.1 &lt;- quap(lst_7.1, data = d, start = list(b = rep(0,4)))
+mdl_7.1a &lt;- quap(lst_7.1a, data = d, start = list(b = rep(0,4)))
+...</code></pre>
+<p>Use <code>precis</code> to inspect the values of the parameters and see how they change
+as you apply more and more informative priors</p>
+<p>Then you can sample from the models, following the code
+in 7.10</p>
+<pre><code>new_data &lt;- data.frame(mass_std = seq(min(d$mass_std), max(d$mass_std),
+                                      length.out = 100))
+lnk_7.1 &lt;- link(mdl_7.1, data = new_data)
+lnk_7.1a &lt;- link(mdl_7.1a, data = new_data)
+...</code></pre>
+<p>Finally, you can plot the models</p>
+<pre><code>mu_7.1 &lt;- apply(lnk_7.1, 2, mean)
+ci_7.1 &lt;- apply(lnk_7.1, 2, PI)
+
+mu_7.1a &lt;- apply(lnk_7.1a, 2, mean)
+ci_7.1a &lt;- apply(lnk_7.1a, 2, PI)
+...
+
+plot(brain_std ~ mass_std, data = d)
+lines(new_data$mass_std, mu_7.1)
+shade(ci_7.1, new_data$mass_std)
+
+plot(brain_std ~ mass_std, data = d)
+lines(new_data$mass_std, mu_7.1a)
+shade(ci_7.1a, new_data$mass_std)
+...</code></pre>
+<p>and so forth.</p>
+<p>As you make the prior for <code>b</code> narrower and narrower, how do things change in
+terms of overfitting and underfitting?</p>
+</div>
+<div id="exercise-7m4" class="section level3">
+<h3>Exercise 7M4:</h3>
+<p>For exercise 7M4, I recommend using the fungus treatment example from
+section 6.2 or the educational attainment example from section 6.3.2.</p>
+<p>Start with the code for creating the data
+(code 6.13 for the fungus example, or 6.25–6.26 for the education example).
+Modify the code to generate a data-frame with 200 rows (<span class="math inline">\(N = 200\)</span>)</p>
+<p>Then instead of using the code for fitting models from 6.15–6.17 or
+6.27–6.28, make the formula lists separately and then call <code>quap</code> with
+different amounts of data:</p>
+<pre><code>lst_6.6 &lt;- alist(
+  h1 ~ dnorm(mu, sigma),
+  mu &lt;- h0 * p,
+  p ~ dlnorm(0, 0.25),
+  sigma ~ dexp(1)
+)</code></pre>
+<p>and make similar lists for models 6.7 and 6.8.</p>
+<p>If you’re using the educational attainment model, there are only two models
+in the book, so I’d recommend making up a 3rd model with fewer parameters
+(maybe only look at <code>G</code> and ignore <code>P</code>).</p>
+<p>You can pick <span class="math inline">\(n\)</span> rows from the data frame <span class="math inline">\(d\)</span> using the <code>slice_sample</code>
+function:</p>
+<pre><code>d_20 &lt;- slice_sample(d, n = 20)
+d_50 &lt;- slice_sample(d, n = 50)
+d_100 &lt;- slice_sample(d, n = 100)</code></pre>
+<p>Now you can fit each model to a different amount of data:</p>
+<pre><code>mdl_6.6_20 &lt;- quap(lst_6.6, data = d_20)</code></pre>
+<p>First, for a single model, vary the amount of data and see how WAIC changes
+with the number of samples.</p>
+<p>Then fit the different models to the same data (<code>d_20</code>, <code>d_50</code>, <code>d_100</code>), and
+use the <code>compare</code> function to see which has the smallest WAIC. Are the
+results consistent for the different amounts of data (20, 50, or 100 points)?</p>
+<p>Next, compare models fit to different amounts of data: <code>mdl_6.6.20</code>,
+<code>mdl_6.7_50</code>, and <code>mdl_6.8_100</code> and other combinations.
+Does the <code>compare</code> function rank the models differently when you
+compare models fit to different amounts of data?
+(You will see a warning from <code>compare()</code> when you do this).</p>
 </div>
 </div>
