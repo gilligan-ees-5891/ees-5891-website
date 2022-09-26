@@ -18,6 +18,10 @@ pdf_url: /files/homework_asgts/homework_05.pdf
 ---
 ## Homework
 
+### Preliminary Information
+
+Homework exercises from the textbook
+
 ### Homework Exercises:
 
 
@@ -38,6 +42,8 @@ pdf_url: /files/homework_asgts/homework_05.pdf
 
 ### Notes on Homework:
 
+
+Here are the [homework exercises from the book](/files/homework_docs/McElreath-Ch-6-7-homework.pdf)
 
 ### Exercise 7M3:
 
