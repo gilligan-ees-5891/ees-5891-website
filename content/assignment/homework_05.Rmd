@@ -20,7 +20,7 @@ pdf_url: /files/homework_asgts/homework_05.pdf
 
 ### Preliminary Information
 
-Homework exercises from the textbook
+Here are the [homework exercises from the book](/files/homework_docs/McElreath-Ch-6-7-homework.pdf)
 
 ### Homework Exercises:
 
@@ -43,7 +43,7 @@ Homework exercises from the textbook
 ### Notes on Homework:
 
 
-Here are the [homework exercises from the book](/files/homework_docs/McElreath-Ch-6-7-homework.pdf)
+Because I was late posting the exercises from the textbook, everyone can have an extension until Friday to turn the homework in. Turn it in any time before the weekend and you'll get full credit.
 
 ### Exercise 7M3:
 
