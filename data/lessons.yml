@@ -42,6 +42,7 @@ lessons:
   title: Interactions
   reading: /reading/reading_10
   assignment: homework_05
+  lecture: /slides/class_10
 - date: '2022-09-29'
   title: Monte Carlo sampling
   reading: /reading/reading_11
