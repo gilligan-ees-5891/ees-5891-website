@@ -46,6 +46,7 @@ lessons:
 - date: '2022-09-29'
   title: Monte Carlo sampling
   reading: /reading/reading_11
+  lecture: /slides/class_11
 - date: '2022-10-04'
   title: Generalized linear models
   reading: /reading/reading_12

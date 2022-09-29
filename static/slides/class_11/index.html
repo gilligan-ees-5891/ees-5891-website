@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Theory of Monte-Carlo Analysis</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Theory of Monte-Carlo Analysis</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #11:
+       Thursday, September 29
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="announcement" class="title-slide slide level1 center"><h1 class="center">Announcement</h1>
+
+</section><section id="announcement-1" class="slide level2 eighty"><h2 class="eighty">Announcement</h2>
+<ul>
+<li>No class Tuesday
+<ul>
+<li>I will schedule a makeup</li>
+</ul>
+</li>
+<li>I will post homework due Thursday (not Tuesday) from Chapter 8</li>
+<li>For next Thursday, read Sections 9.4–9.6</li>
+</ul></section></section><section><section id="monte-carlo-analysis" class="title-slide slide level1 center"><h1 class="center">Monte-Carlo Analysis</h1>
+
+</section><section id="the-problem" class="slide level2 eighty"><h2 class="eighty">The Problem</h2>
+<ul>
+<li>Bayes’s Theorem <span class="math display">\[
+\begin{align}
+P(\beta | Y, X) &amp;= \frac{P(Y | \beta, X) P(\beta)}{P(Y | X)} \\
+                &amp;= \frac{P(Y | \beta, X) P(\beta)}{ \int P(Y |
+\beta, X) P(\beta) d\beta}
+\end{align}
+\]</span>
+<ul>
+<li>
+<span class="math inline">\(\beta\)</span> = the set of parameters
+for model (a vector)</li>
+<li>
+<span class="math inline">\(Y\)</span> = all the observed values of
+the outcome variable (a vector)</li>
+<li>
+<span class="math inline">\(X\)</span> = all the observed values of
+the predictor variables (an array)</li>
+<li>
+<span class="math inline">\(P(Y | \beta, X)\)</span> =
+<em>likelihood</em> for <em>Y</em> (e.g., <span class="math inline">\(Y
+\sim \text{Normal}(\beta x, \sigma)\)</span>)</li>
+<li>
+<span class="math inline">\(P(\beta)\)</span> = <em>prior</em> for
+<span class="math inline">\(\beta\)</span>
+</li>
+<li>
+<span class="math inline">\(P(Y | X)\)</span> =
+<em>evidence</em>
+</li>
+</ul>
+</li>
+<li>All of these terms are super-easy to calculate except the
+<em>evidence</em> term: <span class="math display">\[\int P(Y | \beta,
+X) P(\beta) d\beta\]</span>
+</li>
+</ul></section><section id="calculating-the-evidence" class="slide level2 eighty"><h2 class="eighty">Calculating the <em>Evidence</em>
+</h2>
+<ul>
+<li>For a few simple cases, you can solve the integral analytically</li>
+<li class="fragment">For most cases, there is not a simple solution</li>
+<li class="fragment">Numerical integration:
+<ul>
+<li>Approximate the integral</li>
+<li class="fragment">Grid sampling:
+<ul>
+<li class="fragment">We looked at this in Chapter 2–3.</li>
+<li class="fragment">Works for 1 and 2 dimensional problems, if the prior is close to
+zero for most values of <span class="math inline">\(\beta\)</span>.</li>
+<li class="fragment">For many dimensions (many parameters), it becomes
+computationally crazy.
+<ul>
+<li>10 parameters, grid with 100 points along each dimension:
+100<sup>10</sup> = 10<sup>20</sup> points. If it takes one microsecond
+to calculate one grid point, then it would take more than 3,000,000
+years to calculate the whole grid.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Monte-Carlo sampling:
+<ul>
+<li>Nuclear bomb research, 1940s: calculating diffusion of neutrons in
+the core of a bomb.</li>
+<li class="fragment">Integrals were too hard for the best mathematicians</li>
+<li class="fragment">Stanislaw Ulam: Instead of a regular grid, pick a bunch of
+random numbers.
+<ul>
+<li>John von Neumann and Nicholas Metropolis made important
+contributions.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="origin-of-monte-carlo-integration" class="slide level2 seventyfive"><h2 class="seventyfive">Origin of Monte-Carlo Integration</h2>
+<blockquote>
+<p>The first were suggested by a question which occurred to me in 1946
+as I was convalescing from an illness and playing solitaires. The
+question was what are the chances that a Canfield solitaire laid out
+with 52 cards will come out successfully? whether a more practical
+method than “abstract thinking” might not be to lay it out say one
+hundred times and simply observe and count the number of successful
+plays.</p>
+<p>This was already possible to envisage with the beginning of the new
+era of fast computers, and I immediately thought of problems of neutron
+diffusion and other questions of mathematical physics, and more
+generally how to change processes described by certain differential
+equations into an equivalent form interpretable as a succession of
+random operations.</p>
+<p>— Stanislaw Ulam</p>
+</blockquote>
+</section><section id="simple-illustration" class="slide level2 eighty"><h2 class="eighty">Simple Illustration</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Estimate the area of a circle
+<ul>
+<li class="fragment" data-fragment-index="1">Draw a square 1 inch by 1 inch</li>
+<li class="fragment" data-fragment-index="2">Inscribe a circle 1 inch in diameter</li>
+<li class="fragment" data-fragment-index="3">Throw a dart at the paper many times</li>
+<li class="fragment" data-fragment-index="4">Count the number of times the dart lands inside the circle and
+the number it lands anywhere inside the square <span class="math display">\[\frac{\# \text{in circle}}{\# \text{in square}} =
+\frac{\text{area of circle}}{\text{area of square}}\]</span>
+</li>
+<li class="fragment" data-fragment-index="5">200 throws land in the square. 165 land inside the circle.
+<ul>
+<li>The ratio is 0.825.</li>
+<li>The exact area of the circle is 0.785.</li>
+<li>The difference is 5.0%</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="6">The method works just as well for the area inside any
+complicated shape</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/plot-circle-1.png"></p>
+</div>
+<div class="bare fragment" data-fragment-index="4">
+<p><img data-src="assets/fig/plot-circle-mc-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="monte-carlo-for-bayesian-analysis" class="slide level2 eighty"><h2 class="eighty">Monte-Carlo for Bayesian Analysis</h2>
+<ul>
+<li>Monte-Carlo:
+<ul>
+<li>If you have <em>n</em> <em>parameters</em> (, , , etc.):
+<ol type="1">
+<li>Draw <em>n</em> random numbers: each is a potential value for a
+<em>parameter</em>
+<ul>
+<li>These represent one point in the <em>n</em>-dimensional
+<em>parameter space</em> <span class="math inline">\(\beta_i =
+(\beta_{i,1}, \beta_{i,2}, \ldots, \beta_{i,n})\)</span>
+</li>
+</ul>
+</li>
+<li>Calculate <em>prior</em> and <em>likelihood</em>
+</li>
+<li>Repeat many times (typically a few thousand)</li>
+</ol>
+</li>
+<li class="fragment">For any point <span class="math inline">\(\beta_i\)</span> in
+parameter space, the posterior for <span class="math inline">\(\beta_i\)</span> is <span class="math display">\[
+P(\beta_i | Y, X) =
+     \frac{ P(Y | \beta_i, X) P(\beta_i) }
+          { \sum_j P(Y | \beta_j, X) P(\beta_j)} \]</span>
+</li>
+</ul>
+</li>
+<li class="fragment">The bigger <em>n</em> is, the more samples you need.
+<ul>
+<li>For high <em>n</em>, this can become very large, computationally
+hard.</li>
+</ul>
+</li>
+<li class="fragment">Can we find a smarter way to pick random numbers?
+<ul>
+<li class="fragment">What does it mean to be smart about randomness?</li>
+</ul>
+</li>
+<li class="fragment">Markov-Chain Monte Carlo:
+<ul>
+<li>The probability distribution for the <em>next</em> random number
+depends on the <em>last</em> one.</li>
+</ul>
+</li>
+</ul></section></section><section><section id="markov-chain-monte-carlo" class="title-slide slide level1 center"><h1 class="center">Markov-Chain Monte Carlo</h1>
+
+</section><section id="metropolis-algorithm" class="slide level2 eighty"><h2 class="eighty">Metropolis Algorithm</h2>
+<ol type="1">
+<li class="fragment">Start at a random value for the parameter <span class="math inline">\(\beta\)</span>
+</li>
+<li class="fragment">To pick the next, toss a coin.
+<ul>
+<li>Heads: your candidate is a random number greater than <span class="math inline">\(\beta\)</span>.</li>
+<li>Tails: your candidate is a random number less than <span class="math inline">\(\beta\)</span>.</li>
+</ul>
+</li>
+<li class="fragment">Calculate <span class="math inline">\(q = \text{prior} \times
+\text{likelihood}\)</span> at the current <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(q'\)</span> at the candidate point
+<ul>
+<li>if <span class="math inline">\(q' &gt; q\)</span>, move to the
+candidate point</li>
+<li>Otherwise, pick a random number <span class="math inline">\(r\)</span> between 0 and 1.
+<ul>
+<li>If <span class="math inline">\(r \le q' / q\)</span> then move
+to the candidate point</li>
+<li>Otherwise stay at the current point</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li class="fragment">This guarantees that you visit points where the posterior is
+greater more often than points where the posterior is small
+<ul>
+<li>The frequency of visiting a point is proportional to the posterior
+at that point</li>
+</ul>
+</li>
+<li class="fragment">If the posterior is relatively smooth, and only has one maximum,
+and is very small over most of <em>parameter space</em>, then you can
+estimate the integral by only looking at a small part of <em>parameter
+space</em>, where the posterior is significantly greater than zero.</li>
+</ul></section><section id="gibbs-sampling" class="slide level2 eighty"><h2 class="eighty">Gibbs Sampling</h2>
+<ul>
+<li>Metropolis sampling:
+<ul>
+<li>
+<strong>Symmetric:</strong> The probability of choosing a proposal
+to go from <span class="math inline">\(\beta_1\)</span> to <span class="math inline">\(\beta_2\)</span> is the same a proposal to go from
+<span class="math inline">\(\beta_2\)</span> to <span class="math inline">\(\beta_1\)</span>.</li>
+<li>
+<strong>Random:</strong> You don’t use any information about what
+you know about the posterior to choose the next point.</li>
+</ul>
+</li>
+<li>Gibbs Sampling:
+<ul>
+<li>
+<strong>Asymmetric</strong> and <strong>adaptive:</strong> Makes
+smarter proposals that sample the posterior much more efficiently.</li>
+<li class="fragment">Cost: You can only use certain kinds of priors, called
+<em>conjugate pairs</em>.</li>
+<li class="fragment">From 1989 to 2012, Gibbs sampling was the state of the art for
+most Bayesian analysis.
+<ul>
+<li>R package <code>rjags</code>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="limitations-of-metropolis-gibbs" class="slide level2 eighty"><h2 class="eighty">Limitations of Metropolis &amp; Gibbs</h2>
+<ul>
+<li>Metropolis and Gibbs sampling work very well for small numbers of
+parameters (&lt;100 or so)</li>
+<li class="fragment">For hundreds or thousands of parameters, they break badly.</li>
+<li class="fragment">Even for small numbers of parameters, they break badly when
+parameters are highly correlated
+<ul>
+<li>
+<p>(think about height and length of legs, or exercise 6M2)</p>
+<p><img data-src="assets/images/metro-corr.png" height="400"></p>
+</li>
+</ul>
+</li>
+<li class="fragment">The problem is that these algorithms only look along a few
+directions at a time, and with high dimensions, they may not be looking
+in the most interesting direction, so they keep poking around in the
+dark, not looking at where the insteresting stuff is.</li>
+</ul></section></section><section><section id="hamiltonian-monte-carlo" class="title-slide slide level1 center"><h1 class="center">Hamiltonian Monte Carlo</h1>
+
+</section><section id="simple-vs.-complex-monte-carlo" class="slide level2"><h2>Simple vs. Complex Monte Carlo</h2>
+<ul>
+<li>Metropolis and Gibbs make simple proposals.
+<ul>
+<li class="fragment">The computational cost of making a proposal is small</li>
+<li class="fragment">The quality of the proposals is also small</li>
+<li class="fragment">For simple problems, you don’t need high-quality proposals.</li>
+<li class="fragment">For complex problems, low-quality proposals waste time and the
+algorithm spins its wheels.</li>
+</ul>
+</li>
+<li class="fragment">Hamiltonian Monte Carlo (HMC)
+<ul>
+<li class="fragment">Proposals are costly</li>
+<li class="fragment">But their quality is much greater</li>
+<li class="fragment">For complex problems, HMC finds solutions much faster.</li>
+<li class="fragment">For many years, HMC wasn’t very useful because you had to write
+custom code and there were many options to control the performance, and
+no one knew how to adjust the options effectively.</li>
+</ul>
+</li>
+</ul></section><section id="stan" class="slide level2 eighty"><h2 class="eighty">Stan</h2>
+<ul>
+<li>In 2012, the <code>stan</code> program changed everything:
+<ul>
+<li class="fragment">The developers figured out how to adjust the HMC options
+effectively and automatically</li>
+<li class="fragment"><code>Stan</code> lets you write your model in a simple
+programming language and translates it to efficient <code>c++</code>,
+which is compiled and runs very fast.</li>
+<li class="fragment">Now R packages like <code>rethinking</code> and
+<code>brms</code> let you specify the model in <code>R</code> and
+translates it to the <code>stan</code> language, and <code>stan</code>
+then translates it to <code>c++</code> and turns it into a program.</li>
+</ul>
+</li>
+</ul></section><section id="hamiltonian-monte-carlo-carlo" class="slide level2 eighty"><h2 class="eighty">Hamiltonian Monte Carlo Carlo</h2>
+<ul>
+<li>Hamiltonian Monte Carlo uses a physics simulation to do statistical
+calculations
+<ul>
+<li class="fragment">Think of graphs of probability as hills and valleys
+<ul>
+<li>The elevation is the logarithm of the posterior probability
+density</li>
+</ul>
+</li>
+<li class="fragment">Consider your Monte Carlo sampling point like a ball rolling on
+the landscape
+<ol type="1">
+<li class="fragment">Pick a starting point and put the ball there.</li>
+<li class="fragment">Flick the ball in a random direction with a random velocity</li>
+<li class="fragment">Allow the ball to roll over the landscape for some amount of
+time</li>
+<li class="fragment">Otherwise, after the time is up, wherever the ball is, that’s
+your next sample.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul></section><section id="illustrations-of-hamiltonian-monte-carlo" class="slide level2 eighty"><h2 class="eighty">Illustrations of Hamiltonian Monte Carlo</h2>
+<div class="bare mtop-1">
+<p><img data-src="assets/images/king-monty.png" height="500"></p>
+</div>
+<ul>
+<li>Horizontal lines are elevation contours</li>
+<li>Position 0 is the bottom of the valleh, which goes uphill to the
+North and South.</li>
+<li>Thickness of the line is momentum (speed)
+<ul>
+<li>Ball slows down as it moves uphill</li>
+<li>Ball speeds up as it moves downhill</li>
+<li>Slower speed at high altitude, so it spends more time there</li>
+</ul>
+</li>
+</ul></section><section id="illustrations-of-hamiltonian-monte-carlo-1" class="slide level2 eighty"><h2 class="eighty">Illustrations of Hamiltonian Monte Carlo</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Top left: Uncorrelated parameters, well-tuned HMC
+<ul>
+<li>Samples are far apart, uncorrelated</li>
+</ul>
+</li>
+<li class="fragment">Top right: Uncorrelated parameters, poorly-tuned HMC
+<ul>
+<li>Samples are close together because “ball” made U-turns</li>
+<li>Stan has a “No U-Turn Sampler” (NUTS) to avoid this.</li>
+</ul>
+</li>
+<li class="fragment">Lower left: Highly correlated parammeters. HMC samples the space
+effectively, with little autocorrelation</li>
+<li class="fragment">Lower right: Only one candidate was rejected and they
+effectively explore the space and quickly find the maxiumum.</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1">
+<p><img data-src="assets/images/hmc.png" alt="Hamiltonian Monte Carlo Samples"></p>
+</div>
+</div>
+</div>
+</section><section id="limitations-of-hmc" class="slide level2 eighty"><h2 class="eighty">Limitations of HMC</h2>
+<ul>
+<li>HMC can only work with priors that have continuous parameters and
+are continuously differentiable.</li>
+<li class="fragment">Metropolis and Gibbs can solve models with discrete parameters
+(integrers, categories, etc.)</li>
+<li class="fragment">You can usually find workarounds for models with discrete
+parameters, but this requires clever thinking</li>
+<li class="fragment">HMC can fail and it can be very confusing to figure out
+why.</li>
+<li class="fragment">But when it works well, HMC is enormously effective and much
+faster than Gibbs or Metropolis sampling</li>
+</ul></section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_11">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_11"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_11">https://ees5891.jgilligan.org/slides/class_11</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_11/ees_5891-03_class_11_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_11/ees_5891-03_class_11_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
