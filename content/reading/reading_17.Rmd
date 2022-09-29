@@ -1,11 +1,11 @@
 ---
-title: Multilevel models
-class_date: '2022-10-25'
+title: Discussion of student projects
+class_date: '2022-10-27'
 class_number: 17
 weight: 17
 slug: reading_17
 pubdate: '2022-07-31'
-date: '2022-10-25'
+date: '2022-10-27'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
@@ -13,7 +13,8 @@ pdf_url: /files/reading_asgts/reading_17.pdf
 ---
 ## Reading:
 
-### Required Reading (everyone):
+No new reading for today.
 
-* Statistical Rethinking, Ch. 13 ("Models with Memory").
+### Notes:
 
+No reading for today. We will discuss the semester research projects.

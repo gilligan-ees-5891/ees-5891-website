@@ -1,11 +1,11 @@
 ---
-title: Geospatial data analysis
-class_date: '2022-11-08'
+title: Messy data
+class_date: '2022-11-10'
 class_number: 21
 weight: 21
 slug: reading_21
 pubdate: '2022-07-31'
-date: '2022-11-08'
+date: '2022-11-10'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_21.pdf
 
 ### Required Reading (everyone):
 
-* Bayesian Inference with INLA.
+* Statistical Rethinking, Ch. 15 ("Missing Data and Other Opportunities").
 

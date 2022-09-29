@@ -1,11 +1,11 @@
 ---
-title: Multilevel models, part 2
-class_date: '2022-10-27'
+title: Multilevel models
+class_date: '2022-11-01'
 class_number: 18
 weight: 18
 slug: reading_18
 pubdate: '2022-07-31'
-date: '2022-10-27'
+date: '2022-11-01'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists

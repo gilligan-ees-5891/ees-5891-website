@@ -1,11 +1,11 @@
 ---
-title: Discussion of student projects
-class_date: '2022-10-20'
+title: Mixture models
+class_date: '2022-10-25'
 class_number: 16
 weight: 16
 slug: reading_16
 pubdate: '2022-07-31'
-date: '2022-10-20'
+date: '2022-10-25'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
@@ -13,8 +13,7 @@ pdf_url: /files/reading_asgts/reading_16.pdf
 ---
 ## Reading:
 
-No new reading for today.
+### Required Reading (everyone):
 
-### Notes:
+* Statistical Rethinking, Ch. 12 ("Monsters and Mixtures").
 
-No reading for today. We will discuss the semester research projects.

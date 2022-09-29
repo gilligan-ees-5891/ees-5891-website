@@ -1,11 +1,11 @@
 ---
-title: More multilevel models
-class_date: '2022-11-01'
+title: Multilevel models, part 2
+class_date: '2022-11-03'
 class_number: 19
 weight: 19
 slug: reading_19
 pubdate: '2022-07-31'
-date: '2022-11-01'
+date: '2022-11-03'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_19.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 14 ("Adventures in Covariance").
+* Statistical Rethinking, Ch. 13 ("Models with Memory").
 

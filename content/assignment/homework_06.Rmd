@@ -1,13 +1,13 @@
 ---
 title: Monte-Carlo sampling
-due_date: '2022-10-04'
+due_date: '2022-10-06'
 assignment_type: Homework
 short_assignment_type: HW
 assignment_number: 6
 weight: 6
 slug: homework_06
 pubdate: '2022-07-31'
-date: '2022-10-04'
+date: '2022-10-06'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists
