@@ -1,5 +1,5 @@
 ---
-title: Monte-Carlo sampling
+title: Interactions
 due_date: '2022-10-06'
 assignment_type: Homework
 short_assignment_type: HW
@@ -19,4 +19,18 @@ pdf_url: /files/homework_asgts/homework_06.pdf
 ## Homework
 
 ### Homework Exercises:
+
+
+
+**Self-study:** Work these exercises, but do not turn them in.
+
+* Exercises 8E1--8E3
+
+**Turn in:** Work these exercises and turn them in.
+
+* Exercises 8M1, 8M4
+
+**Optional:** The following exercises are optional. You can turn them in for extra credit.
+
+* Exercises 8H1--8H2
 
