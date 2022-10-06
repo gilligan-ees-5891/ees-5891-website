@@ -15,5 +15,5 @@ pdf_url: /files/reading_asgts/reading_14.pdf
 
 ### Required Reading (everyone):
 
-* Statistical Rethinking, Ch. 10 ("Big Entropy and the Generalized Linear Model").
+* Statistical Rethinking, Ch. 10 ("Big Entropy and the Generalized Linear Model"), sections 10.2--10.4.
 

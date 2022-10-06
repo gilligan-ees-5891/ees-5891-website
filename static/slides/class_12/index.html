@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Hamiltonian Monte Carlo with Stan and Ulam</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Hamiltonian Monte Carlo<br>with Stan and
+Ulam</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #12:
+       Thursday, October 06
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="hamiltonian-monte-carlo-sampling" class="title-slide slide level1 center"><h1 class="center">Hamiltonian Monte Carlo Sampling</h1>
+
+</section><section id="prepare-data" class="slide level2 eighty"><h2 class="eighty">Prepare data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<code>rugged</code> data set:
+<ul>
+<li>Each row is a different country</li>
+<li>
+<code>rugged</code>: Topographic roughness of the terrain</li>
+<li>
+<code>rpcgdp_2000</code>: Per-capita GDP in 2000</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="1">Use the logarithm of GDP.</li>
+<li class="fragment" data-fragment-index="2">quasi-standardize the variables.</li>
+<li class="fragment" data-fragment-index="3">Model <span class="math display">\[
+\begin{align}
+G &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha_{\text{CID}} + \beta_{\text{CID}} R \\
+\alpha_{\text{CID}} &amp;\sim \text{Normal}(1, 0.1) \\
+\beta_{\text{CID}} &amp;\sim \text{Normal}(0, 0.3) \\
+\sigma &amp;\sim \text{Exponential}(1)
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare max-listing seventy">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(rugged)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> rugged</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">complete.cases</span>(rgdppc_2000)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_gdp =</span> <span class="fu">log</span>(rgdppc_2000),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_gdp_std =</span> log_gdp <span class="sc">/</span> <span class="fu">mean</span>(log_gdp),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">rugged_std =</span> rugged <span class="sc">/</span> <span class="fu">max</span>(rugged),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cid =</span> <span class="fu">ifelse</span>(cont_africa <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+<div class="fragment bare mtop-1 max-listing seventy" data-fragment-index="3">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lst_rug <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.3</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="quap-vs.-ulam" class="slide level2 eighty"><h2 class="eighty">
+<code>quap</code> vs. <code>ulam</code>
+</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<code>quap</code> calculates the posterior using a <em>quadratic
+approximation</em>
+<ul>
+<li class="fragment">Focus on finding the peak of the posterior (maximum
+<em>a-posteriori</em>) for each parameter.
+<ul>
+<li class="fragment">Near the peak, the posterior looks like a quadratic function
+(parabola).</li>
+</ul>
+</li>
+<li class="fragment">Approximate the width</li>
+<li class="fragment">Works well with Gaussian (Normal) distributions, not so well
+with other functions.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment"><code>ulam</code> calculates the posterior using a
+<em>Hamiltonian Monte Carlo</em> sampler.
+<ul>
+<li class="fragment">Generates samples from the posterior.</li>
+<li class="fragment">Doesn’t directly calculate the <em>maximum
+a-posteriori</em>.</li>
+</ul>
+</li>
+<li class="fragment">Use statistical functions to analyze the posterior (mean,
+median, standard deviation, etc.)</li>
+<li class="fragment">Runs slower than <code>quap</code> but works with a greater
+variety of prior and likelihood functions.</li>
+</ul>
+</div>
+</div>
+</section><section id="ulam-and-stan" class="slide level2 eighty"><h2 class="eighty">
+<code>ulam</code> and <code>stan</code>
+</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy" style="height:900px;overflow-y:scroll;">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lst_rug <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.3</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat_slim <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">log_gdp_std =</span> dd<span class="sc">$</span>log_gdp_std, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rugged_std =</span> dd<span class="sc">$</span>rugged_std, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">cid =</span> <span class="fu">as.integer</span>(dd<span class="sc">$</span>cid))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mdl_rug_ulam <span class="ot">&lt;-</span> <span class="fu">ulam</span>(lst_rug, <span class="at">data =</span> dat_slim,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+## 
+## Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+## Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+## Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+## Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+## Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+## Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+## Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+## Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+## Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+## Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+## Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+## Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+## Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+## Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+## Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+## Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+## Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+## Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+## Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+## Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+## Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+## Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+## Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+## Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+## Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+## Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+## Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+## Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+## Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+## Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+## Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+## Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+## Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+## Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+## Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+## Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+## Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+## Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+## Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+## Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+## Chain 1 finished in 0.1 seconds.
+## Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+## Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+## Chain 2 finished in 0.1 seconds.
+## Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+## Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+## Chain 3 finished in 0.1 seconds.
+## Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+## Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+## Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+## Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+## Chain 4 finished in 0.1 seconds.
+## 
+## All 4 chains finished successfully.
+## Mean chain execution time: 0.1 seconds.
+## Total execution time: 1.1 seconds.</code></pre>
+</div>
+</div>
+<div class="column">
+<p>Ulam creates this Stan model:</p>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(mdl_rug_ulam<span class="sc">@</span>model)</span></code></pre></div>
+<pre><code>## data{
+##     vector[170] log_gdp_std;
+##     vector[170] rugged_std;
+##     int cid[170];
+## }
+## parameters{
+##     vector[2] a;
+##     vector[2] b;
+##     real&lt;lower=0&gt; sigma;
+## }
+## model{
+##     vector[170] mu;
+##     sigma ~ exponential( 1 );
+##     b ~ normal( 0 , 0.3 );
+##     a ~ normal( 1 , 0.1 );
+##     for ( i in 1:170 ) {
+##         mu[i] = a[cid[i]] + b[cid[i]] * (rugged_std[i] - 0.215);
+##     }
+##     log_gdp_std ~ normal( mu , sigma );
+## }</code></pre>
+</div>
+</div>
+</div>
+</section><section id="running-ulam" class="slide level2 eighty" data-transition="fade-out"><h2 class="eighty" data-transition="fade-out">Running
+<code>ulam</code>
+</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li class="fragment">The model specification is pretty much the same as for
+<code>quap</code>.</li>
+<li class="fragment">Data must <strong>only</strong> have the observed variables in
+the model
+<ul>
+<li>Do transforms (<code>log()</code>, <code>standardize()</code>)
+before calling <code>ulam</code>.</li>
+</ul>
+</li>
+<li class="fragment">When you call <code>ulam()</code> it.
+<ol>
+<li>Generates <code>stan</code> code for the model.</li>
+<li>Calls the <code>stan</code> compiler to translate the
+<code>stan</code> model into C++.</li>
+<li>Compiles the C++ model.</li>
+<li>Runs the model with the data you provided.
+<ul>
+<li>Default: 1000 iterations per chain</li>
+<li>Half are <em>warm-up</em> and half are samples from posterior
+<ul>
+<li>
+<em>warm-up</em> is where the model tunes itself</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Returns the results.</li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lst_rug <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.3</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mdl_rug_quap <span class="ot">&lt;-</span> <span class="fu">quap</span>(lst_rug, <span class="at">data =</span> dat_slim)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat_slim <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">log_gdp_std =</span> dd<span class="sc">$</span>log_gdp_std, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rugged_std =</span> dd<span class="sc">$</span>rugged_std, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">cid =</span> <span class="fu">as.integer</span>(dd<span class="sc">$</span>cid))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mdl_rug_ulam <span class="ot">&lt;-</span> <span class="fu">ulam</span>(lst_rug, <span class="at">data =</span> dat_slim,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section><section id="running-ulam-1" class="slide level2 eighty" data-transition="fade-in"><h2 class="eighty" data-transition="fade-in">Running
+<code>ulam</code>
+</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<code>chains</code>: A <em>chain</em> is a sequence of samples.
+<ul>
+<li class="fragment"><em>Markov chain</em>: Each sample depends on the previous
+sample.</li>
+<li class="fragment">Different chains start from different starting points.</li>
+<li class="fragment"><em>Mixing</em>: After a certain number of samples, chains that
+start at different starting points should become indistinguishable.</li>
+<li class="fragment">You should sample multiple chains so you can check whether the
+chains are well-mixed.</li>
+</ul>
+</li>
+<li class="fragment"><code>cores</code>: How many processor cores to use:
+<ul>
+<li>When <code>cores = 1</code>, the chains execute sequentially</li>
+<li>When <code>cores = chains</code>, all chains execute in parallel
+(faster).</li>
+<li>There’s no extra benefit in having more <code>cores</code> than
+<code>chains</code>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lst_rug <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.3</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dat_slim <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">log_gdp_std =</span> dd<span class="sc">$</span>log_gdp_std, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rugged_std =</span> dd<span class="sc">$</span>rugged_std, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">cid =</span> <span class="fu">as.integer</span>(dd<span class="sc">$</span>cid))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mdl_rug_ulam <span class="ot">&lt;-</span> <span class="fu">ulam</span>(lst_rug, <span class="at">data =</span> dat_slim,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</section></section><section><section id="interpreting-model-results" class="title-slide slide level1 center"><h1 class="center">Interpreting Model Results</h1>
+
+</section><section id="model-output" class="slide level2 eighty"><h2 class="eighty">Model Output</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lst_rug <span class="ot">&lt;-</span> <span class="fu">alist</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.3</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat_slim <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">log_gdp_std =</span> dd<span class="sc">$</span>log_gdp_std, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rugged_std =</span> dd<span class="sc">$</span>rugged_std, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">cid =</span> <span class="fu">as.integer</span>(dd<span class="sc">$</span>cid))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>mdl_rug_ulam <span class="ot">&lt;-</span> <span class="fu">ulam</span>(lst_rug, <span class="at">data =</span> dat_slim,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+<div class="eightyfive">
+<ul>
+<li class="fragment">For each parameter, <code>precis</code> shows:
+<ul>
+<li>Statistical properties: mean, standard deviation, 5.5% and 94.5%
+quantiles,</li>
+<li class="fragment"><code>n_eff</code>: The effective number of samples (smaller
+than the actual number because of autocorrelation)</li>
+<li class="fragment"><code>Rhat4</code>: The Gelman-Rubin convergence diagnostic:
+<ul>
+<li>variance between chains / variance within chain</li>
+<li>1 when chains have converged completely</li>
+<li>≤ 1.1 indicates good convergence (well-mixed)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mdl_rug_ulam)</span></code></pre></div>
+<pre><code>## Hamiltonian Monte Carlo approximation
+## 2000 samples from 4 chains
+## 
+## Sampling durations (seconds):
+##         warmup sample total
+## chain:1   0.08   0.05  0.13
+## chain:2   0.09   0.06  0.15
+## chain:3   0.08   0.05  0.13
+## chain:4   0.08   0.05  0.13
+## 
+## Formula:
+## log_gdp_std ~ dnorm(mu, sigma)
+## mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215)
+## a[cid] ~ dnorm(1, 0.1)
+## b[cid] ~ dnorm(0, 0.3)
+## sigma ~ dexp(1)</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_rug_ulam, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1]   0.89 0.02  0.86  0.91  3016     1
+## a[2]   1.05 0.01  1.03  1.07  2414     1
+## b[1]   0.13 0.08  0.01  0.26  3307     1
+## b[2]  -0.14 0.06 -0.24 -0.05  3287     1
+## sigma  0.11 0.01  0.10  0.12  2306     1</code></pre>
+</div>
+</div>
+</div>
+</section><section id="plotting-model-results" class="slide level2 eighty"><h2 class="eighty">Plotting Model Results</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>mdl_fit <span class="ot">&lt;-</span> mdl_rug_ulam<span class="sc">@</span>stanfit</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens</span>(mdl_fit)</span></code></pre></div>
+</div>
+<ul>
+<li>The graphs show the probability density of each parameter.</li>
+<li class="fragment"><code>lp__</code> is the log of the posterior probability
+density.
+<ul>
+<li>This graph shows how the MCMC samples are mostly drawn from higher
+probability regions of the posterior.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<p><img data-src="assets/fig/plot-rug-ulam-1.png"></p>
+</div>
+</div>
+</div>
+</section></section><section><section id="model-diagnostics" class="title-slide slide level1 center"><h1 class="center">Model Diagnostics</h1>
+
+</section><section id="pair-correlation-plots" class="slide level2 eighty"><h2 class="eighty">Pair-Correlation Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"blue"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(mdl_fit, <span class="at">off_diag_args =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/pairs-rug-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-plots" class="slide level2 eighty"><h2 class="eighty">MCMC Trace Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"brewer-Dark2"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trace-rug-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-rank-plots" class="slide level2 eighty"><h2 class="eighty">MCMC Trace-Rank Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_rank_overlay</span>(mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trank-rug-ulam-1.png"></p>
+</div>
+</section><section id="posterior-density-plots" class="slide level2 eighty"><h2 class="eighty">Posterior Density Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens_overlay</span>(mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/post-rug-ulam-1.png"></p>
+</div>
+</section></section><section><section id="mcmc-problems" class="title-slide slide level1 center"><h1 class="center">MCMC Problems</h1>
+
+</section><section id="poorly-fit-model" class="slide level2 eighty"><h2 class="eighty">Poorly Fit Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mdl_bad <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> alpha,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1000</span>),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="fl">0.0001</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
+</div>
+<ul>
+<li><p>2 data observations</p></li>
+<li><p>Very uninformative priors</p></li>
+<li>
+<p>Gives warning:</p>
+<p>::: {bare .mtop-1 .max-listing .seventy}</p>
+<pre><code>Warning: 87 of 2000 (4.0%) transitions ended with a divergence.
+See https://mc-stan.org/misc/warnings for details.
+</code></pre>
+<p>:::</p>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mdl_bad)</span></code></pre></div>
+<pre><code>## Hamiltonian Monte Carlo approximation
+## 2000 samples from 4 chains
+## 
+## Sampling durations (seconds):
+##         warmup sample total
+## chain:1   0.07   0.04  0.11
+## chain:2   0.07   0.06  0.13
+## chain:3   0.15   0.06  0.20
+## chain:4   0.04   0.04  0.08
+## 
+## Formula:
+## y ~ dnorm(mu, sigma)
+## mu &lt;- alpha
+## alpha ~ dnorm(0, 1000)
+## sigma ~ dexp(1e-04)</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_bad, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##         mean      sd    5.5%   94.5% n_eff Rhat4
+## alpha  16.35  334.62 -354.99  481.62   194  1.02
+## sigma 492.14 1303.25    4.84 2083.80   156  1.04</code></pre>
+</div>
+<ul>
+<li class="fragment"><code>n_eff</code>: &lt;200 effective samples out of 2000.</li>
+<li class="fragment"><code>sd</code>: Huge standard deviations in posteriors.</li>
+</ul>
+</div>
+</div>
+</section><section id="show-posteriors" class="slide level2"><h2>Show Posteriors</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bad_mdl_fit <span class="ot">&lt;-</span> mdl_bad<span class="sc">@</span>stanfit</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"brewer-Dark2"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens_overlay</span>(bad_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/post-bad-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-plots-1" class="slide level2 eighty"><h2 class="eighty">MCMC Trace Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(bad_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trace-bad-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-rank-plots-1" class="slide level2 eighty"><h2 class="eighty">MCMC Trace-Rank Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_rank_overlay</span>(bad_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trank-bad-ulam-1.png"></p>
+</div>
+</section><section id="pair-correlation-plots-funnels" class="slide level2 eighty"><h2 class="eighty">Pair-Correlation Plots: Funnels</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"blue"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(bad_mdl_fit, <span class="at">off_diag_args =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/pairs-bad-ulam-1.png"></p>
+</div>
+</section><section id="better-model" class="slide level2 eighty"><h2 class="eighty">Better Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>mdl_better <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> alpha,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
+</div>
+<ul>
+<li>Replace uninformative priors with w akly informative priors.akly
+informative priors help a lot.</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mdl_better)</span></code></pre></div>
+<pre><code>## Hamiltonian Monte Carlo approximation
+## 2000 samples from 4 chains
+## 
+## Sampling durations (seconds):
+##         warmup sample total
+## chain:1   0.03   0.02  0.05
+## chain:2   0.02   0.02  0.04
+## chain:3   0.03   0.02  0.04
+## chain:4   0.03   0.03  0.05
+## 
+## Formula:
+## y ~ dnorm(mu, sigma)
+## mu &lt;- alpha
+## alpha ~ dnorm(0, 10)
+## sigma ~ dexp(1)</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_bad, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##         mean      sd    5.5%   94.5% n_eff Rhat4
+## alpha  16.35  334.62 -354.99  481.62   194  1.02
+## sigma 492.14 1303.25    4.84 2083.80   156  1.04</code></pre>
+</div>
+<ul>
+<li class="fragment">Even weakly informative priors help a lot!</li>
+<li class="fragment"><code>n_eff</code>: &gt;400 effective samples.</li>
+<li class="fragment"><code>sd</code>: Much smaller.</li>
+</ul>
+</div>
+</div>
+</section><section id="show-posteriors-1" class="slide level2"><h2>Show Posteriors</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>better_mdl_fit <span class="ot">&lt;-</span> mdl_better<span class="sc">@</span>stanfit</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens_overlay</span>(better_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/post-better-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-plots-2" class="slide level2 eighty"><h2 class="eighty">MCMC Trace Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"brewer-Dark2"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(better_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trace-better-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-rank-plots-2" class="slide level2 eighty"><h2 class="eighty">MCMC Trace-Rank Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_rank_overlay</span>(better_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trank-better-ulam-1.png"></p>
+</div>
+</section><section id="pair-correlation-plots-1" class="slide level2 eighty"><h2 class="eighty">Pair-Correlation Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"blue"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(better_mdl_fit, <span class="at">off_diag_args =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/pairs-better-ulam-1.png"></p>
+</div>
+</section></section><section><section id="non-identifiable-models" class="title-slide slide level1 center"><h1 class="center">Non-Identifiable Models</h1>
+
+</section><section id="non-identifiable-model" class="slide level2 eighty"><h2 class="eighty">Non-Identifiable Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">41</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<ul>
+<li>Fit model <span class="math display">\[
+\begin{align}
+y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha_1 + \alpha_2 \\
+\alpha_1 &amp;\sim \text{Normal}(0, 1000) \\
+\alpha_2 &amp;\sim \text{Normal}(0, 1000) \\
+\sigma &amp;\sim \text{Exponential}(1)
+\end{align}
+\]</span>
+</li>
+</ul>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>mdl_non_id <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a1 <span class="sc">+</span> a2,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    a1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1000</span>),</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    a2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1000</span>),</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mdl_non_id)</span></code></pre></div>
+<pre><code>## Hamiltonian Monte Carlo approximation
+## 2000 samples from 4 chains
+## 
+## Sampling durations (seconds):
+##         warmup sample total
+## chain:1   1.20   1.30  2.50
+## chain:2   1.08   1.35  2.43
+## chain:3   1.12   1.33  2.45
+## chain:4   1.19   1.25  2.45
+## 
+## Formula:
+## y ~ dnorm(mu, sigma)
+## mu &lt;- a1 + a2
+## a1 ~ dnorm(0, 1000)
+## a2 ~ dnorm(0, 1000)
+## sigma ~ dexp(1)</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_non_id, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##         mean     sd     5.5%   94.5% n_eff Rhat4
+## a1     11.76 744.23  -907.39 1317.93     2  5.85
+## a2    -11.58 744.24 -1317.69  907.51     2  5.85
+## sigma   1.04   0.06     0.95    1.17    32  1.16</code></pre>
+</div>
+</div>
+</div>
+</section><section id="pair-correlation-plots-2" class="slide level2 eighty"><h2 class="eighty">Pair-Correlation Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"blue"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>nid_mdl_fit <span class="ot">&lt;-</span> mdl_non_id<span class="sc">@</span>stanfit</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(nid_mdl_fit, <span class="at">off_diag_args =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/pairs-nid-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-plots-3" class="slide level2 eighty"><h2 class="eighty">MCMC Trace Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"brewer-Dark2"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nid_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trace-nid-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-rank-plots-3" class="slide level2 eighty"><h2 class="eighty">MCMC Trace-Rank Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_rank_overlay</span>(nid_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trank-nid-ulam-1.png"></p>
+</div>
+</section><section id="regularize-model" class="slide level2 eighty"><h2 class="eighty">Regularize Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Model with regularizing priors <span class="math display">\[
+\begin{align}
+y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha_1 + \alpha_2 \\
+\alpha_1 &amp;\sim \text{Normal}(0, 10) \\
+\alpha_2 &amp;\sim \text{Normal}(0, 10) \\
+\sigma &amp;\sim \text{Exponential}(1)
+\end{align}
+\]</span>
+</li>
+</ul>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>mdl_reg <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a1 <span class="sc">+</span> a2,</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    a1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    a2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(mdl_reg)</span></code></pre></div>
+<pre><code>## Hamiltonian Monte Carlo approximation
+## 2000 samples from 4 chains
+## 
+## Sampling durations (seconds):
+##         warmup sample total
+## chain:1   0.46   0.45  0.91
+## chain:2   0.43   0.49  0.92
+## chain:3   0.39   0.42  0.81
+## chain:4   0.47   0.44  0.92
+## 
+## Formula:
+## y ~ dnorm(mu, sigma)
+## mu &lt;- a1 + a2
+## a1 ~ dnorm(0, 10)
+## a2 ~ dnorm(0, 10)
+## sigma ~ dexp(1)</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_reg, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##        mean   sd   5.5% 94.5% n_eff Rhat4
+## a1     0.25 7.19 -11.21 11.45   670  1.01
+## a2    -0.06 7.19 -11.20 11.40   670  1.01
+## sigma  1.04 0.08   0.93  1.17   616  1.00</code></pre>
+</div>
+</div>
+</div>
+</section><section id="pair-correlation-plots-3" class="slide level2 eighty"><h2 class="eighty">Pair-Correlation Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"blue"</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>reg_mdl_fit <span class="ot">&lt;-</span> mdl_reg<span class="sc">@</span>stanfit</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(reg_mdl_fit, <span class="at">off_diag_args =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/pairs-reg-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-plots-4" class="slide level2 eighty"><h2 class="eighty">MCMC Trace Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"brewer-Dark2"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(reg_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trace-reg-ulam-1.png"></p>
+</div>
+</section><section id="mcmc-trace-rank-plots-4" class="slide level2 eighty"><h2 class="eighty">MCMC Trace-Rank Plots</h2>
+<div class="bare mtop-1 max-listing seventy">
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_rank_overlay</span>(reg_mdl_fit)</span></code></pre></div>
+<p><img data-src="assets/fig/trank-reg-ulam-1.png"></p>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_12">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_12"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_12">https://ees5891.jgilligan.org/slides/class_12</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_12/ees_5891-03_class_12_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_12/ees_5891-03_class_12_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

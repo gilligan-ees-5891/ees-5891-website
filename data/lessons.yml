@@ -53,6 +53,7 @@ lessons:
   title: Monte Carlo Software
   reading: /reading/reading_12
   assignment: homework_06
+  lecture: /slides/class_12
 - date: '2022-10-11'
   title: Generalized linear models
   reading: /reading/reading_13
