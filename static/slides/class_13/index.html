@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Maximum Entropy and Generalized Linear Models</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Maximum Entropy and<br>Generalized Linear
+Models</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #13:
+       Tuesday, October 11
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="beyond-normal-likelihoods" class="title-slide slide level1 center"><h1 class="center">Beyond Normal Likelihoods</h1>
+
+</section><section id="linear-models" class="slide level2 seventy"><h2 class="seventy">Linear Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Models we’ve considered so far have the form <span class="math display">\[
+\begin{align}
+y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta x
+\end{align}
+\]</span>
+</li>
+<li class="fragment">This model is a <em>linear regression</em> because <span class="math inline">\(\mu\)</span> is a linear function of <span class="math inline">\(x\)</span>.</li>
+<li class="fragment">We can have multiple <span class="math inline">\(x\)</span>
+variables (e.g., water and shade), so the equation for <span class="math inline">\(\mu\)</span> becomes <span class="math display">\[
+\mu = \alpha + \sum_i \beta_i x_i \]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">We can treat polynomial and interaction terms as linear terms:
+<ul>
+<li>Instead of <span class="math display">\[
+\begin{align}
+\mu &amp;= \alpha + \beta_x x + \beta_{x^2} x^2 + \beta_{x^3} x^3 +
+  \beta_z z + \beta_{xz} x z
+\end{align}
+\]</span> we can write <span class="math display">\[
+\begin{align}
+x_2 &amp;= x^2 \\
+x_3 &amp;= x^3 \\
+x_4 &amp;= z \\
+x_5 &amp;= x z \\
+\mu &amp;= \alpha + \beta_1 x + \beta_2 x_2 + \beta_3 x_3 +
+  \beta_4 x_4 + \beta_5 x_5
+\end{align}
+\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="generalized-linear-models" class="slide level2 eighty"><h2 class="eighty">Generalized Linear Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>What if <span class="math inline">\(y\)</span> is not normally
+distributed for a given <span class="math inline">\(x\)</span>?
+<ul>
+<li class="fragment">The offspring of an animal have a probability <span class="math inline">\(p\)</span> of being female and <span class="math inline">\(1 - p\)</span> of being male</li>
+<li class="fragment">We want to find out how the animal’s diet affects the fraction
+of female offspring.</li>
+<li class="fragment">We count the total number of offspring (<span class="math inline">\(N\)</span>) and the number of females (<span class="math inline">\(F\)</span>). <span class="math display">\[
+\begin{align}
+F &amp;\sim \text{Binomial}(N, p) \\
+f(p) &amp;= \alpha + \beta x
+\end{align}
+\]</span>
+<ul>
+<li>
+<span class="math inline">\(f()\)</span> is a <em>link
+function</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">This is a <em>generalized linear model</em> because <span class="math inline">\(f(p)\)</span> is a linear function of <span class="math inline">\(x\)</span>.</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment"><span class="math inline">\(0 \le p \le 1\)</span>, so we need a
+<em>link function</em> to map between the valid range of <span class="math inline">\(p\)</span> and the unlimited range of <span class="math inline">\(\alpha + \beta x\)</span>.</li>
+<li class="fragment">A common link function for probabilities is the <em>logit</em>
+function <span class="math display">\[
+\begin{align}
+\text{logit}(p) &amp;= \ln \frac{p}{1 - p} \\
+\text{logit}^{-1}(x) &amp;= \frac{1}{1 + \exp(-x)} =
+\frac{\exp(x)}{\exp(x) + 1}
+\end{align}
+\]</span>
+<ul>
+<li class="fragment"><em>logit</em> maps a probability in the range <span class="math inline">\([0,1]\)</span> to <span class="math inline">\([-\infty, \infty]\)</span>.</li>
+<li class="fragment"><em>logit</em><sup>-1</sup> maps the real axis <span class="math inline">\([-\infty, \infty]\)</span> to a probability in the
+range <span class="math inline">\([0,1]\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="logit-link-function" class="slide level2"><h2>Logit link function</h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="assets/fig/logit-1.png"></p>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/inv-logit-1.png"></p>
+</div>
+</div>
+</section></section><section><section id="choosing-likelihood-functions" class="title-slide slide level1 center"><h1 class="center">Choosing Likelihood Functions</h1>
+
+</section><section id="likelihood-functions" class="slide level2 eighty"><h2 class="eighty">Likelihood Functions</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>In the model <span class="math display">\[
+\begin{align}
+F &amp;\sim \text{Binomial}(N, p) \\
+\text{logit}(p) &amp;= \alpha + \beta x
+\end{align}
+\]</span> <span class="math inline">\(\text{Binomial}(N, p)\)</span>
+defines a <em>likelihood</em> <span class="math inline">\(P(F | N,
+p)\)</span> observing <span class="math inline">\(F\)</span> female
+offspring, given that there are <span class="math inline">\(N\)</span>
+total offspring and the probability of any offspring being female is
+<span class="math inline">\(p\)</span>.</li>
+<li class="fragment">Why do we choose a <em>Binomial</em> distribution here instead
+of some other distribution?</li>
+<li class="fragment">In the model <span class="math display">\[
+\begin{align}
+F &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta x
+\end{align}
+\]</span> Why do we choose a <em>Normal</em> distribution?</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Information theory: The likelihood function that makes the
+fewest assumptions about the data will be the one that has the largest
+<em>information entropy</em> under a set of constraints.</li>
+<li class="fragment"><em>Information entropy</em> is related to counting the
+different ways you can get a result, so <em>maxiumum entropy</em>
+corresponds to the result that has the greatest number of ways that it
+can happen.</li>
+</ul>
+</div>
+</div>
+</section><section id="information-entropy" class="slide level2 eighty"><h2 class="eighty">Information Entropy</h2>
+<ul>
+<li>Find a measure of uncertainty where:
+<ol type="1">
+<li>It is continuous</li>
+<li>It increases as the number of possible events increases</li>
+<li>It is additive: <span class="math inline">\(f(a + b) = f(a) +
+f(b)\)</span>
+</li>
+</ol>
+</li>
+<li class="fragment">Information Entropy: For a set of events <span class="math inline">\(i\)</span>, with probabilities <span class="math inline">\(p_i\)</span>, <span class="math display">\[ H(p) =
+- \sum_i p_i \log p_i \]</span>
+</li>
+</ul></section><section id="example" class="slide level2 eighty"><h2 class="eighty">Example</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Distribute 10 pebbles in 5 buckets, where each pebble has an equal
+probability to land in any bucket.
+<ul>
+<li>5<sup>10</sup> (9,765,625) ways to do this, if we pay attention to
+which pebble is in which bucket.</li>
+<li>If we just care about the number of pebbles in each bucket, the
+number of ways to get <span class="math inline">\(n_1, n_2, n_3, n_4,
+n_5\)</span> pebbles in buckets 1–5 is <span class="math display">\[
+p(n_1, n_2, n_3, n_4, n_5) = \frac{N!}{n_1! n_2! n_3! n_4!
+n_5!},\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">The number of ways to get all the pebbles in bucket 3 is <span class="math display">\[ \frac{10}{0! \times 0! \times 10! \times 0!
+\times 0!} =
+   \frac{10!}{10!} = 1 \]</span>
+</li>
+<li class="fragment">The number of ways to get 1 pebble in bucket 2, 8 in bucket 3,
+and 1 in bucket 4 is <span class="math display">\[ \frac{10}{0! \times
+1! \times 8! \times 1! \times 0!} =
+   \frac{10!}{8!} = 90 \]</span>
+</li>
+<li class="fragment">The number of ways to get 2 pebbles in bucket 2, 6 in bucket 3,
+and 2 in bucket 4 is <span class="math display">\[ \frac{10}{0! \times
+2! \times 6! \times 2! \times 0!} =
+   1,260
+\]</span>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="example-1" class="slide level2 eighty"><h2 class="eighty">Example</h2>
+<p><img data-src="assets/images/fig-10_1.png" height="900" alt="Figure 10.1"></p>
+</section><section id="application-to-bayesian-statistics" class="slide level2 eighty"><h2 class="eighty">Application to Bayesian Statistics</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li class="fragment">Continuously distributed variable:
+<ul>
+<li>If all we know is the mean and the standard deviation, then the
+<em>normal distribution</em> is the distribution with the greatest
+information entropy.</li>
+<li class="fragment">If we know something else, beside the mean and standard
+deviation, then that imposes a new constraint, and the normal
+distribution may not have the maximum entropy.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Binomial data:
+<ul>
+<li>Two possible outcomes (e.g., Heads and Tails) Count the number of
+heads in <span class="math inline">\(N\)</span> trials, if the
+probability of getting heads in any trial is <span class="math inline">\(p\)</span>.</li>
+<li class="fragment">If we know <span class="math inline">\(p\)</span> is the same
+for each trial, then the <em>binomial distribution</em> has the greatest
+information entropy.
+<ul>
+<li>If <span class="math inline">\(p\)</span> can vary from one trial to
+another, then other distributions will maximuze entropy (e.g., <em>beta
+binomial distribution</em>).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="homework" class="title-slide slide level1 center"><h1 class="center">Homework</h1>
+
+</section><section id="exercise-8m4" class="slide level2 eighty"><h2 class="eighty">Exercise 8M4</h2>
+<blockquote>
+<p>Repeat the tulips analysis, but this time use priors that constrain
+the effect of water to be positive and the effect of shade to be
+negative. Use prior predictive simulation. What do these prior
+assumptions mean for the interaction prior, if anything?</p>
+</blockquote>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Set the problem up</p>
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(tulips)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> tulips <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">blooms_std =</span> blooms <span class="sc">/</span> <span class="fu">max</span>(blooms),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">water_cent =</span> water <span class="sc">-</span> <span class="fu">mean</span>(water),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">shade_cent =</span> shade <span class="sc">-</span> <span class="fu">mean</span>(shade)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Define a model with no interaction</p>
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>  mdl <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">alist</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>   a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="fl">0.25</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>   bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>   bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>   sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>   ), <span class="at">data =</span> d)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="prior-predictive-simulation" class="slide level2 eighty"><h2 class="eighty">Prior predictive simulation</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="fl">0.25</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(mdl)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># 3 plots in 1 row</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>){</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(d<span class="sc">$</span>shade_cent <span class="sc">==</span> s)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>( d<span class="sc">$</span>water_cent[idx], d<span class="sc">$</span>blooms_std[idx], </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"water"</span>, <span class="at">ylab =</span> <span class="st">"blooms"</span>, </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> rangi2)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">link</span>(mdl, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">shade_cent =</span> s, </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">water_cent =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">post =</span> prior)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/prior-predict-1-1.png"></p>
+<ul>
+<li class="fragment">Focus first on the center panel (shade = 0).</li>
+<li class="fragment">Slope is too steep, range of slopes is too small:
+<ul>
+<li>Change the prior for <span class="math inline">\(\beta_w\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="prior-predictive-simulation-1" class="slide level2 eighty"><h2 class="eighty">Prior predictive simulation</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mdl<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.25</span>, <span class="fl">0.35</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(mdl<span class="fl">.2</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># 3 plots in 1 row</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>){</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(d<span class="sc">$</span>shade_cent <span class="sc">==</span> s)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>( d<span class="sc">$</span>water_cent[idx], d<span class="sc">$</span>blooms_std[idx], </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"water"</span>, <span class="at">ylab =</span> <span class="st">"blooms"</span>, </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> rangi2)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">link</span>(mdl<span class="fl">.2</span>, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">shade_cent =</span> s, </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">water_cent =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">post =</span> prior)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/prior-predict-2-1.png"></p>
+<ul>
+<li class="fragment">Look at left &amp; right panels (shade)</li>
+<li class="fragment">Slope is too steep:
+<ul>
+<li>Left is too high, right is too low.</li>
+<li>Change the prior for <span class="math inline">\(\beta_s\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="prior-predictive-simulation-2" class="slide level2 eighty"><h2 class="eighty">Prior predictive simulation</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mdl<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.25</span>, <span class="fl">0.35</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(mdl<span class="fl">.3</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># 3 plots in 1 row</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>){</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(d<span class="sc">$</span>shade_cent <span class="sc">==</span> s)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>( d<span class="sc">$</span>water_cent[idx], d<span class="sc">$</span>blooms_std[idx], </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"water"</span>, <span class="at">ylab =</span> <span class="st">"blooms"</span>, </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> rangi2)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>( <span class="at">h=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">link</span>(mdl<span class="fl">.3</span>, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">shade_cent =</span> s, </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">water_cent =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">post =</span> prior)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/prior-predict-3-1.png"></p>
+<ul>
+<li class="fragment">This looks good.
+<ul>
+<li>Now make a model with an interaction …</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="prior-predictive-simulation-3" class="slide level2 eighty"><h2 class="eighty">Prior predictive simulation</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mdl<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent <span class="sc">-</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      bws <span class="sc">*</span> water_cent <span class="sc">*</span> shade_cent,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.25</span>, <span class="fl">0.35</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    bws <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span></code></pre></div>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="1">Why do we use a minus sign for the interaction term?</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/prior-predict-4-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="fitted-model" class="slide level2 eighty"><h2 class="eighty">Fitted Model</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mdl<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">-</span> bs <span class="sc">*</span> shade_cent <span class="sc">-</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      bws <span class="sc">*</span> water_cent <span class="sc">*</span> shade_cent,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.25</span>, <span class="fl">0.35</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    bs <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    bws <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># 3 plots in 1 row</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>){</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(d<span class="sc">$</span>shade_cent <span class="sc">==</span> s)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>( d<span class="sc">$</span>water_cent[idx], d<span class="sc">$</span>blooms_std[idx], </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"water"</span>, <span class="at">ylab =</span> <span class="st">"blooms"</span>, </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> rangi2)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">link</span>(mdl<span class="fl">.4</span>, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">shade_cent =</span> s, </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">water_cent =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>))</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="fragment" data-fragment-index="2">
+<p><img data-src="assets/fig/prior-predict-5-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="inspect-posteriors" class="slide level2 eighty"><h2 class="eighty">Inspect posteriors</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidybayes)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidybayes.rethinking)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(mdl<span class="fl">.4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">imap_dfr</span>(<span class="sc">~</span><span class="fu">tibble</span>(<span class="at">.variable =</span> .y, <span class="at">.value =</span> .x, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.draw =</span> <span class="fu">seq_along</span>(.x), <span class="at">sample =</span> <span class="st">"prior"</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>           </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> <span class="fu">tidy_draws</span>(mdl<span class="fl">.4</span>) <span class="sc">%&gt;%</span> <span class="fu">gather_variables</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample =</span> <span class="st">"post"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(prior)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(posterior, <span class="fu">aes</span>(<span class="at">x =</span> .value, <span class="at">color =</span> sample, </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>.variable, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"posterior"</span>, <span class="at">y =</span> <span class="st">"density"</span>) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="seventy bare max-listing">
+<p><img data-src="assets/fig/extract-posteriors-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="alternate-model-specification" class="slide level2 eighty"><h2 class="eighty">Alternate Model Specification</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy bare max-listing">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mdl<span class="fl">.4</span>b <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    blooms_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bw <span class="sc">*</span> water_cent <span class="sc">+</span> bs <span class="sc">*</span> shade_cent <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      bws <span class="sc">*</span> water_cent <span class="sc">*</span> shade_cent,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># New links</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    bs <span class="ot">&lt;-</span> <span class="sc">-</span>bs_m,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    bws <span class="ot">&lt;-</span> <span class="sc">-</span>bws_m,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.25</span>, <span class="fl">0.35</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    bw <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    bs_m <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    bws_m <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> d)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># 3 plots in 1 row</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>){</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(d<span class="sc">$</span>shade_cent <span class="sc">==</span> s)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>( d<span class="sc">$</span>water_cent[idx], d<span class="sc">$</span>blooms_std[idx], </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"water"</span>, <span class="at">ylab =</span> <span class="st">"blooms"</span>, </span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> rangi2)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">link</span>(mdl<span class="fl">.4</span>b, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">shade_cent =</span> s, </span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">water_cent =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>))</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># There are 3 links, so link() returns a list with </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mu, bs, and bws. We only want mu.</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> mu<span class="sc">$</span>mu</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) </span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div>
+<p><img data-src="assets/fig/prior-predict-5b-1.png"></p>
+</div>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_13">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_13"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_13">https://ees5891.jgilligan.org/slides/class_13</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_13/ees_5891-03_class_13_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_13/ees_5891-03_class_13_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

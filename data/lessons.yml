@@ -57,6 +57,7 @@ lessons:
 - date: '2022-10-11'
   title: Generalized linear models
   reading: /reading/reading_13
+  lecture: /slides/class_13
 - date: '2022-10-13'
   title: Fall Break
 - date: '2022-10-18'
