@@ -63,25 +63,23 @@ lessons:
 - date: '2022-10-18'
   title: Generalized linear models
   reading: /reading/reading_14
-  assignment: homework_08
 - date: '2022-10-20'
-  title: Discrete statistical models
-  reading: /reading/reading_15
-  assignment: project_proposal
-- date: '2022-10-25'
-  title: Mixture models
-  reading: /reading/reading_16
-  assignment: homework_09
-- date: '2022-10-27'
   title: Discussion of student projects
+  reading: /reading/reading_15
+- date: '2022-10-25'
+  title: Discrete statistical models
+  reading: /reading/reading_16
+- date: '2022-10-27'
+  title: Mixture models
   reading: /reading/reading_17
 - date: '2022-11-01'
   title: Multilevel models
   reading: /reading/reading_18
-  assignment: homework_10
+  assignment: homework_08
 - date: '2022-11-03'
   title: Multilevel models, part 2
   reading: /reading/reading_19
+  assignment: project_proposal
 - date: '2022-11-08'
   title: More multilevel models
   reading: /reading/reading_20

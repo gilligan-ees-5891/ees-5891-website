@@ -1,5 +1,5 @@
 ---
-title: Discrete statistical models
+title: Discussion of student projects
 class_date: '2022-10-20'
 class_number: 15
 weight: 15
@@ -13,7 +13,8 @@ pdf_url: /files/reading_asgts/reading_15.pdf
 ---
 ## Reading:
 
-### Required Reading (everyone):
+No new reading for today.
 
-* Statistical Rethinking, Ch. 11 ("God Spiked the Integers").
+### Notes:
 
+No reading for today. We will discuss the semester research projects.
