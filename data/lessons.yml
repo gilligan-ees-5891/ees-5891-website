@@ -76,7 +76,7 @@ lessons:
 - date: '2022-11-01'
   title: Multilevel models
   reading: /reading/reading_18
-  assignment: homework_08
+  assignment: homework_07
 - date: '2022-11-03'
   title: Multilevel models, part 2
   reading: /reading/reading_19
@@ -84,14 +84,13 @@ lessons:
 - date: '2022-11-08'
   title: More multilevel models
   reading: /reading/reading_20
-  assignment: homework_11
+  assignment: homework_08
 - date: '2022-11-10'
   title: Messy data
   reading: /reading/reading_21
 - date: '2022-11-15'
   title: Geospatial data analysis
   reading: /reading/reading_22
-  assignment: homework_12
 - date: '2022-11-17'
   title: Laplace approximations
   reading: /reading/reading_23
