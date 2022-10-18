@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Generalized Linear Models in Practice</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Generalized Linear Models in Practice</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #14:
+       Tuesday, October 18
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section id="announcements" class="title-slide slide level1 center"><h1 class="center">Announcements</h1>
+<ul>
+<li>No office hour this afternoon</li>
+<li>Next homework will be due Tuesday Nov. 1</li>
+<li>Project proposal due Thursday Nov. 3
+<ul>
+<li>I’ll talk more about the project later today</li>
+</ul>
+</li>
+</ul></section><section><section id="choosing-likelihood-functions" class="title-slide slide level1 center"><h1 class="center">Choosing Likelihood Functions</h1>
+
+</section><section id="choosing-a-distribution" class="slide level2 eighty"><h2 class="eighty">Choosing A Distribution</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>“Histomancy” (<strong>bad</strong>)
+<ul>
+<li>Choosing a distribution from a histogram of the outcome
+variable</li>
+<li class="fragment" data-fragment-index="1">A Normal distribution means the <em>residuals</em> should look
+Gaussian <em>after</em> subtracting the prediction.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">Instead, think about the <em>process</em> that produced the
+observations.</li>
+</ul>
+</div>
+<div class="column fragment" data-fragment-index="2">
+<div class="bare max-listing sixtyfive mtop-1">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">rgamma</span>(N, <span class="at">shape =</span> <span class="dv">2</span>, <span class="at">scale =</span> <span class="dv">2</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">mu =</span> a <span class="sc">+</span> b <span class="sc">*</span> x,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">rnorm</span>(N, mu, sigma),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">res =</span> y <span class="sc">-</span> mu)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">summarize</span>(d, <span class="at">ymin =</span> <span class="fu">min</span>(y), <span class="at">ymax =</span> <span class="fu">max</span>(y), </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">ymean =</span> <span class="fu">mean</span>(y), <span class="at">ysd =</span> <span class="fu">sd</span>(y),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">rmin =</span> <span class="fu">min</span>(res), <span class="at">rmax =</span> <span class="fu">max</span>(res))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ref_norm <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">y =</span> <span class="fu">seq</span>(ds<span class="sc">$</span>ymin, ds<span class="sc">$</span>ymax, <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y_dens =</span> <span class="fu">dnorm</span>(y, <span class="at">mean =</span> ds<span class="sc">$</span>ymean, <span class="at">sd =</span> ds<span class="sc">$</span>ysd),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">res =</span> <span class="fu">seq</span>(ds<span class="sc">$</span>rmin, ds<span class="sc">$</span>rmax, <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">res_dens =</span> <span class="fu">dnorm</span>(res, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma))</span></code></pre></div>
+</div>
+<div class="bare max-listing seventy mtop-1">
+<p><img data-src="assets/fig/histomancy_plots-1.png"></p>
+</div>
+</div>
+</div>
+</section><section id="code-for-plots" class="slide level2"><h2>Code for plots</h2>
+<div class="bare max-listing mtop-1 seventy">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Data"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x =</span> y)) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>, </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"darkblue"</span>, <span class="fl">0.3</span>)) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ref_norm, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> y_dens), <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Observed Y"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(<span class="at">x =</span> res)) <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>, </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"darkblue"</span>, <span class="fl">0.3</span>)) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ref_norm, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> res, <span class="at">y =</span> res_dens), <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"residual (y - mu)"</span>, <span class="at">title =</span> <span class="st">"Fit residuals"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3</span></code></pre></div>
+</div>
+</section><section id="exponential-distribution" class="slide level2 eighty"><h2 class="eighty">Exponential Distribution</h2>
+<ul>
+<li class="fragment">Events happen randomly at a <em>constant average rate</em> in
+time or space</li>
+<li class="fragment">Spacing between events follows an <em>exponential</em>
+distribution</li>
+<li class="fragment">Example:
+<ul>
+<li>Radionuclides decay at a constant rate
+<ul>
+<li>The probability that any nucleus decays in the next second is <span class="math inline">\(p\)</span> (assume <span class="math inline">\(p
+\ll 1\)</span>)</li>
+</ul>
+</li>
+<li class="fragment">Consider a large number <span class="math inline">\(N\)</span>
+of nuclei
+<ul>
+<li>On average, <span class="math inline">\(r = Np\)</span> decay every
+second.</li>
+</ul>
+</li>
+<li class="fragment">Consider the time <span class="math inline">\(t\)</span> between
+successive decays
+<ul>
+<li>
+<span class="math inline">\(t\)</span> is distributed exponentially,
+with probability density <br><code>dexp(t, rate = r)</code> <span class="math inline">\(= r \exp(-rt) = Np \exp(-Npt)\)</span>
+</li>
+</ul>
+</li>
+<li class="fragment">The time between <span class="math inline">\(k\)</span> decays
+follows the <em>gamma distribution</em>:
+<br><code>dgamma(t, rate = r, shape = k)</code>
+<ul>
+<li>
+<code>dgamma(t, rate = r, shape = 1)</code> is the same as
+<code>dexp(t, rate = t)</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="exponential-family-of-distribuions" class="slide level2 eighty"><h2 class="eighty">Exponential Family of Distribuions</h2>
+<p><img data-src="assets/images/exp-family.png" height="900" alt="Expoonential family of distributions"></p>
+</section></section><section><section id="link-functions" class="title-slide slide level1 center"><h1 class="center">Link Functions</h1>
+
+</section><section id="generalized-linear-models" class="slide level2 eighty"><h2 class="eighty">Generalized Linear Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Predict <span class="math inline">\(y\)</span> from <span class="math inline">\(x\)</span>: <span class="math display">\[
+\begin{align}
+y &amp;\sim \text{foo}(\theta, \phi) \\
+f(\theta) &amp;= \alpha + \beta x \\
+\cdots &amp;
+\end{align}
+\]</span>
+<ul>
+<li>
+<strong>foo</strong> is some probability distribution with
+parameters <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span>.</li>
+<li>
+<span class="math inline">\(f()\)</span> is a <em>link
+function</em>.</li>
+</ul>
+</li>
+<li class="fragment">This is a <em>generalized linear model</em> because <span class="math inline">\(f(\theta)\)</span> is a linear function of <span class="math inline">\(x\)</span>.</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Choose a link function based on the constraints on <span class="math inline">\(\theta\)</span>.
+<ul>
+<li>If <span class="math inline">\(\theta\)</span> is a probability,
+then <span class="math inline">\(0 \le \theta \le 1\)</span>, so we
+would need a <em>link function</em> to map between the valid range of
+<span class="math inline">\(\theta\)</span> and the unlimited range of
+<span class="math inline">\(\alpha + \beta x\)</span>.</li>
+</ul>
+</li>
+<li class="fragment">A common link function for probabilities is the <em>logit</em>
+function <span class="math display">\[
+\begin{align}
+\text{logit}(\theta) &amp;= \ln \frac{\theta}{1 - \theta} \\
+\text{logit}^{-1}(x) &amp;= \frac{1}{1 + \exp(-x)} =
+\frac{\exp(x)}{\exp(x) + 1}
+\end{align}
+\]</span>
+<ul>
+<li class="fragment"><em>logit</em> maps the range <span class="math inline">\([0,1]\)</span> to <span class="math inline">\([-\infty, \infty]\)</span>.</li>
+<li class="fragment"><em>logit</em><sup>-1</sup> maps the real axis <span class="math inline">\([-\infty, \infty]\)</span> to the range <span class="math inline">\([0,1]\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="logit-link-function" class="slide level2"><h2>Logit link function</h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="assets/fig/logit-1.png"></p>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/inv-logit-1.png"></p>
+</div>
+</div>
+</section><section id="other-link-functions" class="slide level2 eighty"><h2 class="eighty">Other Link Functions</h2>
+<ul>
+<li>Logit and Probit both map the interval <span class="math inline">\((0,1)\)</span> to the real number axis <span class="math inline">\((-\infty, \infty)\)</span>. <span class="math display">\[
+\begin{align}
+\text{logit}^{-1}(x) &amp;= \frac{1}{1 + e^{-x}} \\
+\text{probit}^{-1}(x) &amp;= \Phi(x) = \int_{-\infty}^x \text{Normal}(z,
+0, 1) dz
+  = \texttt{pnorm(x, 0, 1)}
+\end{align}
+\]</span>
+</li>
+</ul>
+<p><img data-src="assets/fig/logit-probit-1.png"></p>
+</section><section id="other-kinds-of-link-functions" class="slide level2 eighty"><h2 class="eighty">Other kinds of link functions</h2>
+<ul>
+<li>
+<span class="math inline">\(\log(\theta) = \alpha + \beta x\)</span>
+ensures that <span class="math inline">\(\theta &gt; 0\)</span>.
+<ul>
+<li class="fragment"><span class="math inline">\(\theta\)</span> has an exponential
+dependence on <span class="math inline">\(x\)</span>
+<ul>
+<li class="fragment">Constant increments of <span class="math inline">\(x\)</span>
+cause <span class="math inline">\(y\)</span> to increase by a proportion
+<ul>
+<li>For <span class="math inline">\(\delta = \log(2) / \beta\)</span>,
+every time <span class="math inline">\(x \rightarrow x +
+\delta\)</span>, <span class="math inline">\(\theta \rightarrow
+2\theta\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Ask yourself whether this kind of model makes sense, based on
+what you know about the system you’re studying.</li>
+</ul>
+</li>
+</ul></section></section><section><section id="other-considerations" class="title-slide slide level1 center"><h1 class="center">Other considerations</h1>
+
+</section><section id="omitted-variable-bias" class="slide level2 eighty"><h2 class="eighty">Omitted Variable Bias</h2>
+<ul>
+<li>
+<span class="math inline">\(y\)</span> is 0 or 1
+<ul>
+<li class="fragment">
+<p>True model:</p>
+<ul>
+<li>Bernoulli model
+<ul>
+<li>Like coin tossing with probability <span class="math inline">\(p\)</span> of heads</li>
+</ul>
+</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Bernoulli}(p) \\
+\text{logit}(p) &amp;= \alpha + \beta_x X + \beta_z Z
+\end{align}
+\]</span></p>
+</li>
+<li class="fragment"><p>Suppose we leave <span class="math inline">\(Z\)</span> out
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Bernoulli}(p) \\
+\text{logit}(p) &amp;= \alpha + \beta_x X
+\end{align}
+\]</span></p></li>
+<li class="fragment"><p>With ordinary linear regression, this just increases the
+scatter around the mean</p></li>
+<li class="fragment">
+<p>With a logit model, there will be data where <span class="math inline">\(X\)</span> is small, but <span class="math inline">\(Y = 1\)</span></p>
+<ul>
+<li>These cases will make it seem like <span class="math inline">\(X\)</span> doesn’t have much influence on <span class="math inline">\(Y\)</span>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="interpreting-parameters" class="slide level2 eighty"><h2 class="eighty">Interpreting Parameters</h2>
+<ul>
+<li>Compare a linear and a logit model:
+<ul>
+<li>Model 1: <span class="math inline">\(\mu = \alpha + \beta
+x\)</span>
+</li>
+<li>Model 2: <span class="math inline">\(\text{logit}(p) = \alpha +
+\beta x\)</span>
+</li>
+</ul>
+</li>
+<li class="fragment">In Model 1, every time we change <span class="math inline">\(x\)</span> by 1, <span class="math inline">\(y\)</span> changes by <span class="math inline">\(\beta\)</span>.</li>
+<li class="fragment">In Model 2:
+<ul>
+<li>When <span class="math inline">\(\alpha + \beta x\)</span> is close
+to zero, changing <span class="math inline">\(x\)</span> by <span class="math inline">\(\delta\)</span> will change <span class="math inline">\(p\)</span> by <span class="math inline">\(0.25
+\beta \delta\)</span>,</li>
+<li class="fragment">When <span class="math inline">\(\alpha + \beta x\)</span> is
+close to 3 or -3, changing <span class="math inline">\(x\)</span> by
+<span class="math inline">\(\delta\)</span> will change <span class="math inline">\(p\)</span> by <span class="math inline">\(0.045
+\beta \delta\)</span>,</li>
+<li class="fragment">When <span class="math inline">\(\alpha + \beta x\)</span> is
+close to 5 or -5, changing <span class="math inline">\(x\)</span> by
+<span class="math inline">\(\delta\)</span> will change <span class="math inline">\(p\)</span> by <span class="math inline">\(0.007
+\beta \delta\)</span>,</li>
+</ul>
+</li>
+</ul></section></section><section><section id="information-theory" class="title-slide slide level1 center"><h1 class="center">Information Theory</h1>
+
+</section><section id="information-criteria" class="slide level2 eighty"><h2 class="eighty">Information Criteria</h2>
+<ul>
+<li>Everything from Chapter 7 about information theory applies to GLMs
+the same as it does to linear models.</li>
+<li class="fragment">Quetion: Can we apply information criteria like WAIC to decide
+what likelihood function to use?
+<ul>
+<li class="fragment">WAIC and other information criteria only work for comparing
+models that use the same kind of likelihood function
+<ul>
+<li>Normal, Binomial, Poisson, etc.</li>
+</ul>
+</li>
+<li class="fragment">Information criteria measure deviance, but the relationship
+between deviance and how well the model fits the data depends on the
+likelihood function.
+<ul>
+<li>If we compare two models with the same likelihood function, smaller
+deviance means better fit</li>
+<li class="fragment">But comparing two models with different likelihood functions, we
+can’t sort out what part of deviance comes from the likelihood and what
+part comes from goodness of fit.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Instead, use the <strong>principle of maximum entropy</strong>
+to choose the likelihood function, and then use WAIC or other
+information criteria to compare different specifications of the linear
+part of the model.</li>
+</ul></section></section><section><section id="research-project" class="title-slide slide level1 center"><h1 class="center">Research Project</h1>
+
+</section><section id="research-project-1" class="slide level2 eighty"><h2 class="eighty">Research Project</h2>
+<ul>
+<li>For most of the rest of the semester, we’ll be focusing on research
+projects</li>
+<li class="fragment">Choose a statistial problem to work on;
+<ul>
+<li>Think of:
+<ul>
+<li>A data set you would like to analyze</li>
+<li>A question you would like to answer</li>
+</ul>
+</li>
+<li class="fragment">Apply DAG analysis to develop a causal model relating
+variables</li>
+<li class="fragment">Develop a regression model</li>
+<li class="fragment">Use your model to analyze your data</li>
+<li class="fragment">Develop one or more alternate models and compare them to your
+original model</li>
+<li class="fragment">Intepret what this means for your research question</li>
+</ul>
+</li>
+<li class="fragment">On Thursday, we will discuss your ideas for research projects
+<ul>
+<li class="fragment">Come to class with thoughts about what you want to work on</li>
+<li class="fragment">Formal project proposal is due Thursday Nov. 3</li>
+</ul>
+</li>
+</ul></section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_14">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_14"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_14">https://ees5891.jgilligan.org/slides/class_14</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_14/ees_5891-03_class_14_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_14/ees_5891-03_class_14_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

@@ -63,6 +63,7 @@ lessons:
 - date: '2022-10-18'
   title: Generalized linear models
   reading: /reading/reading_14
+  lecture: /slides/class_14
 - date: '2022-10-20'
   title: Discussion of student projects
   reading: /reading/reading_15
