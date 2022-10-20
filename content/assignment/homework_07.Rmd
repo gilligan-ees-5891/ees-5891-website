@@ -39,25 +39,25 @@ Here are the [homework exercises from the book](/files/homework_docs/McElreath-C
 ### Notes on Homework:
 
 
-#### Exercise 9M3
+#### Exercise 9M2
 
-For exercise 9M3, the question is ambiguous, about whether you should 
+For exercise 9M2, the question is ambiguous, about whether you should 
 uze the original `dexp(1)` or the `dunif(0,1)` from 9M1 as the prior for
 sigma. Use `dexp(1)` and only change the prior for `b` from the `m9.1` in the 
 book.
 
-#### Exercises 9M2--9M3
+#### Exercises 9M1--9M2
 
 For comparing the results, you should both look at the `precis` of the models
 and also plot the densities of the posteriors.
 
 To easily plot the densities of the posteriors for one model, do the
 following (assume the model from the book is `m9.1`, and the models from the
-exercises are `ex9m1` and `ex9m2`).
+           exercises are `ex9m1` and `ex9m2`).
 
 This is equivalent to the code from the textbook for `m9.1`:
-
-```{r ex9m1, echo = TRUE, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
+  
+  ```{r ex9m1, echo = TRUE, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
 library(rethinking)
 library(tidyverse)
 
@@ -85,8 +85,8 @@ m9.1 <- ulam(
 ```
 
 This code will plot the posterior probability densities:
-
-```{r m9.1-dens, echo=TRUE, eval=TRUE, message=FALSE, warning=FALSE, fig.height=4, fig.width=6}
+  
+  ```{r m9.1-dens, echo=TRUE, eval=TRUE, message=FALSE, warning=FALSE, fig.height=4, fig.width=6}
 library(tidybayes)
 library(tidybayes.rethinking)
 library(bayesplot)
@@ -97,8 +97,8 @@ mcmc_dens(m9.1@stanfit)
 If you have two models, `foo` and `bar`, you can compare the 
 posteriors of a parameter like `sigma` using code like this, from the
 textbook:
-
-```{r m9.1-dens-compare-base, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
+  
+  ```{r m9.1-dens-compare-base, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
 post_foo <- extract.samples(foo)
 post_bar <- extract.samples(bar)
 
@@ -107,8 +107,8 @@ dens(post_bar$sigma, lwd = 1, col = rangi2, add = TRUE)
 ```
 
 Alternately, you can do the same thing using the `tidyverse` dialect:
-
-```{r m9.1-dens-compare, echo=TRUE, eval=FALSE}
+  
+  ```{r m9.1-dens-compare, echo=TRUE, eval=FALSE}
 foo_draws <- tidy_draws(foo) %>% mutate(model = "foo")
 bar_draws <- tidy_draws(bar) %>% mutate(model = "bar")
 
@@ -125,17 +125,38 @@ model is which.
 
 The argument `size = 1` tells R how thick to make the line, and `alpha = 0.3`
 sets the transparency of the fills (1 = completely opague and 
-0 = completely transparent)
+                                    0 = completely transparent)
+
+If you want to make a single plot that shows comparisons of all the parameters 
+for both models, 
+the code gets a bit more complicated:
+
+```{r dens-compare-all, echo=TRUE, eval=FALSE}
+foo_draws <- tidy_draws(foo) %>%
+  gather_draws(a[i], b[i], sigma) %>%
+  mutate(model = "foo")
+bar_draws <- tidy_draws(bar) %>%
+  gather_draws(a[i], b[i], sigma) %>%
+  mutate(model = "bar")
+
+bind_rows(foo_draws, bar_draws) %>% 
+  mutate(.variable = ifelse(is.na(i), .variable,
+                            str_c(.variable, "[", i, "]"))) %>%
+  ggplot(aes(x = .value, col = model, fill = model)) + 
+  geom_density(alpha = 0.3) + labs(x = NULL, y = NULL) + 
+  facet_wrap(~.variable, scales = "free")
+
+```
 
 #### Exercises 11E1--11E3
 
-To check yourself, for 11E1 the log-odds is `r round(log(0.35 / (1 - 0.35)), 3)`, for 11E2 the probability is `r round(logistic(3.2), 3)`, and for 11E3 the proportional change in the odds is `r round(exp(1.7), 3)`
+To check yourself, for 11E1 the log-odds is `r round(log(0.35 / (1 - 0.35)), 3)`, for 11E2 the probability is `r round(logistic(3.2), 3)`, and for 11E3 the proportional change in the odds is `r round(exp(1.7), 2)`
 
 #### Exercise 11M7
 
 For 11M7, I recommend using the following code to compare the 
-`precis`es of the two models (`m11.4` is the model on page 330, and 
-`m11.4a` is the `quap` version model that you should write for this
+`precis`es of the two models (`m11.4` is the `ulam` model on page 330, and 
+`m11.4q` is the `quap` version model that you should write for this
 exercise).
 This code prints the two `precis`es side-by-side with each row representing
 a different parameter.
@@ -153,3 +174,11 @@ You can use the code from my notes (above) for exercises 9M1 and 9M2 to do this.
 Think about what important differences you see in the posteriors from the 
 two models, and what I've been emphasizing in class about the differences 
 between the `quap` and Monte-Carlo methods for estimating posteriors.
+
+You can also use the code, above, in the notes for 9M1 and 9M2, to
+make a single plot comparing the posteriors of all the parameters for
+both models. Then you can make a single comparison plot for any of 
+the parameters that show significant differences between the `quap`
+and `ulam` models.
+
+At the minimum, be sure to look carefully at `a[2]`.
