@@ -20,7 +20,7 @@ pdf_url: /files/homework_asgts/homework_07.pdf
 
 ### Preliminary Information
 
-Here are the [homework exercises from the book](/files/homework_docs/McElreath-Ch-9-11-homework.pdf)
+Here are the [homework exercises from the book](/files/homework_docs/McElreath-Ch-9-11-homework.pdf). You can also get them on Brightspace.
 
 ### Homework Exercises:
 
