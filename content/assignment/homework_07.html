@@ -21,7 +21,117 @@ pdf_url: /files/homework_asgts/homework_07.pdf
 
 <div id="homework" class="section level2">
 <h2>Homework</h2>
+<div id="preliminary-information" class="section level3">
+<h3>Preliminary Information</h3>
+<p>Here are the <a href="/files/homework_docs/McElreath-Ch-9-11-homework.pdf">homework exercises from the book</a></p>
+</div>
 <div id="homework-exercises" class="section level3">
 <h3>Homework Exercises:</h3>
+<p><strong>Self-study:</strong> Work these exercises, but do not turn them in.</p>
+<ul>
+<li>Exerccises 9E3–9E6</li>
+<li>Exercises 11E1–11E3</li>
+</ul>
+<p><strong>Turn in:</strong> Work these exercises and turn them in.</p>
+<ul>
+<li>Exercises 9M1–9M2</li>
+<li>Exercises 11M3–11M4 and 11M7</li>
+</ul>
+</div>
+<div id="notes-on-homework" class="section level3">
+<h3>Notes on Homework:</h3>
+<div id="exercise-9m3" class="section level4">
+<h4>Exercise 9M3</h4>
+<p>For exercise 9M3, the question is ambiguous, about whether you should
+uze the original <code>dexp(1)</code> or the <code>dunif(0,1)</code> from 9M1 as the prior for
+sigma. Use <code>dexp(1)</code> and only change the prior for <code>b</code> from the <code>m9.1</code> in the
+book.</p>
+</div>
+<div id="exercises-9m29m3" class="section level4">
+<h4>Exercises 9M2–9M3</h4>
+<p>For comparing the results, you should both look at the <code>precis</code> of the models
+and also plot the densities of the posteriors.</p>
+<p>To easily plot the densities of the posteriors for one model, do the
+following (assume the model from the book is <code>m9.1</code>, and the models from the
+exercises are <code>ex9m1</code> and <code>ex9m2</code>).</p>
+<p>This is equivalent to the code from the textbook for <code>m9.1</code>:</p>
+<pre class="r"><code>library(rethinking)
+library(tidyverse)
+
+data(rugged)
+d &lt;- rugged %&gt;% mutate(log_gdp = log(rgdppc_2000))
+
+dd &lt;- d %&gt;% filter(complete.cases(rgdppc_2000)) %&gt;%
+  mutate(
+    log_gdp_std = log_gdp / mean(log_gdp),
+    rugged_std = rugged / max(rugged),
+    cid = ifelse(cont_africa == 1, 1, 2)
+  )
+
+dat_slim &lt;- dd %&gt;% select(log_gdp_std, rugged_std, cid) %&gt;%
+  mutate(cid = as.integer(cid))
+
+m9.1 &lt;- ulam(
+  alist(
+    log_gdp_std ~ dnorm(mu, sigma),
+    mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215) ,
+    a[cid] ~ dnorm(1, 0.1),
+    b[cid] ~ dnorm(0, 0.3),
+    sigma ~ dexp(1)
+  ), data=dat_slim, chains = 4, cores = 4)</code></pre>
+<p>This code will plot the posterior probability densities:</p>
+<pre class="r"><code>library(tidybayes)
+library(tidybayes.rethinking)
+library(bayesplot)
+
+mcmc_dens(m9.1@stanfit)</code></pre>
+<p><img src="/assignment/homework_07_files/figure-html/m9.1-dens-1.png" width="576" /></p>
+<p>If you have two models, <code>foo</code> and <code>bar</code>, you can compare the
+posteriors of a parameter like <code>sigma</code> using code like this, from the
+textbook:</p>
+<pre class="r"><code>post_foo &lt;- extract.samples(foo)
+post_bar &lt;- extract.samples(bar)
+
+dens(post_foo$sigma, lwd = 1)
+dens(post_bar$sigma, lwd = 1, col = rangi2, add = TRUE)</code></pre>
+<p>Alternately, you can do the same thing using the <code>tidyverse</code> dialect:</p>
+<pre class="r"><code>foo_draws &lt;- tidy_draws(foo) %&gt;% mutate(model = &quot;foo&quot;)
+bar_draws &lt;- tidy_draws(bar) %&gt;% mutate(model = &quot;bar&quot;)
+
+bind_rows(foo_draws, bar_draws) %&gt;% 
+  ggplot(aes(x = sigma, color = model, fill = model)) + 
+  geom_density(size = 1, alpha = 0.3)</code></pre>
+<p>The first two lines extract the Monte-Carlo samples of the posterior for each
+model, and add a label <code>model</code> to indicate which model they came from.
+Then I use <code>ggplot</code> to plot the posterior density of sigma, from each model,
+where the color of the line and the fill inside the density plot indicate which
+model is which.</p>
+<p>The argument <code>size = 1</code> tells R how thick to make the line, and <code>alpha = 0.3</code>
+sets the transparency of the fills (1 = completely opague and
+0 = completely transparent)</p>
+</div>
+<div id="exercises-11e111e3" class="section level4">
+<h4>Exercises 11E1–11E3</h4>
+<p>To check yourself, for 11E1 the log-odds is -0.619, for 11E2 the probability is 0.961, and for 11E3 the proportional change in the odds is 5.474</p>
+</div>
+<div id="exercise-11m7" class="section level4">
+<h4>Exercise 11M7</h4>
+<p>For 11M7, I recommend using the following code to compare the
+<code>precis</code>es of the two models (<code>m11.4</code> is the model on page 330, and
+<code>m11.4a</code> is the <code>quap</code> version model that you should write for this
+exercise).
+This code prints the two <code>precis</code>es side-by-side with each row representing
+a different parameter.</p>
+<pre class="r"><code>pr &lt;- precis( m11.4 , 2 )[,1:4]
+prq &lt;- precis( m11.4q , 2 )
+round( cbind( pr , prq ) , 2 )</code></pre>
+<p>Then for parameters that are really different in the two models
+(differences of more than 0.1 in the means or the 5.5% or 94.5% levels),
+make a density plot comparing the posteriors of the two models.
+You can use the code from my notes (above) for exercises 9M1 and 9M2 to do this.
+Think about what important differences you see in the posteriors from the
+two models, and what I’ve been emphasizing in class about the differences
+between the <code>quap</code> and Monte-Carlo methods for estimating posteriors.</p>
+</div>
 </div>
 </div>
