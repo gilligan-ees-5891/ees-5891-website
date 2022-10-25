@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Integer Models</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Integer Models</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #16:
+       Tuesday, October 25
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="integer-models" class="title-slide slide level1 center"><h1 class="center">Integer Models</h1>
+
+</section><section id="counting-events" class="slide level2 eighty"><h2 class="eighty">Counting Events</h2>
+<ul>
+<li>Counting events:
+<ul>
+<li>Outcome variable is a whole number (0, 1, 2, …)</li>
+<li class="fragment">Definition: <strong>treatment condition</strong> is the
+combination of all the predictor variables.
+<ul>
+<li>Each combination is a different treatment condition.</li>
+</ul>
+</li>
+<li class="fragment">Two approaches:
+<ul>
+<li class="fragment">Treat each event separately, with a probability <span class="math inline">\(p\)</span> that depends on the <em>treatment
+condition</em> (predictor variables).
+<ul>
+<li>Outcome is 0 or 1
+<ul>
+<li>
+<strong>Bernoulli distribution</strong> Like a coin toss with
+probability <span class="math inline">\(p\)</span> of getting heads</li>
+<li>Equivalent: <strong>Binomial distribution</strong> with one trial
+<span class="math inline">\(\text{Binomial}(1, p)\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Group events by <em>treatment condition</em> and sum the events
+<ul>
+<li>Outcome is 0, 1, 2, …</li>
+<li>
+<strong>Binomial distribution</strong> <span class="math inline">\(\text{Binomial}(N, p)\)</span>, where <span class="math inline">\(N\)</span> is the number of trials for the
+treatment condition.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="analyzing-counting-events" class="slide level2 eighty"><h2 class="eighty">Analyzing Counting Events</h2>
+<ul>
+<li>The quadratic approximation <code>quap()</code> only works well for
+<em>Normal</em> posterior distributions.</li>
+<li class="fragment"><em>Bernoulli</em>, <em>Binomial</em>, and <em>Poisson</em>
+distributions are very different to <em>Normal</em> distributions, so
+<code>quap</code> doesn’t work.</li>
+<li class="fragment">Use MCMC analysis (<code>ulam</code>).</li>
+<li class="fragment">Homework exercise 11M7 examines the difference between
+<code>quap</code> and <code>ulam</code> for counting data.</li>
+</ul></section></section><section><section id="example-chimpanzee-altruism" class="title-slide slide level1 center"><h1 class="center">Example: Chimpanzee Altruism</h1>
+
+</section><section id="chimpanzee-altruism" class="slide level2 eighty"><h2 class="eighty">Chimpanzee Altruism</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>A chimpanzee pulls either the right or left lever to get food
+<ul>
+<li class="fragment">One lever is <em>pro-social</em>: When the chimp gets the food,
+a separate tray of food is sent to the other side of the table</li>
+<li class="fragment">Treatment conditions:
+<ol type="1">
+<li>Pro-social lever on the left or right</li>
+<li>The other side of the table is empty, or has a <em>partner</em>
+chimpanzee</li>
+</ol>
+</li>
+<li class="fragment">Count the number of times the chimp pulls the
+<em>pro-social</em> lever.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1">
+<p><img data-src="assets/images/chimp-expt.jpg" height="900" alt="Chimpanzee experiment"></p>
+</div>
+</div>
+</div>
+</section><section id="data" class="slide level2 eighty"><h2 class="eighty">Data</h2>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(chimpanzees)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> chimpanzees</span></code></pre></div>
+</div>
+<ul>
+<li>
+<code>actor</code>: Which chimpanzee is pulling the levers
+(1–7)</li>
+<li>
+<code>condition</code>: Is there a partner (0 = no, 1 = yes)</li>
+<li>
+<code>prosoc_left</code>: Which side is the <em>pro-social</em>
+lever on? (0 = right, 1 = left)</li>
+<li>
+<code>pulled_left</code>: Outcome variable. Did the chimp pull the
+left lever (0 = no, 1 = yes)</li>
+<li class="fragment">Create a <code>treatment</code> variable:
+<ol type="1">
+<li>pro-social on the right, no partner</li>
+<li>pro-social on the left, no partner</li>
+<li>pro-social on the right, partner</li>
+<li>pro-social on the left, partner</li>
+</ol>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">treatment =</span> <span class="dv">1</span> <span class="sc">+</span> prosoc_left <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> condition)</span></code></pre></div>
+</div>
+</li>
+</ul></section><section id="model" class="slide level2 eighty"><h2 class="eighty">Model</h2>
+<p><span class="math display">\[
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha_{\text{actor}} + \beta_{\text{treatment}}
+\\
+\alpha &amp;\sim \text{Normal}(?, ?) \\
+\beta &amp;\sim  \text{Normal}(?, ?) \\
+\end{align}
+\]</span></p>
+<ul>
+<li>Each chimp has a different <span class="math inline">\(\alpha\)</span>, but the same <span class="math inline">\(\beta_{\text{treatment}}\)</span>.
+<ul>
+<li class="fragment">In Chapter 13 (Multilevel models) we’ll make a model with
+different <span class="math inline">\(\beta\)</span> for each
+chimp.</li>
+</ul>
+</li>
+</ul></section><section id="choosing-priors" class="slide level2 eighty"><h2 class="eighty">Choosing priors</h2>
+<ul>
+<li>Wide (uninformative) vs. narrow (informative) priors:</li>
+</ul>
+<p><img data-src="assets/fig/alpha-priors-1.png"></p>
+</section><section id="fit-the-model" class="slide level2 eighty"><h2 class="eighty">Fit the model</h2>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat_trimmed <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">select</span>(pulled_left, actor, treatment) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treatment =</span> <span class="fu">as.integer</span>(treatment))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mdl_chimp <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    pulled_left <span class="sc">~</span> <span class="fu">dbinom</span>(<span class="dv">1</span>, p),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[actor] <span class="sc">+</span> b[treatment],</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    a[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_trimmed, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_chimp, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="at">depth =</span> <span class="dv">2</span>, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1] -0.44 0.33 -0.95  0.07   446  1.01
+## a[2]  3.90 0.75  2.80  5.19  1256  1.00
+## a[3] -0.74 0.34 -1.27 -0.18   612  1.01
+## a[4] -0.74 0.33 -1.28 -0.21   552  1.01
+## a[5] -0.44 0.33 -0.97  0.08   462  1.02
+## a[6]  0.49 0.32 -0.04  1.01   576  1.01
+## a[7]  1.96 0.43  1.29  2.65  1056  1.00
+## b[1] -0.04 0.28 -0.49  0.41   436  1.01
+## b[2]  0.47 0.29  0.01  0.93   405  1.02
+## b[3] -0.39 0.29 -0.85  0.06   415  1.02
+## b[4]  0.35 0.28 -0.09  0.80   413  1.02</code></pre>
+</div>
+</section><section id="what-does-this-mean" class="slide level2 eighty"><h2 class="eighty">What does this mean?</h2>
+<div class="textleft">
+<ul>
+<li>
+<span class="math inline">\(\alpha\)</span> parameters:</li>
+</ul>
+</div>
+<p><img data-src="assets/fig/plot-alpha-range-1.png"></p>
+<div class="textleft">
+<ul>
+<li>This shows the posteriors with 50% and 95% highest-density intervals
+averaged over all treatment conditions</li>
+<li>What does it mean?
+<ul>
+<li class="fragment">3 chimps are more likely to pull the left lever</li>
+<li class="fragment">4 chimps are more likely to pull the right lever</li>
+<li class="fragment">This may reflect handedness, especially for chimp #2.</li>
+</ul>
+</li>
+</ul>
+</div>
+</section><section id="partner-effects" class="slide level2 eighty"><h2 class="eighty">Partner Effects</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Label treatment effects and compare the <span class="math inline">\(\beta\)</span> parameters
+<ul>
+<li>Which lever is pro-social? / Is there a partner?</li>
+</ul>
+</li>
+</ul>
+<div class="seventy max-listing">
+<p><img data-src="assets/fig/label-treatments-1.png"></p>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="1">Difference between partner and no-partner</li>
+</ul>
+<div class="seventy max-listing fragment" data-fragment-index="1">
+<p><img data-src="assets/fig/partner-effect-1.png"></p>
+</div>
+</div>
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidybayes)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidybayes.rethinking)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>treatment_levels <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"R/N"</span>, <span class="st">"L/N"</span>, <span class="st">"R/P"</span>, <span class="st">"L/P"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">spread_draws</span>(mdl_chimp, a[actor], b[treatment]) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treatment =</span> treatment_levels[treatment]) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>a) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"treatment"</span>, <span class="at">values_from =</span> <span class="st">"b"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(post, <span class="at">pars =</span> <span class="fu">vars</span>(<span class="fu">contains</span>(<span class="st">"/"</span>))) <span class="sc">+</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Treatment condition"</span>)</span></code></pre></div>
+</div>
+<div class="seventy max-listing fragment" data-fragment-index="1">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>post_diff <span class="ot">&lt;-</span> <span class="fu">mutate</span>(post, <span class="at">right =</span> <span class="st">`</span><span class="at">R/N</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">R/P</span><span class="st">`</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">left  =</span> <span class="st">`</span><span class="at">L/P</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">L/N</span><span class="st">`</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(post_diff, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"left"</span>)) <span class="sc">+</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Partner effect"</span>, <span class="at">y =</span> <span class="st">"Pro-social lever"</span>)</span></code></pre></div>
+<ul>
+<li>Notice the opposite sign for right and left</li>
+<li>
+<span class="math inline">\(\beta\)</span> is the change in log-odds
+to pull the left lever:
+<ul>
+<li>Pro-social for the “L” treatment, anti for “R”.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="posterior-predictions" class="slide level2 eighty"><h2 class="eighty">Posterior Predictions</h2>
+<div class="columns">
+<div class="column" style="width:69%;">
+<p><img data-src="assets/fig/posterior-pred-1.png"></p>
+</div>
+<div class="column" style="width:30%;">
+<ul>
+<li class="fragment">A partner does not consistently change the probability of
+pulling the pro-social lever</li>
+<li class="fragment">The model does not accurately predict the effect of adding a
+partner.</li>
+<li class="fragment">The biggest effect seems to be the intercept, followed by the
+pro-social lever</li>
+<li class="fragment">The intercept effect suggests that handedness matters more than
+pro-social motives</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="aggregated-counts" class="title-slide slide level1 center"><h1 class="center">Aggregated Counts</h1>
+
+</section><section id="aggregated-chimp-model" class="slide level2 center"><h2 class="center">Aggregated Chimp Model</h2>
+<ul>
+<li>
+<p>Aggregate data</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>d_agg <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(actor, treatment) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">left_pulls =</span> <span class="fu">sum</span>(pulled_left), <span class="at">trials =</span> <span class="fu">n</span>(), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment">
+<p>Now fit a model to it</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mdl_chimp_agg <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    left_pulls <span class="sc">~</span> <span class="fu">dbinom</span>(trials, p),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[actor] <span class="sc">+</span> b[treatment],</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    a[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d_agg, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</li>
+</ul></section><section id="comparing-the-models" class="slide level2 seventyfive"><h2 class="seventyfive">Comparing the models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Compare the models</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(mdl_chimp, mdl_chimp_agg, <span class="at">func =</span> PSIS)</span></code></pre></div>
+<pre><code>##                   PSIS        SE    dPSIS      dSE    pPSIS
+## mdl_chimp_agg 114.8751  8.717503   0.0000       NA 8.777539
+## mdl_chimp     532.9192 18.944325 418.0441 41.44335 8.798700
+##                     weight
+## mdl_chimp_agg 1.000000e+00
+## mdl_chimp     1.670596e-91</code></pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Why the big difference?
+<ul>
+<li class="fragment">Imagine you toss a coin 9 times and get heads the first 6 times
+and then 3 tails: <span class="math display">\[P(1, 1, 1, 1, 1, 0, 0, 0)
+= p^6 (1 - p)^{9 - 6}\]</span>
+</li>
+<li class="fragment">But the binomial probability <span class="math inline">\(P_{\text{binomial}}(6 | 9, p)\)</span> considers
+all the ways you could get 6 heads in 9 tosses: <span class="math display">\[P(6 | 9, p) = \frac{6!}{6! (9 - 6)!} p^6 (1 -
+p)^{9 - 6}\]</span>
+<ul>
+<li class="fragment">This factor is the reason we can’t easily compare a Bernoulli
+model of the individual events with a Binomial model of the aggregated
+counts.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="graduate-school-admissions" class="title-slide slide level1 center"><h1 class="center">Graduate School Admissions</h1>
+<div class="columns">
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UCBadmit)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> UCBadmit <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applicant.gender =</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ordered</span>(applicant.gender, </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gid =</span> <span class="fu">as.integer</span>(applicant.gender))</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(d)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: left;">dept</th>
+<th style="text-align: left;">applicant.gender</th>
+<th style="text-align: right;">admit</th>
+<th style="text-align: right;">reject</th>
+<th style="text-align: right;">applications</th>
+<th style="text-align: right;">gid</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">313</td>
+<td style="text-align: right;">825</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">353</td>
+<td style="text-align: right;">207</td>
+<td style="text-align: right;">560</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">205</td>
+<td style="text-align: right;">325</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">202</td>
+<td style="text-align: right;">391</td>
+<td style="text-align: right;">593</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">417</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">244</td>
+<td style="text-align: right;">375</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">191</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">393</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">317</td>
+<td style="text-align: right;">341</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="model-the-data" class="slide level2 eighty"><h2 class="eighty">Model the Data</h2>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, admit, applications, gid)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mdl_gs <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    admit <span class="sc">~</span> <span class="fu">dbinom</span>(applications, p),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[gid],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1] -0.22 0.04 -0.28 -0.16  1384     1
+## a[2] -0.83 0.05 -0.91 -0.75  1285     1</code></pre>
+</div>
+</section><section id="interpreting-the-significance" class="slide level2 eighty"><h2 class="eighty">Interpreting the significance</h2>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1] -0.22 0.04 -0.28 -0.16  1384     1
+## a[2] -0.83 0.05 -0.91 -0.75  1285     1</code></pre>
+</div>
+<ul>
+<li>What is the significance of the gender difference in <code>a</code>?
+<ul>
+<li class="fragment">Relative difference on logit scale</li>
+<li class="fragment">Absolute difference in odds of getting admitted</li>
+</ul>
+</li>
+</ul>
+<div class="seventy max-listing fragment">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">tidy_draws</span>(mdl_gs)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>diff_a <span class="ot">&lt;-</span> <span class="fu">pull</span>(post, <span class="st">"a[1]"</span>) <span class="sc">-</span> <span class="fu">pull</span>(post, <span class="st">"a[2]"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>diff_p <span class="ot">&lt;-</span> <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[1]"</span>)) <span class="sc">-</span> <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[2]"</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(<span class="fu">list</span>(<span class="at">diff_a =</span> diff_a, <span class="at">diff_p =</span> diff_p))</span></code></pre></div>
+<pre><code>##             mean         sd      5.5%     94.5%    histogram
+## diff_a 0.6115241 0.06611649 0.5080081 0.7172060   ▁▁▁▃▇▇▅▂▁▁
+## diff_p 0.1418290 0.01485815 0.1185003 0.1654232 ▁▁▁▁▃▇▇▅▂▁▁▁</code></pre>
+</div>
+</section><section id="posterior-validation-check" class="slide level2 eighty"><h2 class="eighty">Posterior Validation Check</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy max-listing">
+<p><img data-src="assets/fig/gs-post-check-1.png"></p>
+</div>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">The model makes terrible predictions</li>
+<li class="fragment">Only 2 departments admit a lower percentage of women than
+men</li>
+<li class="fragment">Our model didn’t look department by department. It looked at all
+women applicants vs. all men, without considering that more women apply
+to some departments and more men apply to others: <img data-src="assets/fig/applications-1.png">
+</li>
+</ul>
+</div>
+</div>
+</section><section id="a-better-model" class="slide level2 eighty"><h2 class="eighty">A Better Model</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dept =</span> <span class="fu">ordered</span>(dept), <span class="at">dept_id =</span> <span class="fu">as.integer</span>(dept)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(admit, applications, gid, dept_id)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>mdl_gs_2 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    admit <span class="sc">~</span> <span class="fu">dbinom</span>(applications, p),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[gid] <span class="sc">+</span> delta[dept_id],</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    delta[dept_id] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">iter=</span><span class="dv">4000</span>)</span></code></pre></div>
+</div>
+<div class="seventy max-listing fragment">
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs_2, <span class="at">depth=</span><span class="dv">2</span>, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##           mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1]     -0.50 0.52 -1.32  0.33   513  1.01
+## a[2]     -0.41 0.52 -1.22  0.42   526  1.01
+## delta[1]  1.09 0.53  0.26  1.91   519  1.01
+## delta[2]  1.04 0.53  0.20  1.87   520  1.01
+## delta[3] -0.17 0.53 -1.00  0.64   523  1.01
+## delta[4] -0.21 0.53 -1.04  0.61   521  1.01
+## delta[5] -0.65 0.53 -1.47  0.19   530  1.01
+## delta[6] -2.21 0.54 -3.06 -1.35   554  1.00</code></pre>
+</div>
+</div>
+<div class="column">
+<div class="seventy max-listing fragment">
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">tidy_draws</span>(mdl_gs_2)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>diff_a <span class="ot">&lt;-</span> <span class="fu">pull</span>(post, <span class="st">"a[1]"</span>) <span class="sc">-</span> <span class="fu">pull</span>(post, <span class="st">"a[2]"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>diff_p <span class="ot">&lt;-</span> <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[1]"</span>)) <span class="sc">-</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[2]"</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(<span class="fu">list</span>(<span class="at">diff_a =</span> diff_a, <span class="at">diff_p =</span> diff_p))</span></code></pre></div>
+<pre><code>##               mean         sd        5.5%       94.5%
+## diff_a -0.09693455 0.08059363 -0.22784018 0.030840896
+## diff_p -0.02179354 0.01852169 -0.05241286 0.006905889
+##             histogram
+## diff_a ▁▁▁▁▁▂▅▇▇▅▂▁▁▁
+## diff_p      ▁▁▁▂▇▇▂▁▁</code></pre>
+</div>
+<div class="seventy max-listing fragment">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dept) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pg =</span> applications <span class="sc">/</span> <span class="fu">sum</span>(applications)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dept, applicant.gender, pg) <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"dept"</span>, <span class="at">values_from =</span> <span class="st">"pg"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: left;">applicant.gender</th>
+<th style="text-align: right;">A</th>
+<th style="text-align: right;">B</th>
+<th style="text-align: right;">C</th>
+<th style="text-align: right;">D</th>
+<th style="text-align: right;">E</th>
+<th style="text-align: right;">F</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.48</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_16">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_16"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_16">https://ees5891.jgilligan.org/slides/class_16</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_16/ees_5891-03_class_16_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_16/ees_5891-03_class_16_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

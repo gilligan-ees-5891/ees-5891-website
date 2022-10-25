@@ -70,6 +70,7 @@ lessons:
 - date: '2022-10-25'
   title: Discrete statistical models
   reading: /reading/reading_16
+  lecture: /slides/class_16
 - date: '2022-10-27'
   title: Mixture models
   reading: /reading/reading_17
