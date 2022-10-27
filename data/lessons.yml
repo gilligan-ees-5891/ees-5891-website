@@ -74,6 +74,7 @@ lessons:
 - date: '2022-10-27'
   title: Mixture models
   reading: /reading/reading_17
+  lecture: /slides/class_17
 - date: '2022-11-01'
   title: Multilevel models
   reading: /reading/reading_18

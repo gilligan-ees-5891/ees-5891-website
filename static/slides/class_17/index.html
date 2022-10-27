@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Mixture Models</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Mixture Models</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #17:
+       Thursday, October 27
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="poisson-models" class="title-slide slide level1 center"><h1 class="center">Poisson Models</h1>
+
+</section><section id="poisson-models-1" class="slide level2 eighty"><h2 class="eighty">Poisson Models</h2>
+<ul>
+<li>
+<em>Binomial</em> model:
+<ul>
+<li>Number of events out of <span class="math inline">\(N\)</span>
+trials, with probability <span class="math inline">\(p\)</span> of an
+event in any trial.
+<ul>
+<li class="fragment">Maximum number of events is <span class="math inline">\(N\)</span>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment"><em>Poisson</em> model:
+<ul>
+<li>Limit of many trials with small <span class="math inline">\(p\)</span>.
+<ul>
+<li class="fragment">No upper limit, but the average is finite.</li>
+</ul>
+</li>
+<li class="fragment">If a random event has a constant probability of happening in an
+interval of time
+<ul>
+<li>
+<em>Exponential</em> distribution describes time between events</li>
+<li>
+<em>Poisson</em> distribution describes # events per interval</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Examples
+<ul>
+<li>Radioactive decay</li>
+<li>Storms hitting a location</li>
+<li>Eruptions in an active volcano (e.g., Etna, Mauna Loa)</li>
+<li>Bicycle commuter traffic</li>
+<li>Customers visiting a business</li>
+<li>Incidence of cancer</li>
+</ul>
+</li>
+</ul></section><section id="poisson-distribution" class="slide level2 eeighty"><h2 class="eeighty">Poisson Distribution</h2>
+<ul>
+<li class="fragment">Poisson distribution <span class="math display">\[P(k | \lambda)
+= \frac{\lambda^k e^{-\lambda}}{k!}\]</span>
+<ul>
+<li><span class="math inline">\(\text{mean}(k) = \lambda\)</span></li>
+<li><span class="math inline">\(\text{standard deviation}(k) =
+\sqrt{\lambda}\)</span></li>
+</ul>
+</li>
+</ul></section><section id="overdispersed-data" class="slide level2 eighty"><h2 class="eighty">Overdispersed Data</h2>
+<ul>
+<li>
+<em>Poisson</em> has one parameter <span class="math inline">\(\lambda\)</span>, so <em>mean</em> and
+<em>standard deviation</em> are not independent.
+<ul>
+<li>mean = <span class="math inline">\(\lambda\)</span>
+</li>
+<li>standard deviation = <span class="math inline">\(\sqrt{\lambda}\)</span> = <span class="math inline">\(\sqrt{\text{mean}}\)</span>
+</li>
+</ul>
+</li>
+<li class="fragment">What happens if standard deviation &gt; <span class="math inline">\(\sqrt{\text{mean}}\)</span>?</li>
+<li class="fragment"><em>Gamma Poisson</em> model (also known as <em>Negative
+binomial</em> model) <span class="math display">\[\text{Gamma Poisson}(k
+| r, p) = \int_0^\infty \text{Poisson}(k | \lambda)
+  \text{Gamma}\left(\lambda \middle | r, \frac{1 - p}{p}\right)
+d\lambda\]</span>
+<ul>
+<li class="fragment">This is a combination of Poisson distributions for many values
+of <span class="math inline">\(\lambda\)</span>
+</li>
+<li class="fragment">Example:
+<ul>
+<li>Cancer:
+<ul>
+<li>
+<em>Poisson</em> describes cancer incidence if everyone has the same
+risk</li>
+<li>
+<em>Gamma Poisson</em> describes cancer incidence for a
+heterogeneous population where different people have different
+risks.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="examples-of-gamma-poissonnegative-binomial-models" class="slide level2 eighty"><h2 class="eighty">Examples of Gamma-Poisson/Negative Binomial
+models</h2>
+<ul>
+<li>Hurricanes:
+<ul>
+<li>
+<em>Poisson</em> describes # hurricanes per year if all years are
+the same</li>
+<li>
+<em>Gamma Poisson</em> accounts for climatic variation, such as El
+Niño, that affects hurricane frequency.</li>
+</ul>
+</li>
+<li class="fragment">Bicycle commuters crossing Brooklyn Bridge each day
+<ul>
+<li>
+<em>Poisson</em> describes # commuters per day if all commuters have
+the same probability of cycling each day</li>
+<li>
+<em>Gamma Poisson</em>: Commuters are heterogeneous: different
+people have different probability of cycling.
+<ul>
+<li>Weather affects rates too.
+<ul>
+<li class="fragment"><em>Gamma Poisson</em> accounts for this with random variation
+in <span class="math inline">\(\lambda\)</span>
+</li>
+<li class="fragment">You could also explicitly model effect of weather on <span class="math inline">\(\lambda\)</span>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Volcanic eruptions: Chih-Hsiang Ho. 1990. Bayesian analysis of
+volcanic eruptions. <em>J. Volcan. Geotherm. Res.</em> 43:91–98.
+<ul>
+<li>
+<em>Poisson</em> assumes equal likelihood of eruption each year</li>
+<li>
+<em>Gamma-Poisson</em> accounts for unpredictable variation in
+activity over time</li>
+</ul>
+</li>
+</ul></section></section><section><section id="mixture-models" class="title-slide slide level1 center"><h1 class="center">Mixture Models</h1>
+
+</section><section id="mixture-models-1" class="slide level2"><h2>Mixture Models</h2>
+<ul>
+<li>Simple models assume a homogeneous population
+<ul>
+<li>Each individual, or each slice of time, is the same as all
+others</li>
+</ul>
+</li>
+<li>Mixture models account for heterogeneous populations
+<ul>
+<li>The probability distribution for the whole population is a
+<em>mixture</em> of different distributions for the members of the
+population</li>
+</ul>
+</li>
+<li>Common mixtures:
+<ul>
+<li>Overdispersed models (continuous or discrete)
+<ul>
+<li>
+<em>Gamma Poisson/Negative Binomial</em> (mixture of
+<em>Poisson</em> distributions with different <span class="math inline">\(\lambda\)</span>)</li>
+<li>
+<em>Beta Binomial</em> (mixture of <em>Binomial</em> distributions
+with different <span class="math inline">\(p\)</span>)</li>
+<li>
+<em>Student-t</em> (mixture of <em>Normal</em> distributions with
+different <span class="math inline">\(\sigma\)</span>)</li>
+</ul>
+</li>
+<li>Zero-inflated models (continuous or discrete)
+<ul>
+<li>Mixture of individuals for whom effect is strictly zero with others
+for whom there is a distribution of effects</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="mixture-models-for-categorical-data" class="slide level2 eighty"><h2 class="eighty">Mixture Models for Categorical Data</h2>
+<ul>
+<li>Binomial describes 2 possible outcomes</li>
+<li class="fragment">Multinomial (categorical) describes <em>k</em> possible
+outcomes</li>
+<li class="fragment">Ordered categorical describes <em>k</em> outcomes that have a
+sequence or ranking order.
+<ul>
+<li class="fragment">Mixtures of many binary logistic models</li>
+<li class="fragment">Use of <em>cumulative link</em> functions</li>
+</ul>
+</li>
+</ul></section></section><section><section id="overdispersed-counts" class="title-slide slide level1 center"><h1 class="center">Overdispersed Counts</h1>
+
+</section><section id="beta-binomial-models" class="slide level2 eighty"><h2 class="eighty">Beta-Binomial Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Dig deeper into the graduate school admissions data</li>
+</ul>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UCBadmit)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> UCBadmit <span class="sc">%&gt;%</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applicant.gender =</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ordered</span>(applicant.gender, </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gid =</span> <span class="fu">as.integer</span>(applicant.gender))</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(d)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: left;">dept</th>
+<th style="text-align: left;">applicant.gender</th>
+<th style="text-align: right;">admit</th>
+<th style="text-align: right;">reject</th>
+<th style="text-align: right;">applications</th>
+<th style="text-align: right;">gid</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">313</td>
+<td style="text-align: right;">825</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">353</td>
+<td style="text-align: right;">207</td>
+<td style="text-align: right;">560</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">205</td>
+<td style="text-align: right;">325</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">202</td>
+<td style="text-align: right;">391</td>
+<td style="text-align: right;">593</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">417</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">244</td>
+<td style="text-align: right;">375</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">191</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">393</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">317</td>
+<td style="text-align: right;">341</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="model-that-ignores-department" class="slide level2 eighty"><h2 class="eighty">Model that Ignores Department</h2>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, admit, applications, gid)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mdl_gs <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    admit <span class="sc">~</span> <span class="fu">dbinom</span>(applications, p),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[gid],</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+</section><section id="posterior-validation-check" class="slide level2 eighty"><h2 class="eighty">Posterior Validation Check</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy max-listing">
+<p><img data-src="assets/fig/gs-post-check-1.png"></p>
+</div>
+</div>
+<div class="column">
+<ul>
+<li>The data are overdispersed, compared to the model
+<ul>
+<li><p>Binomial distribution: mean = <span class="math inline">\(Np\)</span>, standard deviation = <span class="math inline">\(\sqrt{Np(1-p)}\)</span></p></li>
+<li>
+<p>Model:</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predicted_draws</span>(mdl_gs, <span class="at">newdata =</span> dat_list) <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gid) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.prediction <span class="sc">/</span> applications), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd   =</span>   <span class="fu">sd</span>(.prediction <span class="sc">/</span> applications)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: right;">gid</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.03</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<p>Data:</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gid) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(admit <span class="sc">/</span> applications), </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd   =</span>   <span class="fu">sd</span>(admit <span class="sc">/</span> applications)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: right;">gid</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><p>Standard deviation in the data is 5–7 times greater than the
+model predicts.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="beta-binomial-model" class="slide level2 eighty"><h2 class="eighty">Beta Binomial Model</h2>
+<ul>
+<li>Our model uses a binomial likelihood <span class="math display">\[
+A_i ~ \text{Binomial}(N_i, p_{\text{gender}_i}),\]</span> where <span class="math inline">\(A\)</span> is the # of admissions, <span class="math inline">\(N\)</span> is the # of applications, and <span class="math inline">\(p\)</span> is the probability of getting
+admitted.</li>
+<li>On Tuesday we developed an alternative model in which <span class="math inline">\(p\)</span> varied from department to
+department.</li>
+<li>But if we don’t know who applied to which department, we can account
+for this variation by assuming that <span class="math inline">\(p\)</span> varies randomly from one student to the
+next.
+<ul>
+<li>
+<span class="math inline">\(p\)</span> must lie in the range [0,1],
+so we assume that the probabilities <span class="math inline">\(p\)</span> are described by a <em>beta</em>
+distribution.</li>
+</ul>
+</li>
+<li class="fragment">Beta Binomial Distribution: <span class="math display">\[
+\text{BetaBinomial}(N, \bar p, \theta) \]</span>
+<ul>
+<li>
+<span class="math inline">\(\bar p\)</span> is the average
+probability</li>
+<li>
+<span class="math inline">\(\theta\)</span> is the
+<em>dispersion</em> (amount of variation in <span class="math inline">\(p\)</span>).</li>
+</ul>
+</li>
+</ul></section><section id="beta-distributions" class="slide level2 eighty"><h2 class="eighty">Beta Distributions</h2>
+<p><img data-src="assets/fig/beta-dist-1.png"></p>
+<ul>
+<li>We saw this in chapter 2, as the posteriors for the fraction of
+water covering the Earth.</li>
+</ul></section><section id="beta-binomial-model-1" class="slide level2 eighty"><h2 class="eighty">Beta Binomial Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>New model: <span class="math display">\[
+\begin{align}
+A &amp;\sim \text{BetaBinomial}(N, \bar p, \theta) \\
+\text{logit}(\bar p) &amp;= \alpha_{\text{gender}} \\
+\alpha_{\text{gender}} &amp;\sim \text{Normal}(0,1.5) \\
+\theta &amp;= \phi + 2 \\
+\phi &amp;\sim \text{Exponential}(1)
+\end{align}
+\]</span>
+<ul>
+<li>Trick: The dispersion <span class="math inline">\(\theta\)</span> is
+related to the sum of the parameters for <em>beta</em>, so we want it to
+be at least 2 (flat, uniform), so we don’t pile up probability at 0 or
+1.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, <span class="at">A =</span> admit, <span class="at">N =</span> applications, gid)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mdl_gs_bb <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">dbetabinom</span>(N, pbar, theta),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(pbar) <span class="ot">&lt;-</span> a[gid],</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> theta <span class="ot">&lt;&lt;-</span> phi <span class="sc">+</span> <span class="fl">2.0</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        phi <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span>dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_gs_bb)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>post<span class="sc">$</span>da <span class="ot">&lt;-</span> post<span class="sc">$</span>a[,<span class="dv">1</span>] <span class="sc">-</span> post<span class="sc">$</span>a[,<span class="dv">2</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs_bb, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1]  -0.45 0.42 -1.13  0.21  1294     1
+## a[2]  -0.31 0.42 -0.97  0.34  1156     1
+## phi    1.01 0.78  0.09  2.40  1610     1
+## theta  3.01 0.78  2.09  4.40  1610     1</code></pre>
+</div>
+</div>
+</div>
+</section><section id="posterior-checks" class="slide level2 eighty"><h2 class="eighty">Posterior Checks</h2>
+<div class="columns">
+<div class="column">
+<div class="seventy max-listing">
+<p><img data-src="assets/fig/post-beta-1.png"></p>
+</div>
+</div>
+<div class="column">
+<div class="seventy max-listing">
+<p><img data-src="assets/fig/post-check_gs_bb-1.png"></p>
+</div>
+</div>
+</div>
+<ul>
+<li>Warning: Be very cautious using WAIC or PSIS with mixture models. It
+is not straightforward to interpret what the information criteria
+mean.</li>
+</ul></section></section><section><section id="zero-inflated-models" class="title-slide slide level1 center"><h1 class="center">Zero-Inflated Models</h1>
+
+</section><section id="zero-inflated-models-1" class="slide level2 eighty"><h2 class="eighty">Zero-Inflated Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>This is like an extreme version of overdispersion.
+<ul>
+<li>Some individuals have zero probability of producing an event, and
+others have some probabilty distribution.</li>
+</ul>
+</li>
+<li>Example: Monks and Manuscripts
+<ul>
+<li>Monks in the monastery have a probability <span class="math inline">\(p\)</span> to spend the day drinking instead of
+working on manuscripts. When they do work on manuscripts, there is a
+Poisson distribution of manuscripts completed in a day, with mean <span class="math inline">\(\lambda\)</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/monks-manuscripts.png" height="500" alt="Monks and Manuscripts"></p>
+<ul>
+<li class="fragment">The histogram of manuscripts completed per day looks just like a
+Poisson distribution, but with an extra bit added to zero.</li>
+</ul>
+</div>
+</div>
+</section><section id="writing-the-model-in-r" class="slide level2 eighty"><h2 class="eighty">Writing the Model in R</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Generate data</p>
+<div class="seventy max-listing bare" data-fig.height="4" data-fig.width="6">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>prob_drink <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># 20% of days</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rate_work <span class="ot">&lt;-</span> <span class="dv">1</span>    <span class="co"># average 1 manuscript per day</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">365</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">736</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>drink <span class="ot">&lt;-</span> <span class="fu">rbinom</span>( N , <span class="dv">1</span> , prob_drink )</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>drink)<span class="sc">*</span><span class="fu">rpois</span>( N , rate_work )</span></code></pre></div>
+</div>
+</li>
+<li>
+<p>Make the model</p>
+<div class="seventy max-listing bare">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mdl_zinf <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        y <span class="sc">~</span> <span class="fu">dzipois</span>(p, lambda),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> ap,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">log</span>(lambda) <span class="ot">&lt;-</span> al,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        ap <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="dv">1</span> ),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        al <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span> , <span class="fl">0.5</span> )</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span><span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Analyze the results</p>
+<div class="seventy max-listing bare">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>( mdl_zinf, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>##     mean   sd  5.5% 94.5% n_eff Rhat4
+## ap -1.43 0.38 -2.06 -0.95   690  1.01
+## al  0.09 0.08 -0.05  0.22   656  1.00</code></pre>
+</div>
+<div class="seventy max-listing bare">
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_zinf)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">inv_logit</span>( post<span class="sc">$</span>ap)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>) <span class="co"># probability of drinking</span></span></code></pre></div>
+<pre><code>## [1] 0.2</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rate of finishing manuscripts when not drinking</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">exp</span>( post<span class="sc">$</span>al)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>) </span></code></pre></div>
+<pre><code>## [1] 1.09</code></pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="ordered-categorical-models" class="title-slide slide level1 center"><h1 class="center">Ordered Categorical Models</h1>
+
+</section><section id="categorical-models" class="slide level2 eighty"><h2 class="eighty">Categorical Models</h2>
+<ul>
+<li>Multinomial data
+<ul>
+<li>Predict what subject high-school students will major in when they go
+to college
+<ul>
+<li class="fragment">For simplicity, assume no double-majors</li>
+</ul>
+</li>
+<li class="fragment">For <span class="math inline">\(N\)</span> students, and <span class="math inline">\(K\)</span> possible subjects to major in, <span class="math display">\[\text{Pr}(y_1, y_2, \ldots, y_K | N, p_1, p_2,
+\ldots, p_K) =
+   \frac{N!}{\prod_i y_i!} \: \prod_{i = 1}^{K} p_i^{y_i}\]</span>
+</li>
+<li class="fragment">Constraint: <span class="math display">\[\sum_{i = 1}^K p_i =
+1\]</span>
+<ul>
+<li class="fragment"><em>Softmax</em> (<em>multinomial logit</em>) link function
+ensures the probabilities add up to 1.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="ordered-categorical-outcome-variables" class="slide level2 eighty"><h2 class="eighty">Ordered Categorical Outcome Variables</h2>
+<ul>
+<li>Analyze survey data with Likert responses (scale of 1–5, 1–7, etc.)
+Predict Likert response, based on demographic data
+<ul>
+<li>“How much do you approve of Joe Biden?”
+<ol type="1">
+<li>Strongly disapprove</li>
+<li>Somewhat disapprove</li>
+<li>Neither approve nor disapprove</li>
+<li>Somewhat approve</li>
+<li>Strongly approve</li>
+</ol>
+</li>
+<li class="fragment"><strong>Warning:</strong> It is not legitimate to just assume
+that Likert scores are like a <em>metric</em> variable with a numerical
+value.
+<ul>
+<li class="fragment">Is the difference between 1 and 2 the same as between 3 and
+4?</li>
+</ul>
+</li>
+<li class="fragment">Instead analyze outcome variable as categorical, but with the
+constraint that it’s ordered (1 comes before 2, which comes before 3,
+…).</li>
+</ul>
+</li>
+</ul></section><section id="modeling-ordered-categorical-outcomes" class="slide level2 eighty"><h2 class="eighty">Modeling Ordered Categorical Outcomes</h2>
+<ul>
+<li>Ordered logit function: <span class="math inline">\(K\)</span> logit
+functions <span class="math inline">\(f_1, f_2, \ldots, f_K\)</span>,
+where each one is centered on a <em>cutpoint</em> <span class="math inline">\(C_1, C_2, \ldots, C_K\)</span>.</li>
+</ul></section><section id="boxcar-problem" class="slide level2 eighty"><h2 class="eighty">Boxcar Problem</h2>
+<blockquote>
+<p>A boxcar is rolling down some train tracks out of control. Five
+people are in the way Dennis can pull a lever and send the boxcar down a
+different track, which will save the five people but kill one other
+person.</p>
+</blockquote>
+<ul>
+<li>Three important psychological principles:
+<ol type="1">
+<li>*Action principle:** Harm caused by action is worse than harm caused
+by failing to act.</li>
+<li>
+<strong>Intention principle:</strong> Harm intended as the means to
+a goal is worse than harm as an unindended side-effect</li>
+<li>
+<strong>Contact principle:</strong> Using physical contact to cause
+harm is worse than causing equivalent harm without physical
+contact.</li>
+</ol>
+</li>
+<li class="fragment">Experiment: Ask people the question with different prompts that
+introduce one or more of these principles.
+<ul>
+<li>Response is a number 1–7 indicating how morally permissible it is to
+throw the switch.</li>
+</ul>
+</li>
+</ul></section><section id="model-to-predict-peoples-answers" class="slide level2 eighty"><h2 class="eighty">Model to predict people’s answers</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Set up the data</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Trolley)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Trolley</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">R =</span> d<span class="sc">$</span>response,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">A =</span> d<span class="sc">$</span>action,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">I =</span> d<span class="sc">$</span>intention,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">C =</span> d<span class="sc">$</span>contact )</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>The model</p>
+<div class="seventy max-listing">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mdl_boxcar <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      R <span class="sc">~</span> <span class="fu">dordlogit</span>(phi, cutpoints),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      phi <span class="ot">&lt;-</span> bA <span class="sc">*</span> A <span class="sc">+</span> bC <span class="sc">*</span> C <span class="sc">+</span> BI <span class="sc">*</span> I,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>      BI <span class="ot">&lt;-</span> bI <span class="sc">+</span> bIA <span class="sc">*</span> A <span class="sc">+</span> bIC <span class="sc">*</span> C ,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(bA,bI,bC,bIA,bIC) <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      cutpoints <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat, <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>)</span></code></pre></div>
+</div>
+<ul>
+<li class="fragment">Note <code>c(bA,bI,bC,...)</code> instead of one line for each
+parameter.</li>
+<li class="fragment"><code>cutpoints ~ dnorm(0, 1.5)</code> automatically samples the
+right number of cutpoints but it runs into trouble because
+<code>dnorm</code> does not guarantee that the cutpoints are in the
+right order.</li>
+</ul>
+</li>
+</ul>
+<!--
+* Analysis results
+  
+  ::: {.seventy .max-listing}
+  
+  ```r
+  precis_show(precis(mdl_boxcar, digits = 2))
+  ```
+  :::
+  ::: {.seventy .max-listing}
+  
+  ```r
+  plot(precis(mdl_boxcar), xlim = c(-1.4, 0))
+  ```
+  :::
+-->
+</div>
+</div>
+<!--
+## Making sense of a complicated model {.eighty}
+
+
+-->
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_17/">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_17/"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_17/">https://ees5891.jgilligan.org/slides/class_17/</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_17/ees_5891-03_class_17_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_17/ees_5891-03_class_17_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
