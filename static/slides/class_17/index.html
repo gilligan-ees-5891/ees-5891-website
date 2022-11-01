@@ -298,18 +298,15 @@ sequence or ranking order.
 <ul>
 <li>Dig deeper into the graduate school admissions data</li>
 </ul>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UCBadmit)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UCBadmit)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> UCBadmit <span class="sc">%&gt;%</span> </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applicant.gender =</span> </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ordered</span>(applicant.gender, </span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)),</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gid =</span> <span class="fu">as.integer</span>(applicant.gender))</span></code></pre></div>
 </div>
-</div>
 <div class="column">
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(d)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(d)</span></code></pre></div>
 <table>
 <thead><tr class="header">
 <th style="text-align: left;">dept</th>
@@ -420,38 +417,26 @@ sequence or ranking order.
 </table>
 </div>
 </div>
-</div>
 </section><section id="model-that-ignores-department" class="slide level2 eighty"><h2 class="eighty">Model that Ignores Department</h2>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, admit, applications, gid)</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mdl_gs <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, admit, applications, gid)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mdl_gs <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    admit <span class="sc">~</span> <span class="fu">dbinom</span>(applications, p),</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[gid],</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
-</div>
 </section><section id="posterior-validation-check" class="slide level2 eighty"><h2 class="eighty">Posterior Validation Check</h2>
 <div class="columns">
 <div class="column">
-<div class="seventy max-listing">
-<p><img data-src="assets/fig/gs-post-check-1.png"></p>
-</div>
-<ul>
-<li>The data are overdispersed, compared to the model
-<ul>
-<li>Binomial distribution: mean = <span class="math inline">\(Np\)</span>, standard deviation = <span class="math inline">\(\sqrt{Np(1-p)}\)</span>
-</li>
-</ul>
-</li>
-</ul>
+<p><img data-src="assets/fig/gs-post-check-1.png"> * The data are
+overdispersed, compared to the model * Binomial distribution: mean =
+<span class="math inline">\(Np\)</span>, standard deviation = <span class="math inline">\(\sqrt{Np(1-p)}\)</span></p>
 </div>
 <div class="column ninety">
 <ul>
 <li>
 <p>Model:</p>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predicted_draws</span>(mdl_gs, <span class="at">newdata =</span> dat_list) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predicted_draws</span>(mdl_gs, <span class="at">newdata =</span> dat_list) <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gid) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.prediction <span class="sc">/</span> applications), </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd   =</span>   <span class="fu">sd</span>(.prediction <span class="sc">/</span> applications)) <span class="sc">%&gt;%</span></span>
@@ -475,12 +460,10 @@ sequence or ranking order.
 </tr>
 </tbody>
 </table>
-</div>
 </li>
 <li>
 <p>Data:</p>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gid) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(admit <span class="sc">/</span> applications), </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd   =</span>   <span class="fu">sd</span>(admit <span class="sc">/</span> applications)) <span class="sc">%&gt;%</span> </span>
@@ -504,7 +487,6 @@ sequence or ranking order.
 </tr>
 </tbody>
 </table>
-</div>
 </li>
 <li><p>Standard deviation in the data is 5–7 times greater than the
 model predicts.</p></li>
@@ -566,8 +548,7 @@ uniform), so we don’t pile up probability at 0 or 1.</li>
 </ul>
 </div>
 <div class="column">
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, <span class="at">A =</span> admit, <span class="at">N =</span> applications, gid)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">select</span>(d, <span class="at">A =</span> admit, <span class="at">N =</span> applications, gid)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mdl_gs_bb <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
@@ -577,28 +558,23 @@ uniform), so we don’t pile up probability at 0 or 1.</li>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> theta <span class="ot">&lt;&lt;-</span> phi <span class="sc">+</span> <span class="fl">2.0</span>,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        phi <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span>dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span> )</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_gs_bb)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_gs_bb)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>post<span class="sc">$</span>da <span class="ot">&lt;-</span> post<span class="sc">$</span>a[,<span class="dv">1</span>] <span class="sc">-</span> post<span class="sc">$</span>a[,<span class="dv">2</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs_bb, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
-<pre><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
-## a[1]  -0.43 0.42 -1.10  0.26  1475     1
-## a[2]  -0.32 0.40 -0.97  0.31  1586     1
-## phi    1.04 0.80  0.08  2.53  1575     1
-## theta  3.04 0.80  2.08  4.53  1575     1</code></pre>
-</div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1]  -0.42 0.43 -1.12  0.27  1601  1.00
+## a[2]  -0.32 0.44 -1.03  0.38  1138  1.01
+## phi    1.01 0.83  0.08  2.54  1556  1.00
+## theta  3.01 0.83  2.08  4.54  1556  1.00</code></pre>
 </div>
 </div>
 </section><section id="posterior-checks" class="slide level2 eighty"><h2 class="eighty">Posterior Checks</h2>
 <div class="columns">
 <div class="column">
-<div class="seventy max-listing">
 <p><img data-src="assets/fig/post-beta-1.png"></p>
 </div>
-</div>
 <div class="column">
-<div class="seventy max-listing">
 <p><img data-src="assets/fig/post-check_gs_bb-1.png"></p>
-</div>
 </div>
 </div>
 <ul>
@@ -640,20 +616,17 @@ Poisson distribution, but with an extra bit added to zero.</li>
 <ul>
 <li>
 <p>Generate data</p>
-<div class="seventy max-listing bare" data-fig.height="4" data-fig.width="6">
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>prob_drink <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># 20% of days</span></span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>prob_drink <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co"># 20% of days</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rate_work <span class="ot">&lt;-</span> <span class="dv">1</span>    <span class="co"># average 1 manuscript per day</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">365</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">736</span>)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>drink <span class="ot">&lt;-</span> <span class="fu">rbinom</span>( N , <span class="dv">1</span> , prob_drink )</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>drink)<span class="sc">*</span><span class="fu">rpois</span>( N , rate_work )</span></code></pre></div>
-</div>
 </li>
 <li>
 <p>Make the model</p>
-<div class="seventy max-listing bare">
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mdl_zinf <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mdl_zinf <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        y <span class="sc">~</span> <span class="fu">dzipois</span>(p, lambda),</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> ap,</span>
@@ -661,7 +634,6 @@ Poisson distribution, but with an extra bit added to zero.</li>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        ap <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="dv">1</span> ),</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        al <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span> , <span class="fl">0.5</span> )</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span><span class="fu">list</span>(<span class="at">y =</span> y), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
-</div>
 </li>
 </ul>
 </div>
@@ -669,20 +641,16 @@ Poisson distribution, but with an extra bit added to zero.</li>
 <ul>
 <li>
 <p>Analyze the results</p>
-<div class="seventy max-listing bare">
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>( mdl_zinf, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
-<pre><code>##     mean   sd  5.5% 94.5% n_eff Rhat4
-## ap -1.43 0.38 -2.06 -0.95   690  1.01
-## al  0.09 0.08 -0.05  0.22   656  1.00</code></pre>
-</div>
-<div class="seventy max-listing bare">
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_zinf)</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>( mdl_zinf, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##     mean   sd  5.5% 94.5% n_eff Rhat4
+## ap -1.44 0.35 -2.05 -0.97   628  1.01
+## al  0.08 0.08 -0.05  0.20   686  1.01</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_zinf)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">inv_logit</span>( post<span class="sc">$</span>ap)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>) <span class="co"># probability of drinking</span></span></code></pre></div>
-<pre><code>## [1] 0.2</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rate of finishing manuscripts when not drinking</span></span>
+<pre class="seventy max-listing"><code>## [1] 0.2</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rate of finishing manuscripts when not drinking</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">exp</span>( post<span class="sc">$</span>al)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>) </span></code></pre></div>
-<pre><code>## [1] 1.09</code></pre>
-</div>
+<pre class="seventy max-listing"><code>## [1] 1.09</code></pre>
 </li>
 </ul>
 </div>
@@ -779,20 +747,17 @@ throw the switch.</li>
 <ul>
 <li>
 <p>Set up the data</p>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Trolley)</span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Trolley)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Trolley</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">R =</span> d<span class="sc">$</span>response,</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">A =</span> d<span class="sc">$</span>action,</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">I =</span> d<span class="sc">$</span>intention,</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">C =</span> d<span class="sc">$</span>contact )</span></code></pre></div>
-</div>
 </li>
 <li class="fragment">
 <p>The model</p>
-<div class="seventy max-listing bare">
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mdl_boxcar <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mdl_boxcar <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      R <span class="sc">~</span> <span class="fu">dordlogit</span>(phi, cutpoints),</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      phi <span class="ot">&lt;-</span> bA <span class="sc">*</span> A <span class="sc">+</span> bC <span class="sc">*</span> C <span class="sc">+</span> BI <span class="sc">*</span> I,</span>
@@ -800,7 +765,6 @@ throw the switch.</li>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(bA,bI,bC,bIA,bIC) <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      ordered[<span class="dv">6</span>]<span class="sc">:</span> cutpoints <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat, <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>)</span></code></pre></div>
-</div>
 <ul>
 <li class="fragment">Note <code>c(bA,bI,bC,...)</code> instead of one line for each
 parameter.</li>
@@ -818,19 +782,15 @@ them), and that they are ordered so <span class="math inline">\(\text{cutpoints}
 <ul>
 <li class="fragment">
 <p>Analysis results</p>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_boxcar, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
-<pre><code>##      mean   sd  5.5% 94.5% n_eff Rhat4
-## bIC -1.24 0.09 -1.39 -1.09  1210  1.00
-## bIA -0.44 0.08 -0.57 -0.31  1242  1.00
-## bC  -0.34 0.07 -0.44 -0.23  1059  1.00
-## bI  -0.29 0.06 -0.38 -0.20  1006  1.00
-## bA  -0.47 0.06 -0.56 -0.38  1046  1.01</code></pre>
-</div>
-<div class="seventy max-listing">
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_boxcar), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.4</span>, <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_boxcar, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##      mean   sd  5.5% 94.5% n_eff Rhat4
+## bIC -1.24 0.09 -1.39 -1.09  1173     1
+## bIA -0.44 0.08 -0.56 -0.32  1089     1
+## bC  -0.34 0.07 -0.45 -0.23  1099     1
+## bI  -0.29 0.06 -0.38 -0.20   950     1
+## bA  -0.47 0.05 -0.55 -0.39   883     1</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_boxcar), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.4</span>, <span class="dv">0</span>))</span></code></pre></div>
 <p><img data-src="assets/fig/precis-trolley-plot-1.png"></p>
-</div>
 </li>
 </ul>
 </div>
