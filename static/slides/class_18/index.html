@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Multilevel Models, Part 1</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Multilevel Models, Part 1</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #18:
+       Tuesday, November 01
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="multilevel-models" class="title-slide slide level1 center"><h1 class="center">Multilevel Models</h1>
+
+</section><section id="a-tale-of-two-cafés" class="slide level2 eighty"><h2 class="eighty">A Tale of Two Cafés</h2>
+<ul>
+<li>Two cafés:
+<ul>
+<li>Estimate time to get a coffee</li>
+<li class="fragment">Prior: Normal(5, 1) (times in minutes)</li>
+<li class="fragment">Randomly visit each café
+<ul>
+<li><p>Order coffee: waiting time t</p></li>
+<li>
+<p>Update estimate:</p>
+<p><span class="math display">\[ \text{Posterior}(\mu | t) =
+\frac{\text{Likelihood}(t | \mu) \text{Prior}(\mu) }{\int_0^\infty
+\text{Likelihood}(t | \mu) \text{Prior}(\mu) d\mu} \]</span></p>
+</li>
+</ul>
+</li>
+<li class="fragment">Great, if the two cafes are the same, but what if they’re very
+different?
+<ul>
+<li class="fragment">Our procedure <em>forgets</em> which café we ordered from.</li>
+<li class="fragment">Multilevel models remember the different cafes
+<ul>
+<li class="fragment">Posterior for generic café (uses all data)</li>
+<li class="fragment">Posterior for each individual café (remembers which data came
+from that cafe)</li>
+</ul>
+</li>
+<li class="fragment">If we visit some cafés more than others, data from
+highly-visited cafés helps refine estimates for seldom-visited
+cafés.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section><section id="multilevel-models-1" class="slide level2 eighty textleft"><h2 class="eighty textleft">Multilevel Models</h2>
+<ul>
+<li>Multiple clusters of data
+<ul>
+<li>Model <em>pools</em> information across clusters</li>
+</ul>
+</li>
+</ul>
+<ol type="1">
+<li class="fragment">Repeat sampling improves estimates
+<ul>
+<li>Each new measurement in <em>any</em> cluster improves posterior
+estimates in <em>all</em> clusters.</li>
+</ul>
+</li>
+<li class="fragment">Improved estimates for imbalanced sampling
+<ul>
+<li>Clusters with few samples borrow strength by pooling with
+highly-sampled clusters.</li>
+</ul>
+</li>
+<li class="fragment">Estimates of variation between clusters</li>
+<li class="fragment">Avoid averaging, retain variation
+<ul>
+<li>Averaging all clusters together underestimates variation &amp;
+uncertainty.
+<ul>
+<li>Danger of overconfidence</li>
+</ul>
+</li>
+<li>Multilevel models let us look at the averages <em>and</em>
+variation.</li>
+<li class="fragment">Key concept: <strong>partial pooling</strong>.</li>
+</ul>
+</li>
+</ol></section><section id="disadvantages-of-multilevel-models" class="slide level2 eighty"><h2 class="eighty">Disadvantages of Multilevel Models</h2>
+<ol type="1">
+<li class="fragment">More assumptions about the system we’re studying
+<ul>
+<li>Distributions of characteristics of the different clusters.
+<ul>
+<li class="fragment">Maximum entropy methods help choose likelihood
+distributions.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Computational/mathematical challenges in calculating estimates
+of posterior
+<ul>
+<li>MCMC methods work well</li>
+</ul>
+</li>
+<li class="fragment">Hard to understand and interpret
+<ul>
+<li>Model has many levels
+<ul>
+<li>We may oonly be interested in one or a few</li>
+<li class="fragment">DIC, WAIC, etc. are harder to interpret
+<ul>
+<li>Hard to compare different models</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol></section><section id="vocabulary" class="slide level2 eighty"><h2 class="eighty">Vocabulary</h2>
+<ul>
+<li>Different names:
+<ul>
+<li>
+<em>multilevel</em> models,</li>
+<li>
+<em>hierarchical</em> models,</li>
+<li>
+<em>mixed-effects</em> models</li>
+</ul>
+</li>
+<li>All mean the same thing</li>
+<li class="fragment">“<em>mixed effects</em>” (my definition):
+<ul>
+<li>Mixes <em>fixed effects</em> and <em>random effects</em>
+<ul>
+<li>A <em>fixed effect</em> describes the effect a categorical variabe,
+where you sample all possibilities (e.g., different states, or different
+counties within a state)
+<ul>
+<li>Typically, we have several measurements for each level of the
+<em>fixed effect</em>.</li>
+</ul>
+</li>
+<li class="fragment">A <em>random effect</em> is a variable that is not sampled
+exhaustively (e.g., continuously distributed variables)</li>
+</ul>
+</li>
+<li class="fragment"><strong>But…</strong>
+<ul>
+<li>There are many different definitions of <em>fixed</em> and
+<em>random</em> effects, and even expert statisticians can’t agree on a
+precise definition.</li>
+</ul>
+</li>
+<li class="fragment"><strong>Bottom line:</strong> Don’t sweat the definition.
+<ul>
+<li>We don’t need precise definitions of <em>fixed</em> and
+<em>random</em> effects to work with multilevel or mixed-effects
+models.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></section></section><section><section id="case-study-radon-in-minnesota" class="title-slide slide level1 center"><h1 class="center">Case Study: Radon in Minnesota</h1>
+
+</section><section id="radon" class="slide level2 eighty"><h2 class="eighty">Radon</h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="assets/images/radon_entry.jpg" style="width:100%;" alt="Illustration of ways that radon can enter homes"></p>
+<div class="credit">
+<p>Image from Minnesota Department of Public Health <a href="https://www.health.state.mn.us/communities/environment/air/radon/index.html" class="uri">https://www.health.state.mn.us/communities/environment/air/radon/index.html</a></p>
+</div>
+</div>
+<div class="column">
+<ul>
+<li>Radon is a radioactive gas
+<ul>
+<li class="fragment">Produced by decay of uranium and thorium in soil</li>
+<li class="fragment">Heavier than air (seeks low levels, like basements)</li>
+<li class="fragment">Seeps into homes through gaps and pores in foundation</li>
+<li class="fragment">Easily dispersed by improving ventillation in homes</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="geographical-distribution-of-radon" class="slide level2 eighty"><h2 class="eighty">Geographical Distribution of Radon</h2>
+<p><img data-src="assets/images/epa_radon_map.png" height="900" alt="Map of Radon in US counties"></p>
+</section><section id="problem" class="slide level2 eighty"><h2 class="eighty">Problem</h2>
+<ul>
+<li>In the late 1980s, the EPA conducted radon measurements throughout
+the nation (State Residential Radon Survey, SRRS)</li>
+<li class="fragment">Sampling was not uniform:
+<ul>
+<li>Some counties had many measurements, others might have only one or
+two.</li>
+</ul>
+</li>
+<li class="fragment">Radon concentrations measured in homes depend on the soil
+characteristics (amount of uranium) and characteristics of house
+construction.</li>
+<li class="fragment">Regression model to predict radon risk from soil uranium
+concentation
+<ul>
+<li><p>We need to account for variations in home construction</p></li>
+<li class="fragment">
+<p>Assumption:</p>
+<ul>
+<li>Different counties have different housing characteristics</li>
+<li>Houses in the same county tend to be similar</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Price, Nero, &amp; Gelman (1996). “Bayesian prediction of
+mean indoor radon concentrations for Minnesota counties.” <em>Health
+Physics</em> 71:922. DOI: <a href="https://doi.org/10.1097/00004032-199612000-00009">10.1097/00004032-199612000-00009</a>.</p>
+<p>Multilevel model of indoor radon concentrations as a function of soil
+uranium concentration, accounting for variation in housing from county
+to county.</p>
+</li>
+</ul>
+</li>
+</ul></section><section id="radon-data" class="slide level2 eighty"><h2 class="eighty">Radon Data</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://ees5891.jgilligan.org/files/data/radon/radon.Rdata"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"wb"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"radon.Rdata"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mn_radon)</span></code></pre></div>
+<pre class="seventy max-listing"><code>## [1] 919   7</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mn_radon)</span></code></pre></div>
+<pre class="seventy max-listing"><code>## # A tibble: 6 × 7
+##   idnum state county  fips floor activity county_id
+##   &lt;int&gt; &lt;chr&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;     &lt;int&gt;
+## 1  5081 MN    AITKIN 27001     1      2.2         1
+## 2  5082 MN    AITKIN 27001     0      2.2         1
+## 3  5083 MN    AITKIN 27001     0      2.9         1
+## 4  5084 MN    AITKIN 27001     0      1           1
+## 5  5085 MN    ANOKA  27003     0      3.1         2
+## 6  5086 MN    ANOKA  27003     0      2.5         2</code></pre>
+<div class="eighty textleft">
+<ul>
+<li>919 homes were tested</li>
+<li>
+<code>fips</code>: Federal Information Processing Standard code for
+state/county location</li>
+<li>
+<code>floor</code>: 0 = basement, 1 = ground-floor</li>
+<li>
+<code>activity</code>: Radon activity (picocuries per liter of
+air)</li>
+</ul>
+</div>
+</div>
+<div class="column">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mn_counties)</span></code></pre></div>
+<pre class="seventy max-listing"><code>## [1] 85  5</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mn_counties)</span></code></pre></div>
+<pre class="seventy max-listing"><code>## # A tibble: 6 × 5
+##    fips  Uppm county    county_id homes
+##   &lt;int&gt; &lt;dbl&gt; &lt;fct&gt;         &lt;int&gt; &lt;int&gt;
+## 1 27001 0.502 AITKIN            1     4
+## 2 27003 0.429 ANOKA             2    52
+## 3 27005 0.893 BECKER            3     3
+## 4 27007 0.552 BELTRAMI          4     7
+## 5 27009 0.867 BENTON            5     4
+## 6 27011 1.47  BIG STONE         6     3</code></pre>
+<div class="eighty textleft">
+<ul>
+<li>There are 85 counties in the data set.</li>
+<li>
+<code>Uppm</code>: Average soil uranium concentration (ppm) in the
+county</li>
+<li>
+<code>homes</code>: Number of homes tested in a county</li>
+</ul>
+</div>
+</div>
+</div>
+</section><section id="distribution-of-radon-activity" class="slide level2 eighty"><h2 class="eighty">Distribution of radon activity</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_radon, <span class="fu">aes</span>(<span class="at">x =</span> activity, <span class="at">colour =</span> <span class="fu">factor</span>(floor), </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fill =</span> <span class="fu">factor</span>(floor))) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">position =</span> <span class="st">"stack"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Radon activity (pC/l)"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-radon-raw-1.png"></p>
+</div>
+<div class="column fragment">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_radon, <span class="fu">aes</span>(<span class="at">x =</span> activity, <span class="at">colour =</span> <span class="fu">factor</span>(floor), </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fill =</span> <span class="fu">factor</span>(floor))) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">position =</span> <span class="st">"stack"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Radon activity (pC/l)"</span>, <span class="at">title =</span> <span class="st">"Log scale"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-radon-log-scale-1.png"></p>
+</div>
+</div>
+</section><section id="transform-to-log-scales" class="slide level2 eighty"><h2 class="eighty">Transform to log scales</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mn_radon<span class="sc">$</span>activity <span class="sc">%&gt;%</span> <span class="fu">keep</span>(<span class="sc">~</span>.x <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">range</span>()</span></code></pre></div>
+<pre class="seventy max-listing"><code>## [1]  0.1 48.2</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mn_radon <span class="ot">&lt;-</span> mn_radon <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_radon =</span> <span class="fu">log</span>(<span class="fu">ifelse</span>(activity <span class="sc">&gt;</span> <span class="dv">0</span>, activity, <span class="fl">0.1</span>)))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mn_counties <span class="ot">&lt;-</span> mn_counties <span class="sc">%&gt;%</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_uranium =</span> <span class="fu">log</span>(<span class="fu">ifelse</span>(Uppm <span class="sc">&gt;=</span> <span class="dv">0</span>, Uppm, <span class="fl">0.1</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_radon, <span class="fu">aes</span>(<span class="at">x =</span> log_radon, <span class="at">colour =</span> <span class="fu">factor</span>(floor), </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fill =</span> <span class="fu">factor</span>(floor))) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">position =</span> <span class="st">"stack"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"log(Radon activity)"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-log-radon-1.png"></p>
+</div>
+<div class="column">
+<div class="sourceCode" id="cb16"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_radon, <span class="fu">aes</span>(<span class="at">x =</span> floor, <span class="at">y =</span> log_radon)) <span class="sc">+</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"darkred"</span>, <span class="at">fill =</span> <span class="st">"orange"</span>, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/radon-vs-floor-1.png"></p>
+</div>
+</div>
+</section></section><section><section id="imbalanced-sampling" class="title-slide slide level1 center"><h1 class="center">Imbalanced Sampling</h1>
+
+</section><section id="imbalanced-sampling-1" class="slide level2 eighty"><h2 class="eighty">Imbalanced Sampling</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_counties, <span class="fu">aes</span>(<span class="at">x =</span> homes)) <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>) <span class="sc">+</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Number of homes in a county"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/sampling-homes-plot-1.png"></p>
+</section><section id="effects-of-imabalanced-sampling" class="slide level2 eighty"><h2 class="eighty">Effects of Imabalanced Sampling</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mn_radon <span class="ot">&lt;-</span> mn_radon <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(mn_counties, fips, homes, log_uranium), <span class="at">by =</span> <span class="st">"fips"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(homes) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">ordered</span>(county, <span class="at">levels =</span> <span class="fu">unique</span>(county)))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>mn_radon <span class="sc">%&gt;%</span> <span class="fu">filter</span>(floor <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> log_radon)) <span class="sc">+</span> </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.alpha =</span> <span class="fl">0.4</span>, <span class="at">varwidth =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"log radon"</span>, <span class="at">title =</span> <span class="st">"Basement radon concentration"</span>) <span class="sc">+</span> </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/radon-box-plot-1.png"></p>
+<p>## Soil Uranium Measurements {.eighty}</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mn_counties <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">ifelse</span>(homes <span class="sc">&gt;=</span> <span class="dv">25</span>, <span class="fu">as.character</span>(county), <span class="cn">NA</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> homes, <span class="at">y =</span> log_uranium)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"orange"</span>, <span class="fl">0.3</span>), <span class="at">color =</span> <span class="st">"darkred"</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), <span class="at">size =</span> <span class="dv">5</span>, <span class="at">nudge_y =</span> <span class="fl">0.05</span>, <span class="at">nudge_x =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Observations per county"</span>, <span class="at">y =</span> <span class="st">"log soil uranium"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/u-measurements-1.png"></p>
+</section><section id="soil-uranium-vs.-radon" class="slide level2 eighty"><h2 class="eighty">Soil Uranium vs. Radon</h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mn_radon, <span class="fu">aes</span>(<span class="at">x =</span> log_uranium, <span class="at">y =</span> log_radon, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">color =</span> <span class="fu">factor</span>(floor))) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"0"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"purple"</span>)) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Log soil uranium"</span>, <span class="at">y =</span> <span class="st">"Log radon concentration"</span> )</span></code></pre></div>
+<p><img data-src="assets/fig/u-vs-radon-1.png"></p>
+</section><section id="soil-uranium-vs.-radon-1" class="slide level2 eighty"><h2 class="eighty">Soil Uranium vs. Radon</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mn_radon <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(log_uranium)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">ordered</span>(county, <span class="at">levels =</span> <span class="fu">unique</span>(county))) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> log_radon)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">varwidth =</span> <span class="cn">TRUE</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"Log radon"</span>, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Counties ordered by soil uranium high (left) to low (right)"</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/u-vs-radon-box-1.png"></p>
+</section></section><section><section id="modeling-imbalanced-data" class="title-slide slide level1 center"><h1 class="center">Modeling Imbalanced Data</h1>
+
+</section><section id="pooling" class="slide level2 eighty"><h2 class="eighty">Pooling</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Many counties have only a few radon measurements:
+<ul>
+<li>3 counties have only 1</li>
+<li>8 have only 2</li>
+<li>11 have only 3</li>
+</ul>
+</li>
+<li class="fragment"><strong>Pooling</strong>
+<ul>
+<li>Combine data from multiple counties to get more samples</li>
+<li>
+<em>Complete pooling</em>: Ignore counties and average all
+measurements together.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<pre class="seventy max-listing"><code>## # A tibble: 85 × 6
+##     fips  Uppm county          county_id homes log_uranium
+##    &lt;int&gt; &lt;dbl&gt; &lt;ord&gt;               &lt;int&gt; &lt;int&gt;       &lt;dbl&gt;
+##  1 27087 1.16  MAHNOMEN               42     1     0.150  
+##  2 27101 1.49  MURRAY                 50     1     0.399  
+##  3 27167 1.27  WILKIN                 82     1     0.236  
+##  4 27031 0.604 COOK                   16     2    -0.505  
+##  5 27045 1.51  FILLMORE               23     2     0.415  
+##  6 27073 1.36  LAC QUI PARLE          36     2     0.311  
+##  7 27095 0.811 MILLE LACS             47     2    -0.210  
+##  8 27121 1.32  POPE                   60     2     0.281  
+##  9 27133 1.70  ROCK                   65     2     0.528  
+## 10 27149 1.60  STEVENS                73     2     0.471  
+## 11 27173 1.43  YELLOW MEDICINE        85     2     0.355  
+## 12 27005 0.893 BECKER                  3     3    -0.113  
+## 13 27011 1.47  BIG STONE               6     3     0.387  
+## 14 27039 1.30  DODGE                  20     3     0.264  
+## 15 27059 0.471 ISANTI                 29     3    -0.752  
+## 16 27069 0.992 KITTSON                34     3    -0.00780
+## 17 27105 1.50  NOBLES                 52     3     0.405  
+## 18 27107 1.30  NORMAN                 53     3     0.265  
+## 19 27113 0.929 PENNINGTON             56     3    -0.0740 
+## 20 27129 1.46  RENVILLE               63     3     0.381  
+## 21 27153 0.954 TODD                   75     3    -0.0468 
+## 22 27165 1.20  WATONWAN               81     3     0.183  
+## 23 27001 0.502 AITKIN                  1     4    -0.689  
+## 24 27009 0.867 BENTON                  5     4    -0.143  
+## 25 27015 1.32  BROWN                   8     4     0.278  
+## # … with 60 more rows</code></pre>
+</div>
+</div>
+</section><section id="descriptive-statistics" class="slide level2 eighty"><h2 class="eighty">Descriptive Statistics</h2>
+<p>Preliminary Data Analysis Findings</p>
+<ul>
+<li>83% of the data are measurements taken on the basement level. The
+remaining 17% are on the ground floor.</li>
+<li>70% of the counties (60 out of 85) have observations from both
+floors 0 and 1, the remaining 30% only have observations from floor 0
+(basement).</li>
+<li>For most counties, there are fewer than 10 observations; 8 counties
+in metropolitan areas account for over half of the observations.</li>
+<li>The counties with the highest soil uranium levels do not have a lot
+of observations per county.</li>
+<li>Within each county, there is a wide range of radon
+measurements.</li>
+</ul></section><section id="first-models" class="slide level2 eighty"><h2 class="eighty">First models</h2>
+<ul>
+<li>Start simple: <span class="math display">\[
+\begin{align}
+R &amp;\sim \text{Normal}(\mu, \sigma)\\
+\mu &amp;= \alpha + \beta F
+\end{align}
+\]</span> where <span class="math inline">\(R\)</span> is
+<code>log_radon</code> and <span class="math inline">\(F\)</span> is
+<code>floor</code>.</li>
+</ul>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Complete Pooling</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_cp <span class="ot">&lt;-</span> mn_radon <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(log_radon, floor)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>mdl_comp_pool <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    log_radon <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b <span class="sc">*</span> floor,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> df_cp, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>No pooling</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_np <span class="ot">&lt;-</span> mn_radon <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(county_id, log_radon, floor)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mdl_no_pool <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    log_radon <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[county_id] <span class="sc">+</span> b <span class="sc">*</span> floor,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    a[county_id] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> df_np, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="model-results" class="slide level2 eighty"><h2 class="eighty">Model results</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Complete Pooling</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_comp_pool, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a      1.33 0.03  1.28  1.37  1379     1
+## b     -0.61 0.07 -0.73 -0.49  1495     1
+## sigma  0.82 0.02  0.80  0.85  1679     1</code></pre>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>No pooling</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_no_pool, <span class="at">pars =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"a["</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="st">"]"</span>), <span class="st">"b"</span>, <span class="st">"sigma"</span>), </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1]   0.85 0.38  0.25  1.47  3987     1
+## a[2]   0.87 0.11  0.70  1.06  5071     1
+## a[3]   1.53 0.43  0.83  2.22  4380     1
+## a[4]   1.55 0.30  1.07  2.03  3820     1
+## a[5]   1.42 0.39  0.80  2.05  5431     1
+## a[6]   1.52 0.43  0.82  2.21  4701     1
+## a[7]   2.01 0.20  1.69  2.33  3853     1
+## a[8]   1.99 0.38  1.34  2.58  3956     1
+## a[9]   1.00 0.24  0.62  1.39  4783     1
+## a[10]  1.57 0.31  1.08  2.04  4250     1
+## a[11]  1.40 0.35  0.85  1.95  4962     1
+## a[12]  1.73 0.38  1.10  2.35  3670     1
+## a[13]  1.03 0.30  0.55  1.52  3986     1
+## a[14]  1.99 0.21  1.64  2.32  3167     1
+## a[15]  1.34 0.38  0.70  1.95  4040     1
+## a[16]  0.68 0.52 -0.16  1.51  3815     1
+## a[17]  1.27 0.37  0.69  1.85  4865     1
+## a[18]  1.12 0.22  0.77  1.46  4405     1
+## a[19]  1.34 0.10  1.18  1.50  3505     1
+## a[20]  1.80 0.43  1.11  2.50  4537     1
+## b     -0.72 0.07 -0.84 -0.60  2445     1
+## sigma  0.76 0.02  0.73  0.79  3000     1</code></pre>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="model-results-1" class="slide level2 eighty"><h2 class="eighty">Model results</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Prepare data</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cp_draws <span class="ot">&lt;-</span> <span class="fu">gather_draws</span>(mdl_comp_pool, a)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>cp_sum <span class="ot">&lt;-</span> cp_draws <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(.variable) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.value), </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">PI =</span> <span class="fu">list</span>(<span class="fu">set_names</span>(<span class="fu">PI</span>(.value), <span class="fu">c</span>(<span class="st">"lower"</span>, <span class="st">"upper"</span>))),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> ) <span class="sc">%&gt;%</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(PI) <span class="sc">%&gt;%</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pooling =</span> <span class="st">"Complete"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>cp_counties <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">county =</span> mn_counties<span class="sc">$</span>county,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mean =</span> cp_sum<span class="sc">$</span>mean,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">lower =</span> cp_sum<span class="sc">$</span>lower, </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">upper =</span> cp_sum<span class="sc">$</span>upper,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">pooling =</span> cp_sum<span class="sc">$</span>pooling)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>np_draws <span class="ot">&lt;-</span> <span class="fu">gather_draws</span>(mdl_no_pool, a[county_id]) <span class="sc">%&gt;%</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(mn_counties, county_id, county), </span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"county_id"</span>)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>np_sum <span class="ot">&lt;-</span> np_draws <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(.variable, county_id, county) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.value), </span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">PI =</span> <span class="fu">list</span>(<span class="fu">set_names</span>(<span class="fu">PI</span>(.value), <span class="fu">c</span>(<span class="st">"lower"</span>, <span class="st">"upper"</span>))),</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(PI) <span class="sc">%&gt;%</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pooling =</span> <span class="st">"None"</span>)</span></code></pre></div>
+</div>
+<div class="column">
+<div class="sourceCode" id="cb30"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(np_sum, <span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> mean, <span class="at">ymin =</span> lower, </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">ymax =</span> upper, <span class="at">color =</span> pooling, </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fill =</span> pooling)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_pointrange</span>(<span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">data =</span> cp_counties, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(county)), </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_ribbon</span>(<span class="at">data =</span> cp_counties, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(county)), </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Complete =</span> <span class="st">"orange"</span>, </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">None =</span> <span class="st">"darkblue"</span>)) <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Complete =</span> <span class="st">"orange"</span>, </span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                             <span class="at">None =</span> <span class="st">"darkblue"</span>)) <span class="sc">+</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div>
+</div>
+</div>
+</section><section id="plot-model-results" class="slide level2 eighty"><h2 class="eighty">Plot model results</h2>
+<p><img data-src="assets/fig/unnamed-chunk-1-1.png"></p>
+</section><section id="posterior-predictive-check" class="slide level2 eighty"><h2 class="eighty">Posterior Predictive Check</h2>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mn_basement_radon <span class="ot">&lt;-</span> mn_radon <span class="sc">%&gt;%</span> <span class="fu">filter</span>(floor <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>np_median <span class="ot">&lt;-</span> np_draws <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.variable <span class="sc">==</span> <span class="st">"a"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">log_radon =</span> <span class="fu">median</span>(.value))</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>np_draws <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.variable <span class="sc">==</span> <span class="st">"a"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> log_radon)) <span class="sc">+</span> </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">data =</span> mn_basement_radon, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> np_median, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"log radon"</span>, <span class="at">title =</span> <span class="st">"No-pooling model posterior predictive check"</span>) <span class="sc">+</span> </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/posterior-predictive-check-pooled-1.png"></p>
+</section><section id="posterior-predictive-check-1" class="slide level2 eighty"><h2 class="eighty">Posterior Predictive Check</h2>
+<p><img data-src="assets/fig/posterior-predictive-check-pooled-big-1.png"></p>
+</section></section><section><section id="multilevel-modeling" class="title-slide slide level1 center"><h1 class="center">Multilevel Modeling</h1>
+
+</section><section id="a-multilevel-model" class="slide level2 eighty"><h2 class="eighty">A Multilevel Model</h2>
+<div class="columns">
+<div class="column ninety">
+<ul>
+<li>Partial Pooling <span class="math display">\[
+\begin{align}
+U &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha_{\text{county}} + \beta F \\
+\alpha_{\text{county}} &amp;\sim \text{Normal}(\bar\alpha,
+\sigma_\alpha)
+\end{align}
+\]</span>
+</li>
+<li class="fragment">Two levels
+<ol type="1">
+<li><span class="math inline">\(U \sim \text{Normal}(\mu,
+\sigma)\)</span></li>
+<li>
+<span class="math inline">\(\alpha_{\text{county}} \sim
+\text{Normal}(\bar\alpha, \sigma_\alpha)\)</span>
+<ul>
+<li>Instead of a <em>prior</em> for <span class="math inline">\(\alpha\)</span>, we have a _likelihood, with
+<em>hyperpriors</em> for <span class="math inline">\(\bar\alpha\)</span>
+and <span class="math inline">\(\sigma_\alpha\)</span>.</li>
+<li class="fragment"><span class="math inline">\(\bar\alpha\)</span> reflects the
+completely pooled analysis</li>
+<li class="fragment"><span class="math inline">\(\sigma_\alpha\)</span> allows
+variation similar to the non-pooled analysis</li>
+<li class="fragment">The model allows <span class="math inline">\(\sigma_\alpha\)</span> to adjust to create the
+best balance between the <em>completely pooled</em> and the
+<em>non-pooled</em> models.</li>
+<li class="fragment">This is a <em>partially pooled</em> model.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="sourceCode" id="cb32"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ml_data <span class="ot">&lt;-</span> <span class="fu">select</span>(mn_radon, county_id, log_radon, floor)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>mdl_ml <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    log_radon <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[county_id] <span class="sc">+</span> b <span class="sc">*</span> floor,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    a[county_id] <span class="sc">~</span> <span class="fu">dnorm</span>(a_bar, sig_a),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    a_bar <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    sig_a <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> ml_data, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb33"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_ml, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">depth =</span> <span class="dv">2</span>,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"a_bar"</span>, <span class="st">"sig_a"</span>, <span class="st">"b"</span>, <span class="st">"sigma"</span>, <span class="fu">paste0</span>(<span class="st">"a["</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="st">"]"</span>)))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## a_bar  1.46 0.05  1.38  1.55   990     1
+## sig_a  0.33 0.04  0.27  0.41   595     1
+## b     -0.69 0.07 -0.81 -0.58  1525     1
+## sigma  0.76 0.02  0.73  0.79  2563     1
+## a[1]   1.20 0.25  0.78  1.59  2616     1
+## a[2]   0.93 0.10  0.77  1.08  2685     1
+## a[3]   1.48 0.26  1.07  1.90  2657     1
+## a[4]   1.50 0.22  1.15  1.85  2387     1
+## a[5]   1.45 0.25  1.07  1.83  3307     1</code></pre>
+</div>
+</div>
+</div>
+</section><section id="analyzing-multilevel-model" class="slide level2 eighty"><h2 class="eighty">Analyzing Multilevel Model</h2>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ml_draws <span class="ot">&lt;-</span> <span class="fu">gather_draws</span>(mdl_ml, a[county_id]) <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(mn_counties, county_id, county), <span class="at">by =</span> <span class="st">"county_id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pooling =</span> <span class="st">"Partial"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>ml_sum <span class="ot">&lt;-</span> ml_draws <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(county, county_id, pooling) <span class="sc">%&gt;%</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.value), <span class="at">PI =</span> <span class="fu">list</span>(<span class="fu">set_names</span>(<span class="fu">PI</span>(.value), <span class="fu">c</span>(<span class="st">"lower"</span>, <span class="st">"upper"</span>)))) <span class="sc">%&gt;%</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(PI)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ml_sum, <span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> mean, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"89% confidence interval"</span>, <span class="at">title =</span> ) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/plot_ml_draws-1.png"></p>
+</section><section id="analyzing-multilevel-model-1" class="slide level2 eighty"><h2 class="eighty">Analyzing Multilevel Model</h2>
+<p><img data-src="assets/fig/unnamed-chunk-2-1.png"></p>
+</section><section id="comparing-models" class="slide level2 eighty"><h2 class="eighty">Comparing Models</h2>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ml_sum, <span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> mean, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper, <span class="at">color =</span> pooling)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">data =</span> np_sum, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Partial =</span> <span class="st">"darkblue"</span>, <span class="at">None =</span> <span class="st">"orange"</span>)) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"89% confidence interval"</span>, <span class="at">title =</span> ) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/plot_comparison-1.png"></p>
+</section><section id="posterior-predictive-check-2" class="slide level2 eighty"><h2 class="eighty">Posterior Predictive Check</h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>ml_median <span class="ot">&lt;-</span> ml_draws <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.variable <span class="sc">==</span> <span class="st">"a"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">log_radon =</span> <span class="fu">median</span>(.value))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>ml_draws <span class="sc">%&gt;%</span> <span class="fu">filter</span>(.variable <span class="sc">==</span> <span class="st">"a"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> log_radon)) <span class="sc">+</span> </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">data =</span> mn_basement_radon, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> ml_median, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"County"</span>, <span class="at">y =</span> <span class="st">"log radon"</span>, <span class="at">title =</span> <span class="st">"Partial-pooling model posterior predictive check"</span>) <span class="sc">+</span> </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/posterior-predictive-check-ml-1.png"></p>
+</section><section id="posterior-predictive-check-3" class="slide level2 eighty"><h2 class="eighty">Posterior Predictive Check</h2>
+<p><img data-src="assets/fig/unnamed-chunk-3-1.png"></p>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_18">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_18"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_18">https://ees5891.jgilligan.org/slides/class_18</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_18/ees_5891-03_class_18_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_18/ees_5891-03_class_18_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

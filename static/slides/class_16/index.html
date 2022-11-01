@@ -249,17 +249,17 @@ chimp.</li>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_chimp, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="at">depth =</span> <span class="dv">2</span>, </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
-## a[1] -0.44 0.33 -0.95  0.07   446  1.01
-## a[2]  3.90 0.75  2.80  5.19  1256  1.00
-## a[3] -0.74 0.34 -1.27 -0.18   612  1.01
-## a[4] -0.74 0.33 -1.28 -0.21   552  1.01
-## a[5] -0.44 0.33 -0.97  0.08   462  1.02
-## a[6]  0.49 0.32 -0.04  1.01   576  1.01
-## a[7]  1.96 0.43  1.29  2.65  1056  1.00
-## b[1] -0.04 0.28 -0.49  0.41   436  1.01
-## b[2]  0.47 0.29  0.01  0.93   405  1.02
-## b[3] -0.39 0.29 -0.85  0.06   415  1.02
-## b[4]  0.35 0.28 -0.09  0.80   413  1.02</code></pre>
+## a[1] -0.45 0.32 -0.98  0.06   752  1.01
+## a[2]  3.89 0.75  2.79  5.17   909  1.00
+## a[3] -0.75 0.33 -1.26 -0.23   725  1.01
+## a[4] -0.75 0.32 -1.24 -0.24   760  1.00
+## a[5] -0.45 0.32 -0.95  0.08   791  1.00
+## a[6]  0.47 0.32 -0.03  1.00   693  1.00
+## a[7]  1.95 0.41  1.29  2.62   983  1.00
+## b[1] -0.05 0.28 -0.48  0.41   653  1.01
+## b[2]  0.48 0.28  0.05  0.92   644  1.00
+## b[3] -0.38 0.28 -0.83  0.06   674  1.01
+## b[4]  0.37 0.27 -0.05  0.80   736  1.01</code></pre>
 </div>
 </section><section id="what-does-this-mean" class="slide level2 eighty"><h2 class="eighty">What does this mean?</h2>
 <div class="textleft">
@@ -389,11 +389,11 @@ pro-social motives</li>
 <div class="seventy max-listing">
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(mdl_chimp, mdl_chimp_agg, <span class="at">func =</span> PSIS)</span></code></pre></div>
 <pre><code>##                   PSIS        SE    dPSIS      dSE    pPSIS
-## mdl_chimp_agg 113.8410  8.229458   0.0000       NA 8.219263
-## mdl_chimp     532.9192 18.944325 419.0782 39.66951 8.798700
+## mdl_chimp_agg 114.0660  8.397036   0.0000       NA 8.254432
+## mdl_chimp     531.8984 18.920172 417.8324 40.26618 8.306741
 ##                     weight
 ## mdl_chimp_agg 1.000000e+00
-## mdl_chimp     9.961579e-92</code></pre>
+## mdl_chimp     1.857139e-91</code></pre>
 </div>
 </li>
 </ul>
@@ -556,15 +556,15 @@ counts.</li>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    a[gid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
-## a[1] -0.22 0.04 -0.28 -0.16  1511  1.00
-## a[2] -0.83 0.05 -0.91 -0.75  1494  1.01</code></pre>
+## a[1] -0.22 0.04 -0.29 -0.16  1396     1
+## a[2] -0.83 0.05 -0.91 -0.75  1321     1</code></pre>
 </div>
 </section><section id="interpreting-the-significance" class="slide level2 eighty"><h2 class="eighty">Interpreting the significance</h2>
 <div class="seventy max-listing">
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
-## a[1] -0.22 0.04 -0.28 -0.16  1511  1.00
-## a[2] -0.83 0.05 -0.91 -0.75  1494  1.01</code></pre>
+## a[1] -0.22 0.04 -0.29 -0.16  1396     1
+## a[2] -0.83 0.05 -0.91 -0.75  1321     1</code></pre>
 </div>
 <ul>
 <li>What is the significance of the gender difference in <code>a</code>?
@@ -580,8 +580,8 @@ counts.</li>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>diff_p <span class="ot">&lt;-</span> <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[1]"</span>)) <span class="sc">-</span> <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[2]"</span>))</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(<span class="fu">list</span>(<span class="at">diff_a =</span> diff_a, <span class="at">diff_p =</span> diff_p))</span></code></pre></div>
 <pre><code>##             mean         sd      5.5%     94.5%  histogram
-## diff_a 0.6120066 0.06072354 0.5169900 0.7104636 ▁▁▁▂▇▇▅▂▁▁
-## diff_p 0.1419666 0.01366396 0.1204831 0.1641566 ▁▁▁▃▇▇▅▂▁▁</code></pre>
+## diff_a 0.6101899 0.06463158 0.5045819 0.7134302 ▁▁▁▃▇▇▅▂▁▁
+## diff_p 0.1414933 0.01461511 0.1175268 0.1645466 ▁▁▂▃▇▇▅▂▁▁</code></pre>
 </div>
 </section><section id="posterior-validation-check" class="slide level2 eighty"><h2 class="eighty">Posterior Validation Check</h2>
 <div class="columns">
@@ -621,14 +621,14 @@ to some departments and more men apply to others: <img data-src="assets/fig/appl
 <div class="seventy max-listing fragment">
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gs_2, <span class="at">depth=</span><span class="dv">2</span>, <span class="at">digits=</span><span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##           mean   sd  5.5% 94.5% n_eff Rhat4
-## a[1]     -0.53 0.53 -1.36  0.34   714  1.01
-## a[2]     -0.43 0.53 -1.25  0.44   716  1.01
-## delta[1]  1.11 0.53  0.24  1.94   728  1.01
-## delta[2]  1.07 0.53  0.18  1.90   719  1.01
-## delta[3] -0.15 0.53 -1.03  0.69   710  1.01
-## delta[4] -0.18 0.53 -1.05  0.65   714  1.01
-## delta[5] -0.62 0.54 -1.50  0.21   730  1.01
-## delta[6] -2.18 0.54 -3.07 -1.32   755  1.01</code></pre>
+## a[1]     -0.52 0.53 -1.37  0.32   642  1.01
+## a[2]     -0.42 0.53 -1.26  0.42   643  1.01
+## delta[1]  1.10 0.53  0.25  1.95   645  1.01
+## delta[2]  1.06 0.53  0.20  1.90   670  1.01
+## delta[3] -0.16 0.53 -1.00  0.68   626  1.01
+## delta[4] -0.19 0.53 -1.04  0.65   642  1.01
+## delta[5] -0.63 0.53 -1.50  0.22   621  1.01
+## delta[6] -2.19 0.54 -3.06 -1.33   699  1.01</code></pre>
 </div>
 </div>
 <div class="column">
@@ -639,11 +639,11 @@ to some departments and more men apply to others: <img data-src="assets/fig/appl
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inv_logit</span>(<span class="fu">pull</span>(post, <span class="st">"a[2]"</span>))</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(<span class="fu">list</span>(<span class="at">diff_a =</span> diff_a, <span class="at">diff_p =</span> diff_p))</span></code></pre></div>
 <pre><code>##               mean         sd        5.5%       94.5%
-## diff_a -0.09691668 0.07978308 -0.22626653 0.029650330
-## diff_p -0.02163657 0.01816266 -0.05171786 0.006653057
-##             histogram
-## diff_a ▁▁▁▁▂▅▇▇▅▂▁▁▁▁
-## diff_p ▁▁▁▂▃▅▇▇▅▂▁▁▁▁</code></pre>
+## diff_a -0.09762225 0.08186111 -0.22892626 0.032305656
+## diff_p -0.02184398 0.01865166 -0.05231966 0.007115956
+##            histogram
+## diff_a ▁▁▁▂▅▇▇▅▂▁▁▁▁
+## diff_p      ▁▁▂▇▇▂▁▁</code></pre>
 </div>
 <div class="seventy max-listing fragment">
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span> </span>
