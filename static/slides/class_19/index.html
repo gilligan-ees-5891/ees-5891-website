@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Multilevel Models (part 2)</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.16.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Multilevel Models (part 2)</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #19:
+       Thursday, November 03
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="chimpanzees" class="title-slide slide level1 center"><h1 class="center">Chimpanzees</h1>
+
+</section><section id="chimpanzee-experiment" class="slide level2 eighty"><h2 class="eighty">Chimpanzee Experiment</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Experimental treatments:
+<ul>
+<li>Partner or not</li>
+<li>Pro-social lever on left or right</li>
+</ul>
+</li>
+<li>Other conditions
+<ul>
+<li>Experiments were performed in “blocks” during different days</li>
+</ul>
+</li>
+<li>Outcome:
+<ul>
+<li>
+<span class="math inline">\(L\)</span>: Which lever did the chimp
+pull (1 = left, 0 = right)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Load data</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(chimpanzees)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> chimpanzees</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> d<span class="sc">$</span>prosoc_left <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>d<span class="sc">$</span>condition</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pulled_left =</span> d<span class="sc">$</span>pulled_left,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">actor =</span> d<span class="sc">$</span>actor,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">block_id =</span> d<span class="sc">$</span>block,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">as.integer</span>(d<span class="sc">$</span>treatment) )</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="original-model" class="slide level2 eighty"><h2 class="eighty">Original Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Original Model: <span class="math display">\[
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha_{\text{actor}} + \beta_{\text{treatment}}
+\\
+\alpha &amp;\sim dnorm(0, 1.5) \\
+\beta &amp;\sim dnorm(0, 0.5)
+\end{align}
+\]</span></p>
+<ul>
+<li>Limitations:
+<ul>
+<li>Prior for <span class="math inline">\(\alpha\)</span> assumes equal
+likelihood of being left- or right-handed</li>
+<li>Experiments were conducted in 6 “blocks” on different days. Did
+chimpanzees behave differently on different days?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Model code:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">25</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mdl_chimp<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        pulled_left <span class="sc">~</span> <span class="fu">dbinom</span>(<span class="dv">1</span>, p),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[actor] <span class="sc">+</span> b[treatment],</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        a[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="multilevel-model" class="slide level2 eighty"><h2 class="eighty">Multilevel Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>New model: <span class="math display">\[
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha_{\text{actor}} + \gamma_{\text{block}} +
+  \beta_{\text{treatment}} \\
+\beta_{\text{treatment}} &amp;\sim \text{Normal}(0, 0.5),
+  \text{treatment in } 1 \ldots 4 \\
+\alpha_{\text{actor}} &amp;\sim \text{Normal}(\bar \alpha,
+\sigma_\alpha),
+  \text{actor in } 1 \ldots 7 \\
+\gamma_{\text{block}} &amp;\sim \text{Normal}(0, \sigma_\gamma),
+  \text{block in } 1 \ldots 6 \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1.5) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\gamma &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span>
+</li>
+<li>This allows for partial pooling across actors and blocks (e.g., most
+actors tend to pull the right lever, but some prefer the left)</li>
+<li>Example of a multilevel model with two different kinds of
+clusters.</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Model code:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">13</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mdl_chimp<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        pulled_left <span class="sc">~</span> <span class="fu">dbinom</span>(<span class="dv">1</span>, p),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[actor] <span class="sc">+</span> g[block_id] <span class="sc">+</span> b[treatment],</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="do">## adaptive priors</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        a[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(a_bar, sigma_a),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        g[block_id] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, sigma_g),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="do">## hyper-priors</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        a_bar <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        sigma_a <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        sigma_g <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="model-results" class="slide level2 eighty"><h2 class="eighty">Model Results</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Model 1 (the old one)</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp<span class="fl">.1</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
+## a[1] -0.45 0.33 -0.98  0.08   507  1.00
+## a[2]  3.85 0.74  2.75  5.08  1223  1.00
+## a[3] -0.75 0.33 -1.28 -0.21   521  1.00
+## a[4] -0.76 0.35 -1.35 -0.20   536  1.00
+## a[5] -0.45 0.34 -0.99  0.08   503  1.00
+## a[6]  0.48 0.33 -0.06  1.01   406  1.00
+## a[7]  1.96 0.42  1.29  2.66   590  1.01
+## b[1] -0.04 0.29 -0.51  0.44   414  1.01
+## b[2]  0.48 0.29  0.01  0.95   518  1.00
+## b[3] -0.38 0.30 -0.85  0.09   438  1.01
+## b[4]  0.37 0.29 -0.08  0.85   449  1.00</code></pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Model 2 (multilevel)</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp<span class="fl">.2</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##          mean   sd  5.5% 94.5% n_eff Rhat4
+## b[1]    -0.14 0.30 -0.58  0.33   565  1.01
+## b[2]     0.39 0.30 -0.06  0.88   456  1.01
+## b[3]    -0.48 0.31 -0.96  0.02   571  1.01
+## b[4]     0.27 0.30 -0.20  0.77   477  1.02
+## a[1]    -0.35 0.37 -0.96  0.24   527  1.01
+## a[2]     4.63 1.22  3.07  7.00   898  1.01
+## a[3]    -0.65 0.37 -1.26 -0.07   433  1.01
+## a[4]    -0.65 0.38 -1.26 -0.07   550  1.01
+## a[5]    -0.36 0.36 -0.93  0.19   502  1.01
+## a[6]     0.59 0.37  0.00  1.17   443  1.01
+## a[7]     2.11 0.46  1.39  2.86   698  1.01
+## g[1]    -0.17 0.22 -0.59  0.07   603  1.00
+## g[2]     0.03 0.18 -0.23  0.32   963  1.00
+## g[3]     0.05 0.17 -0.20  0.34   796  1.00
+## g[4]     0.01 0.18 -0.28  0.30   962  1.00
+## g[5]    -0.03 0.17 -0.33  0.24   885  1.00
+## g[6]     0.11 0.19 -0.12  0.44   628  1.00
+## a_bar    0.60 0.70 -0.49  1.74   958  1.00
+## sigma_a  1.97 0.61  1.21  3.03  1278  1.00
+## sigma_g  0.21 0.16  0.03  0.53   330  1.01</code></pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="plotting-model-results" class="slide level2 eighty"><h2 class="eighty">Plotting Model Results</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Model 1</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_chimp<span class="fl">.1</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>), <span class="at">main =</span> <span class="st">"Model 1"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-model-1-results-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Model 2</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_chimp<span class="fl">.2</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>), <span class="at">main =</span> <span class="st">"Model 2"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-model-2-results-1.png"></p>
+</div>
+<ul>
+<li>Note that all the <span class="math inline">\(\gamma\)</span>
+coefficients are consistent with 0.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="another-model" class="slide level2 eighty"><h2 class="eighty">Another model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Did we need to include Blocks?
+<ul>
+<li>All the block-level coefficients were consistent with zero.</li>
+<li>Try a simpler model: <span class="math display">\[
+\small
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha_{\text{actor}} +  
+  \beta_{\text{treatment}} \\
+\beta_{\text{treatment}} &amp;\sim \text{Normal}(0, 0.5),
+  \text{treatment in } 1 \ldots 4 \\
+\alpha_{\text{actor}} &amp;\sim \text{Normal}(\bar \alpha,
+\sigma_\alpha),
+  \text{actor in } 1 \ldots 7 \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1.5) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Model code:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">13</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mdl_chimp<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        pulled_left <span class="sc">~</span> <span class="fu">dbinom</span>(<span class="dv">1</span>, p),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[actor] <span class="sc">+</span> b[treatment],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="do">## adaptive priors</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        a[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(a_bar, sigma_a),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="do">## hyper-priors</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        a_bar <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        sigma_a <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">log_lik =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="compare-the-models" class="slide level2 eighty"><h2 class="eighty">Compare the models</h2>
+<ul>
+<li>
+<p>Compare the models:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(mdl_chimp<span class="fl">.1</span>, mdl_chimp<span class="fl">.2</span>, mdl_chimp<span class="fl">.3</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##               WAIC    SE dWAIC  dSE pWAIC weight
+## mdl_chimp.3 531.28 19.23  0.00   NA  8.58   0.39
+## mdl_chimp.1 531.44 18.92  0.16 0.42  8.04   0.36
+## mdl_chimp.2 532.20 19.30  0.92 1.67 10.57   0.25</code></pre>
+</div>
+</li>
+<li><p>Model 3 works is slightly better than the original model, and
+model 2 (with the block clusters) is worst, because it overfits (see the
+pWAIC penalty).</p></li>
+<li class="fragment">
+<p>What is the difference between models 1 and 3?</p>
+<ul>
+<li class="fragment">Model 3 has an adaptive prior for <span class="math inline">\(\alpha\)</span> (the actor’s preference for right
+or left.</li>
+</ul>
+</li>
+</ul></section></section><section><section id="divergent-transitions" class="title-slide slide level1 center"><h1 class="center">Divergent Transitions</h1>
+
+</section><section id="divergent-transitions-1" class="slide level2 eighty"><h2 class="eighty">Divergent Transitions</h2>
+<ul>
+<li>Sometimes you get warnings about “divergent transitions” when you
+fit a model using Stan.</li>
+<li class="fragment">Hamiltonian Monte Carlo (HMC) works by simulating a particle
+flowing over a surface with hills and valleys.</li>
+<li class="fragment">In a real physical system, energy is conserved
+<ul>
+<li class="fragment">In a computational simulation, steep slopes can cause
+errors</li>
+</ul>
+</li>
+<li class="fragment">When there is a divergent transition, Stan discards it and tries
+again
+<ul>
+<li class="fragment">If there is a region in the posterior where there are a lot of
+divergent transitions, Stan can’t sample it well.</li>
+<li class="fragment">If there is a lot of probability density there, it means you may
+miss an important part of the posterior.</li>
+</ul>
+</li>
+</ul></section><section id="dealing-with-divergences" class="slide level2 eighty"><h2 class="eighty">Dealing with Divergences</h2>
+<ul>
+<li>There are two ways to deal with divergences:
+<ol type="1">
+<li class="fragment">Make <code>adapt_delta</code> closer to 1.
+<ul>
+<li>
+<code>adapt_delta</code> is the target acceptance rate used in the
+tuning (warm-up) phase to adjust the parameters.</li>
+<li>Default is 0.95. 1 is the maximum allowed value.</li>
+<li>Setting <code>adapt_delta</code> closer to 1 leads to more accurate
+sampling, but slows Stan down.</li>
+</ul>
+</li>
+<li class="fragment">Re-write your model to avoid divergences (e.g., re-parameterize
+it)
+<ul>
+<li>A common strategy is to change from centered to non-centered
+parameterizations.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul></section><section id="the-devils-funnel" class="slide level2 eighty"><h2 class="eighty">The Devil’s Funnel</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Consider this model: <span class="math display">\[
+\begin{align}
+\nu &amp;\sim \text{Normal}(0, 3) \\
+x   &amp;\sim \text{Normal}(0, \exp(\nu))
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mdl_funnel <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        v <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        x <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="fu">exp</span>(v))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">N =</span> <span class="dv">1</span>), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_funnel, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##    mean    sd   5.5% 94.5% n_eff Rhat4
+## v  0.98  1.90  -1.68  4.45    29  1.17
+## x -2.66 26.77 -34.55 16.12   168  1.02</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_funnel<span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 154 of 2000 iterations ended with a divergence (7.7%).
+## Try increasing 'adapt_delta' to remove the divergences.</code></pre>
+</div>
+</div>
+</div>
+</section><section id="cause-of-divergences" class="slide level2 eighty textleft"><h2 class="eighty textleft">Cause of Divergences</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li><p>Why do divergences happen?</p></li>
+<li>
+<p>Potential-energy surface:</p>
+<p><img data-src="assets/images/centered-funnel.png" height="800" alt="Potential-energy surface for funnel with centered parameterization"></p>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Trajectory starts at “X”, and bounces around, …
+<ul>
+<li class="fragment">but when it gets to the steep part near <br>(0, -2) a divergent
+transition makes it jump way out to the “O”.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="non-centered-parameterization" class="slide level2 eighty"><h2 class="eighty">Non-Centered Parameterization</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Original model: <span class="math display">\[
+\begin{align}
+\nu &amp;\sim \text{Normal}(0, 3) \\
+x   &amp;\sim \text{Normal}(0, \exp(\nu))
+\end{align}
+\]</span>
+</li>
+<li>Non-centered version: <span class="math display">\[
+\begin{align}
+\nu &amp;\sim \text{Normal}(0, 3) \\
+z   &amp;\sim \text{Normal}(0, 1) \\
+x   &amp;= z \exp(\nu)
+\end{align}
+\]</span>
+</li>
+<li>This flattens the steep parts by sampling from two Normal
+distributions and the steep stuff only shows up when we multiply them
+together.</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-2">
+<p><img data-src="assets/images/centered-funnel.png" height="450" alt="Centered funnel trajectories"></p>
+<p><img data-src="assets/images/non-centered-funnel.png" height="450" alt="Non-centered funnel trajectories"></p>
+</div>
+</div>
+</div>
+</section><section id="coding-the-model" class="slide level2 eighty"><h2 class="eighty">Coding the model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Original model:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb18"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mdl_funnel <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        v <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        x <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="fu">exp</span>(v))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">N =</span> <span class="dv">1</span>), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_funnel, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##    mean    sd   5.5% 94.5% n_eff Rhat4
+## v  0.98  1.90  -1.68  4.45    29  1.17
+## x -2.66 26.77 -34.55 16.12   168  1.02</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_funnel<span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 154 of 2000 iterations ended with a divergence (7.7%).
+## Try increasing 'adapt_delta' to remove the divergences.</code></pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>
+<p>Non-centered model:</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mdl_funnel_nc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        v <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        z <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        gq<span class="sc">&gt;</span> real[<span class="dv">1</span>]<span class="sc">:</span>x <span class="ot">&lt;&lt;-</span> z<span class="sc">*</span><span class="fu">exp</span>(v)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span><span class="fu">list</span>(<span class="at">N=</span><span class="dv">1</span>) , <span class="at">chains=</span><span class="dv">4</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_funnel_nc, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##     mean      sd   5.5% 94.5% n_eff Rhat4
+## v   0.03    2.99  -4.85  4.63  1340     1
+## z  -0.03    1.01  -1.70  1.56  1517     1
+## x -87.50 1966.94 -24.11 17.84  1034     1</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_funnel_nc<span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 0 of 2000 iterations ended with a divergence.</code></pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="non-centered-chimpanzees" class="title-slide slide level1 center"><h1 class="center">Non-Centered Chimpanzees</h1>
+
+</section><section id="divergent-chimpanzee-model" class="slide level2 eighty"><h2 class="eighty">Divergent Chimpanzee Model</h2>
+<div class="columns">
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp<span class="fl">.2</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##          mean   sd  5.5% 94.5% n_eff Rhat4
+## b[1]    -0.14 0.30 -0.58  0.33   565  1.01
+## b[2]     0.39 0.30 -0.06  0.88   456  1.01
+## b[3]    -0.48 0.31 -0.96  0.02   571  1.01
+## b[4]     0.27 0.30 -0.20  0.77   477  1.02
+## a[1]    -0.35 0.37 -0.96  0.24   527  1.01
+## a[2]     4.63 1.22  3.07  7.00   898  1.01
+## a[3]    -0.65 0.37 -1.26 -0.07   433  1.01
+## a[4]    -0.65 0.38 -1.26 -0.07   550  1.01
+## a[5]    -0.36 0.36 -0.93  0.19   502  1.01
+## a[6]     0.59 0.37  0.00  1.17   443  1.01
+## a[7]     2.11 0.46  1.39  2.86   698  1.01
+## g[1]    -0.17 0.22 -0.59  0.07   603  1.00
+## g[2]     0.03 0.18 -0.23  0.32   963  1.00
+## g[3]     0.05 0.17 -0.20  0.34   796  1.00
+## g[4]     0.01 0.18 -0.28  0.30   962  1.00
+## g[5]    -0.03 0.17 -0.33  0.24   885  1.00
+## g[6]     0.11 0.19 -0.12  0.44   628  1.00
+## a_bar    0.60 0.70 -0.49  1.74   958  1.00
+## sigma_a  1.97 0.61  1.21  3.03  1278  1.00
+## sigma_g  0.21 0.16  0.03  0.53   330  1.01</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_chimp<span class="fl">.2</span><span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 4 of 2000 iterations ended with a divergence (0.2%).
+## Try increasing 'adapt_delta' to remove the divergences.</code></pre>
+</div>
+</div>
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb32"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">13</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>mdl_chimp<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(mdl_chimp<span class="fl">.2</span>, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp<span class="fl">.4</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##         mean   sd  5.5% 94.5% n_eff Rhat4
+## a_bar   0.58 0.74 -0.58  1.78   907  1.00
+## sigma_a 2.05 0.66  1.23  3.27   868  1.01
+## sigma_g 0.19 0.18  0.02  0.49   222  1.00</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_chimp<span class="fl">.4</span><span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 1 of 2000 iterations ended with a divergence (0.05%).
+## Try increasing 'adapt_delta' to remove the divergences.</code></pre>
+</div>
+</div>
+</div>
+</section><section id="noncentered-chimpanzee-model" class="slide level2 eighty"><h2 class="eighty">Noncentered Chimpanzee Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Original model: <span class="math display">\[
+\small
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha_{\text{actor}} + \gamma_{\text{block}} +
+  \beta_{\text{treatment}} \\
+\beta_{\text{treatment}} &amp;\sim \text{Normal}(0, 0.5) \\
+\alpha_{\text{actor}} &amp;\sim \text{Normal}(\bar \alpha,
+\sigma_\alpha) \\
+\gamma_{\text{block}} &amp;\sim \text{Normal}(0, \sigma_\gamma) \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1.5) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\gamma &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>Non-centered model: <span class="math display">\[
+\small
+\begin{align}
+L &amp;\sim \text{Binomial}(1, p) \\
+\text{logit}(p) &amp;= \alpha + z_{\text{actor}} \sigma_\alpha +
+  x_{\text{block}} \sigma_\gamma +
+  \beta_{\text{treatment}} \\
+\beta_{\text{treatment}} &amp;\sim \text{Normal}(0, 0.5) \\
+z &amp;\sim \text{Normal}(0, 1) \\
+x &amp;\sim \text{Normal}(0, 1) \\
+\alpha_{\text{actor}} &amp;\sim \text{Normal}(\bar \alpha,
+\sigma_\alpha) \\
+\gamma_{\text{block}} &amp;\sim \text{Normal}(0, \sigma_\gamma) \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1.5) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\gamma &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="coding-the-non-centered-model" class="slide level2 eighty"><h2 class="eighty">Coding the non-centered model</h2>
+<div class="columns">
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb37"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">13</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>mdl_chimp_nc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        pulled_left <span class="sc">~</span> <span class="fu">dbinom</span>(<span class="dv">1</span>, p) ,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a_bar <span class="sc">+</span> z[actor] <span class="sc">*</span> sigma_a <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                    x[block_id] <span class="sc">*</span> sigma_g <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                    b[treatment],</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>        b[treatment] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        z[actor] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        x[block_id] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        a_bar <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">1.5</span>),</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>        sigma_a <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>        sigma_g <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>        gq<span class="sc">&gt;</span> vector[actor]<span class="sc">:</span>a <span class="ot">&lt;&lt;-</span> a_bar <span class="sc">+</span> z <span class="sc">*</span> sigma_a,</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>        gq<span class="sc">&gt;</span> vector[block_id]<span class="sc">:</span>g <span class="ot">&lt;&lt;-</span> x <span class="sc">*</span> sigma_g</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp_nc, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##         mean   sd  5.5% 94.5% n_eff Rhat4
+## a_bar   0.55 0.73 -0.65  1.67   535  1.00
+## sigma_a 2.01 0.64  1.21  3.20   808  1.00
+## sigma_g 0.20 0.17  0.01  0.51   729  1.01</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_divergences</span>(mdl_chimp_nc<span class="sc">@</span>stanfit)</span></code></pre></div>
+<pre><code>## 0 of 2000 iterations ended with a divergence.</code></pre>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/images/noncentered-chimpanzees.png" style="width:90%;" alt="effective sample numbers for centered vs. non-centered models"></p>
+</div>
+</div>
+</section><section id="comparing-results" class="slide level2 eighty"><h2 class="eighty">Comparing Results</h2>
+<div class="columns">
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb42"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp<span class="fl">.4</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##          mean   sd  5.5% 94.5% n_eff Rhat4
+## b[1]    -0.14 0.30 -0.60  0.34   733  1.00
+## b[2]     0.38 0.30 -0.06  0.87   635  1.00
+## b[3]    -0.50 0.29 -0.96 -0.02   667  1.00
+## b[4]     0.27 0.30 -0.19  0.75   591  1.00
+## a[1]    -0.35 0.36 -0.96  0.20   683  1.00
+## a[2]     4.75 1.34  3.08  7.14   781  1.00
+## a[3]    -0.65 0.37 -1.24 -0.07   641  1.00
+## a[4]    -0.65 0.36 -1.24 -0.08   674  1.00
+## a[5]    -0.35 0.35 -0.89  0.21   675  1.00
+## a[6]     0.60 0.37  0.02  1.19   692  1.00
+## a[7]     2.12 0.46  1.40  2.89   963  1.00
+## g[1]    -0.15 0.20 -0.54  0.06   347  1.01
+## g[2]     0.03 0.16 -0.20  0.32   775  1.00
+## g[3]     0.05 0.16 -0.16  0.34   875  1.00
+## g[4]     0.02 0.15 -0.22  0.27  1137  1.00
+## g[5]    -0.02 0.17 -0.28  0.23   709  1.01
+## g[6]     0.10 0.18 -0.10  0.44   376  1.00
+## a_bar    0.58 0.74 -0.58  1.78   907  1.00
+## sigma_a  2.05 0.66  1.23  3.27   868  1.01
+## sigma_g  0.19 0.18  0.02  0.49   222  1.00</code></pre>
+</div>
+</div>
+<div class="column">
+<div class="max-listing ninety">
+<div class="sourceCode" id="cb44"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mdl_chimp_nc, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre class="seventy max-listing"><code>##          mean   sd  5.5% 94.5% n_eff Rhat4
+## b[1]    -0.12 0.29 -0.59  0.35  1193  1.00
+## b[2]     0.41 0.29 -0.07  0.86  1154  1.00
+## b[3]    -0.47 0.29 -0.93  0.00  1388  1.00
+## b[4]     0.30 0.30 -0.19  0.76  1340  1.00
+## z[1]    -0.51 0.40 -1.18  0.14   552  1.00
+## z[2]     2.14 0.64  1.17  3.22  1341  1.00
+## z[3]    -0.68 0.42 -1.35  0.01   553  1.00
+## z[4]    -0.68 0.42 -1.36  0.01   541  1.00
+## z[5]    -0.51 0.40 -1.17  0.14   553  1.00
+## z[6]     0.00 0.35 -0.55  0.59   613  1.00
+## z[7]     0.83 0.43  0.17  1.57   813  1.01
+## x[1]    -0.64 0.92 -2.05  0.89  1442  1.00
+## x[2]     0.15 0.91 -1.29  1.57  2103  1.00
+## x[3]     0.22 0.88 -1.21  1.60  1858  1.00
+## x[4]     0.03 0.86 -1.39  1.41  2095  1.00
+## x[5]    -0.11 0.88 -1.49  1.28  1974  1.00
+## x[6]     0.46 0.87 -1.00  1.83  2356  1.00
+## a_bar    0.55 0.73 -0.65  1.67   535  1.00
+## sigma_a  2.01 0.64  1.21  3.20   808  1.00
+## sigma_g  0.20 0.17  0.01  0.51   729  1.01
+## g[1]    -0.16 0.22 -0.57  0.08  1023  1.01
+## g[2]     0.04 0.18 -0.21  0.34  1952  1.00
+## g[3]     0.06 0.18 -0.18  0.38  1568  1.00
+## g[4]     0.01 0.17 -0.27  0.28  2084  1.00
+## g[5]    -0.03 0.17 -0.33  0.22  1839  1.00
+## g[6]     0.11 0.19 -0.13  0.46  1603  1.00
+## a[1]    -0.38 0.35 -0.94  0.19  1290  1.00
+## a[2]     4.68 1.36  3.01  7.10  1359  1.00
+## a[3]    -0.67 0.36 -1.27 -0.10  1207  1.01
+## a[4]    -0.69 0.37 -1.29 -0.13  1214  1.00
+## a[5]    -0.37 0.35 -0.92  0.20  1260  1.00
+## a[6]     0.57 0.36  0.00  1.15  1396  1.00
+## a[7]     2.10 0.45  1.41  2.87  1523  1.00</code></pre>
+</div>
+</div>
+</div>
+</section><section id="comparing-results-1" class="slide level2 eighty"><h2 class="eighty">Comparing Results</h2>
+<div class="columns">
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb46"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_chimp<span class="fl">.4</span>, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/chimp_mdl-4-res-plot-2-1.png"></p>
+</div>
+</div>
+<div class="column">
+<div class="max-listing">
+<div class="sourceCode" id="cb47"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mdl_chimp_nc, <span class="at">depth =</span> <span class="dv">2</span>, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<p><img data-src="assets/fig/chimp_mdl-nc-res-plot-1.png"></p>
+</div>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_19">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_19"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_19">https://ees5891.jgilligan.org/slides/class_19</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_19/ees_5891-03_class_19_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_19/ees_5891-03_class_19_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
