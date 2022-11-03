@@ -1451,6 +1451,8 @@ h1.t95,
 h1.ninetyfive,
 h2.t95,
 h2.ninetyfive,
+.reveal .ninetyfive pre code,
+.reveal .t95 pre code,
 .ninetyfive pre,
 .t95 pre {
   font-size: 95%;
@@ -1462,6 +1464,8 @@ h1.t90,
 h1.ninety,
 h2.t90,
 h2.ninety,
+.reveal .ninety pre code,
+.reveal .t90 pre code,
 .ninety pre,
 .t90 pre {
   font-size: 90%;
@@ -1473,6 +1477,8 @@ h1.t85,
 h1.eightyfive,
 h2.t85,
 h2.eightyfive,
+.reveal .eightyfive pre code,
+.reveal .t85 pre code,
 .eightyfive pre,
 .t85 pre {
   font-size: 85%;
@@ -1484,6 +1490,8 @@ h1.t80,
 h1.eighty,
 h2.t80,
 h2.eighty,
+.reveal .eighty pre code,
+.reveal .t80 pre code,
 .eighty pre,
 .t80 pre {
   font-size: 80%;
@@ -1493,6 +1501,8 @@ h2.eighty,
 .reveal .seventyfive,
 h1.t75 h1.seventyfive,
 h2.t75 h2.seventyfive,
+.reveal .seventyfive pre code,
+.reveal .t75 pre code,
 .seventyfive pre,
 .t75 pre {
   font-size: 75%;
@@ -1504,6 +1514,8 @@ h1.t70,
 h1.seventy,
 h2.t70,
 h2.seventy,
+.reveal .seventy pre code,
+.reveal .t70 pre code,
 .seventy pre,
 .t70 pre {
   font-size: 70%;
@@ -1515,6 +1527,8 @@ h1.t65,
 h1.sixtyfive,
 h2.t65,
 h2.sixtyfive,
+.reveal .sixtyfive pre code,
+.reveal .t65 pre code,
 .sixtyfive pre,
 .t65 pre {
   font-size: 65%;
@@ -1526,6 +1540,8 @@ h1.t60,
 h1.sixty,
 h2.t60,
 h2.sixty,
+.reveal .sixty pre code,
+.reveal .t60 pre code,
 .sixty pre,
 .t60 pre {
   font-size: 60%;
@@ -1537,7 +1553,9 @@ h1.t55,
 h1.fiftyfive,
 h2.t55,
 h2.fiftyfive,
-.fiftyfivee pre,
+.reveal .fiftyfive pre code,
+.reveal .t55 pre code,
+.fiftyfive pre,
 .t55 pre {
   font-size: 55%;
 }
@@ -1548,14 +1566,68 @@ h1.t50,
 h1.fifty,
 h2.t50,
 h2.fifty,
+.reveal .fifty pre code,
+.reveal .t50 pre code,
 .fifty pre,
 .t50 pre {
   font-size: 50%;
 }
 
+pre.bare,
 div.bare > div.sourceCode,
+pre.bare > div.sourceCode,
+pre.bare > code.SourceCode,
+.reveal .bare pre.SourceCode > code.SourceCode,
 .reveal .bare pre.sourceCode {
   margin: 0;
+}
+
+pre.mtop-1,
+div.mtop-1 > div.sourceCode,
+pre.mtop-1 > div.SourceCode,
+pre.mtop-1 > code.SourceCode,
+.reveal .mtop-1 pre.sourceCode {
+  margin-top: 1rem;
+}
+
+pre.mtop-2,
+div.mtop-2 > div.sourceCode,
+pre.mtop-2 > div.SourceCode,
+pre.mtop-2 > code.SourceCode,
+.reveal .mtop-2 pre.sourceCode {
+  margin-top: 2rem;
+}
+
+pre.mtop-3,
+div.mtop-3 > div.sourceCode,
+pre.mtop-3 > div.SourceCode,
+pre.mtop-3 > code.SourceCode,
+.reveal .mtop-3 pre.sourceCode {
+  margin-top: 3rem;
+}
+
+pre.mbot-1,
+div.mbot-1 > div.sourceCode,
+pre.mbot-1 > div.SourceCode,
+pre.mbot-1 > code.SourceCode,
+.reveal .mbot-1 pre.sourceCode {
+  margin-bottom: 1rem;
+}
+
+pre.mbot-2,
+div.mbot-2 > div.sourceCode,
+pre.mbot-2 > div.SourceCode,
+pre.mbot-2 > code.SourceCode,
+.reveal .mbot-2 pre.sourceCode {
+  margin-bottom: 2rem;
+}
+
+pre.mbot-3,
+div.mbot-3 > div.sourceCode,
+pre.mbot-3 > div.SourceCode,
+pre.mbot-3 > code.SourceCode,
+.reveal .mbot-3 pre.sourceCode {
+  margin-bottom: 3rem;
 }
 
 /*# sourceMappingURL=solarized_jg.css.map */
