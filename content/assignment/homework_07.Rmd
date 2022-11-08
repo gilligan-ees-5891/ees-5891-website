@@ -42,7 +42,7 @@ Here are the [homework exercises from the book](/files/homework_docs/McElreath-C
 #### Exercise 9M2
 
 For exercise 9M2, the question is ambiguous, about whether you should 
-uze the original `dexp(1)` or the `dunif(0,1)` from 9M1 as the prior for
+use the original `dexp(1)` or the `dunif(0,1)` from 9M1 as the prior for
 sigma. Use `dexp(1)` and only change the prior for `b` from the `m9.1` in the 
 book.
 
@@ -53,11 +53,11 @@ and also plot the densities of the posteriors.
 
 To easily plot the densities of the posteriors for one model, do the
 following (assume the model from the book is `m9.1`, and the models from the
-           exercises are `ex9m1` and `ex9m2`).
+exercises are `ex9m1` and `ex9m2`).
 
 This is equivalent to the code from the textbook for `m9.1`:
   
-  ```{r ex9m1, echo = TRUE, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
+```{r ex9m1, echo = TRUE, eval=TRUE, message=FALSE, warning=FALSE, results="hide"}
 library(rethinking)
 library(tidyverse)
 
@@ -86,7 +86,7 @@ m9.1 <- ulam(
 
 This code will plot the posterior probability densities:
   
-  ```{r m9.1-dens, echo=TRUE, eval=TRUE, message=FALSE, warning=FALSE, fig.height=4, fig.width=6}
+```{r m9.1-dens, echo=TRUE, eval=TRUE, message=FALSE, warning=FALSE, fig.height=4, fig.width=6}
 library(tidybayes)
 library(tidybayes.rethinking)
 library(bayesplot)
@@ -98,7 +98,7 @@ If you have two models, `foo` and `bar`, you can compare the
 posteriors of a parameter like `sigma` using code like this, from the
 textbook:
   
-  ```{r m9.1-dens-compare-base, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
+```{r m9.1-dens-compare-base, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
 post_foo <- extract.samples(foo)
 post_bar <- extract.samples(bar)
 
@@ -108,7 +108,7 @@ dens(post_bar$sigma, lwd = 1, col = rangi2, add = TRUE)
 
 Alternately, you can do the same thing using the `tidyverse` dialect:
   
-  ```{r m9.1-dens-compare, echo=TRUE, eval=FALSE}
+```{r m9.1-dens-compare, echo=TRUE, eval=FALSE}
 foo_draws <- tidy_draws(foo) %>% mutate(model = "foo")
 bar_draws <- tidy_draws(bar) %>% mutate(model = "bar")
 
@@ -130,7 +130,7 @@ sets the transparency of the fills (1 = completely opague and
 If you want to make a single plot that shows comparisons of all the parameters 
 for both models, 
 the code gets a bit more complicated:
-
+  
 ```{r dens-compare-all, echo=TRUE, eval=FALSE}
 foo_draws <- tidy_draws(foo) %>%
   gather_draws(a[i], b[i], sigma) %>%
