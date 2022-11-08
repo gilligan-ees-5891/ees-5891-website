@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Adventures in Covariance</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.17.2.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Adventures in Covariance</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #20:
+       Tuesday, November 08
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="adventures-in-covariance" class="title-slide slide level1 center"><h1 class="center">Adventures in Covariance</h1>
+
+</section><section id="varying-intercepts-and-slopes" class="slide level2 eighty"><h2 class="eighty">Varying Intercepts and Slopes</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Coffee Robot Example
+<ul>
+<li>A robot visits <span class="math inline">\(N\)</span> cafes</li>
+<li>Estimate the average waiting time <span class="math inline">\(W\)</span> to get a coffee.</li>
+<li class="fragment">Model: <span class="math display">\[
+\begin{align}
+W_{\text{cafe}} &amp;\sim \text{Normal}(\mu_{\text{cafe}}, \sigma) \\
+\mu_{\text{cafe}} &amp;= \alpha_{\text{cafe}} \\
+\alpha_{\text{cafe}} &amp;\sim \text{Normal}(5,2) \\
+\sigma &amp;\sim \text{Expoonential}(1)
+\end{align}
+\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Different times of day
+<ul>
+<li>Morning (busier) vs. afternoon (less busy)</li>
+<li class="fragment">Model: <span class="math display">\[
+\begin{align}
+W_{\text{cafe}} &amp;\sim \text{Normal}(\mu_{\text{cafe}}, \sigma) \\
+\mu_{\text{cafe}} &amp;= \alpha_{\text{cafe}} + \beta_{\text{cafe}} A\\
+\alpha_{\text{cafe}} &amp;\sim \text{Normal}(5, 2) \\
+\beta_{\text{cafe}} &amp;\sim \text{Normal}(-1, 0.5) \\
+\sigma &amp;\sim \text{Expoonential}(1)
+\end{align}
+\]</span>
+</li>
+<li class="fragment">Something’s missing …</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="correlations" class="slide level2 eighty"><h2 class="eighty">Correlations</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Some cafes are very popular, and others are not popular</li>
+<li class="fragment" data-fragment-index="1">Popular cafes are busy
+<ul>
+<li class="fragment" data-fragment-index="2">Big differences between morning and afternoon</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="3">Unpopular cafes aren’t busy
+<ul>
+<li class="fragment" data-fragment-index="4">Not much difference between morning and afternoon</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="6"><strong>Covariance</strong> between <em>slopes</em> (<span class="math inline">\(\beta\)</span>) and <em>intercepts</em> (<span class="math inline">\(\alpha\)</span>).</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment" data-fragment-index="5">
+<p><img data-src="assets/images/wait-times.png" height="900" alt="Wait times in popular and unpopular cafes"></p>
+</div>
+</div>
+</div>
+</section><section id="modeling-covariance" class="slide level2 eighty"><h2 class="eighty">Modeling covariance</h2>
+<ul>
+<li>
+<p>Covariance matrix <span class="math display">\[
+\begin{pmatrix}
+\text{variance of intercepts} &amp; \text{covariance of intercepts and
+slopes} \\
+\text{covariance of intercepts and slopes} &amp; \text{variance of
+slopes}
+\end{pmatrix}
+\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_\alpha &amp; \sigma_\alpha \sigma_\beta \rho \\
+\sigma_\alpha \sigma_\beta \rho &amp; \sigma^2_\beta
+\end{pmatrix}
+\]</span></p>
+</div>
+<ul>
+<li class="fragment"><span class="math inline">\(\rho\)</span> is the correlation
+between slopes and intercepts (<span class="math inline">\(-1 \le \rho
+\le 1\)</span>).</li>
+</ul>
+</li>
+</ul></section></section><section><section id="simulation-modeling" class="title-slide slide level1 center"><h1 class="center">Simulation modeling</h1>
+
+</section><section id="simulation-modeling-1" class="slide level2 eighty"><h2 class="eighty">Simulation modeling</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>When we fit our model to observed data, we don’t know the true
+parameter values.</p>
+<ul>
+<li class="fragment">We can’t assess how well the model estimates are.</li>
+</ul>
+</li>
+<li class="fragment"><p>Before fitting observed data, generate <em>simulated
+data</em> using known parameters and see how accurate the models’
+estimates are.</p></li>
+<li class="fragment">
+<p>Simulation parameters</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">3.5</span>            <span class="co"># average morning wait time</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span>             <span class="co"># average difference afternoon wait time</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sigma_a <span class="ot">&lt;-</span> <span class="dv">1</span>        <span class="co"># std dev in intercepts</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sigma_b <span class="ot">&lt;-</span> <span class="fl">0.5</span>      <span class="co"># std dev in slopes</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.7</span>         <span class="co"># correlation between intercepts and slopes</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Mu <span class="ot">&lt;-</span> <span class="fu">c</span>( a, b)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Covariance</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cov_ab <span class="ot">&lt;-</span> sigma_a <span class="sc">*</span> sigma_b <span class="sc">+</span> rho</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sigma_a<span class="sc">^</span><span class="dv">2</span>, cov_ab, cov_ab, sigma_b<span class="sc">^</span><span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment">
+<p>Generate <span class="math inline">\(\alpha\)</span> and
+<span class="math inline">\(\beta\)</span> params with covariance</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>) <span class="co"># used to replicate example</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>N_cafes <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>vary_effects <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(N_cafes, Mu, Sigma)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>a_cafe <span class="ot">&lt;-</span> vary_effects[,<span class="dv">1</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>b_cafe <span class="ot">&lt;-</span> vary_effects[,<span class="dv">2</span>]</span></code></pre></div>
+</li>
+<li class="fragment">
+<p>Generate simulated data</p>
+<div class="max-listing">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">22</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>N_visits <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>afternoon <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, N_visits <span class="sc">*</span> N_cafes <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>cafe_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>N_cafes , <span class="at">each =</span> N_visits)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> a_cafe[cafe_id] <span class="sc">+</span> b_cafe[cafe_id] <span class="sc">*</span> afternoon</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span>  <span class="co"># std dev within cafes</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>wait <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N_visits <span class="sc">*</span> N_cafes, mu, sigma)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cafe =</span> cafe_id, <span class="at">afternoon =</span> afternoon, <span class="at">wait =</span> wait)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="what-is-covariance" class="slide level2 eighty"><h2 class="eighty">What Is Covariance?</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ellipse)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(a_cafe, b_cafe, <span class="at">col =</span> rangi2, <span class="at">pch=</span><span class="dv">19</span>, <span class="at">cex=</span><span class="fl">1.5</span>, <span class="at">cex.lab=</span><span class="fl">1.5</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab=</span><span class="st">"intercepts (a_cafe)"</span>, <span class="at">ylab=</span><span class="st">"slopes (b_cafe)"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay population distribution</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ( l <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.3</span>,<span class="fl">0.5</span>,<span class="fl">0.8</span>,<span class="fl">0.99</span>) )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="fu">ellipse</span>(Sigma, <span class="at">centre=</span>Mu, <span class="at">level=</span>l),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>,<span class="fl">0.5</span>), <span class="at">lwd=</span><span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/plot-cov-1.png"></p>
+</div>
+</div>
+</section></section><section><section id="fitting-the-model-varying-slopes-varying-intercept" class="title-slide slide level1 center"><h1 class="center">Fitting the Model:<br>Varying Slopes, Varying
+Intercept</h1>
+
+</section><section id="fitting-the-model" class="slide level2 eighty"><h2 class="eighty">Fitting the Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Model:</p>
+<p><span class="math display">\[
+\begin{align}
+W &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha_{\text{cafe}} + \beta_{\text{cafe}} A \\
+    \begin{bmatrix}
+      \alpha_{\text{cafe}} \\
+      \beta_{\text{cafe}}
+    \end{bmatrix} &amp;\sim \text{MVNormal}\left(
+    \begin{bmatrix}
+      \alpha \\
+      \beta
+    \end{bmatrix}, S \right) \\
+S &amp;= \begin{pmatrix}
+       \sigma_\alpha &amp; 0 \\
+       0 &amp; \sigma_\beta
+     \end{pmatrix}
+     R
+     \begin{pmatrix}
+       \sigma_\alpha &amp; 0 \\
+       0 &amp; \sigma_\beta
+     \end{pmatrix}
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li>Priors <span class="math display">\[
+\begin{align}
+\alpha &amp;\sim \text{Normal}(5,2) \\
+\beta &amp;\sim \text{Normal}(-1,0.5) \\
+\sigma &amp;\sim \text{Exponential}(1) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\beta &amp;\sim \text{Exponential}(1) \\
+R &amp; \sim \text{LKJcorr}(2)
+\end{align}
+\]</span>
+</li>
+<li class="fragment">LKJ prior:
+<ul>
+<li>Weakly-informative prior for correlation matrices.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="lkj-priors" class="slide level2"><h2>LKJ Priors</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Correlation matrix: <span class="math display">\[
+R = \begin{pmatrix}
+1 &amp; \rho \\
+\rho &amp; 1
+\end{pmatrix}
+\]</span>
+</li>
+<li class="fragment"><span class="math inline">\(\text{LKJcorr}(\eta)\)</span>
+<ul>
+<li>
+<span class="math inline">\(\eta &gt; 1\)</span>: the greater <span class="math inline">\(\eta\)</span> is, the more unlikely extreme
+correlations are</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/lkj-prior.png" width="800" alt="LKJ prior"></p>
+</div>
+</div>
+</section><section id="fitting-the-model-1" class="slide level2 eighty"><h2 class="eighty">Fitting the model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Model</p>
+<div class="max-listing bare mtop-1">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">867530</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mdl_cafe <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        wait <span class="sc">~</span> <span class="fu">normal</span>(mu, sigma),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        mu <span class="ot">&lt;-</span> a_cafe[cafe] <span class="sc">+</span> b_cafe[cafe] <span class="sc">*</span> afternoon,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(a_cafe,b_cafe)[cafe] <span class="sc">~</span> <span class="fu">multi_normal</span>(<span class="fu">c</span>(a, b), Rho, sigma_cafe),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">5</span>, <span class="dv">2</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        b <span class="sc">~</span> <span class="fu">normal</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.5</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        sigma_cafe <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        sigma <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        Rho <span class="sc">~</span> <span class="fu">lkj_corr</span>(<span class="dv">2</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+</li>
+<li class="fragment" data-fragment-index="1">
+<p>Extract samples from posterior</p>
+<div class="max-listing bare mtop-1">
+<div class="sourceCode" id="cb8"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">tidy_draws</span>(mdl_cafe) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">label =</span> <span class="st">"posterior"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">rho =</span> <span class="st">`</span><span class="at">Rho[1,2]</span><span class="st">`</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">rho =</span> <span class="fu">rlkjcorr</span>(<span class="fl">1e4</span>, <span class="at">K=</span><span class="dv">2</span>, <span class="at">eta=</span><span class="dv">2</span>)[,<span class="dv">1</span>,<span class="dv">2</span>], <span class="at">label =</span> <span class="st">"prior"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">rho =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.3</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="fl">1.3</span>, <span class="fl">0.3</span>), </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"posterior"</span>, <span class="st">"prior"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(post, <span class="fu">aes</span>(<span class="at">x =</span> rho, <span class="at">color =</span> label)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_density</span>(<span class="at">bw =</span> <span class="fl">0.05</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_density</span>(<span class="at">data =</span> prior, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">data =</span> labels, <span class="fu">aes</span>(<span class="at">y =</span> y, <span class="at">label =</span> label), <span class="at">size =</span> <span class="dv">10</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="fu">c</span>(<span class="fl">0.005</span>, <span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">prior =</span> <span class="st">"black"</span>, <span class="at">posterior =</span> rangi2), </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expr</span>(rho), <span class="at">y =</span> <span class="st">"density"</span>) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">"lines"</span>))</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment bare eighty" data-fragment-index="1">
+<p><img data-src="assets/fig/extract-cafe-post-1.png"></p>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="2">Posterior is well within the prior:
+<ul>
+<li>The data are determining the posterior</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="shrinkage-and-regularization" class="slide level2 eighty"><h2 class="eighty">Shrinkage and Regularization</h2>
+<ul>
+<li>
+<p><strong>Shrinkage</strong>: Estimates for each cafe move toward
+the average</p>
+<div class="max-listing bare">
+<p><img data-src="assets/fig/unpooled-cafe-1.png"></p>
+</div>
+</li>
+</ul></section></section><section><section id="instrumental-variables" class="title-slide slide level1 center"><h1 class="center">Instrumental Variables</h1>
+
+</section><section id="instrumental-variables-1" class="slide level2 eighty"><h2 class="eighty">Instrumental Variables</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Effect of education on wages
+<ul>
+<li class="fragment"><p>Does more school improve future wages?</p></li>
+<li class="fragment">
+<p>Complication: People who are motivated and disciplined are
+likely to stay in school longer, and also earn more regardless of
+schooling:</p>
+<div class="bare">
+<p><img data-src="assets/fig/dag-1-1.png"></p>
+</div>
+</li>
+<li class="fragment"><p><span class="math inline">\(U\)</span> is an unobserved
+variable that describes the person’s work ethic and
+self-discipline.</p></li>
+<li class="fragment"><p>The backdoor path <span class="math inline">\(E \leftarrow U
+\rightarrow W\)</span> prevents us from drawing causal inferences from
+correlations between <span class="math inline">\(E\)</span> and <span class="math inline">\(W\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p><strong>Instrumental variables:</strong></p>
+<div class="bare">
+<p><img data-src="assets/fig/dag-2-1.png"></p>
+</div>
+<ul>
+<li class="fragment"><span class="math inline">\(Q\)</span> can be an
+<strong>instrumental variable</strong> if:
+<ol type="1">
+<li>It’s independent of <span class="math inline">\(U\)</span>.</li>
+<li>It’s not independent of <span class="math inline">\(E\)</span>.</li>
+<li>
+<span class="math inline">\(Q\)</span> cannot influence <span class="math inline">\(W\)</span> except through <span class="math inline">\(E\)</span>.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="models-with-instrumental-variables" class="slide level2 eighty"><h2 class="eighty">Models with Instrumental Variables</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li class="fragment">What are instrumental variables?</li>
+<li class="fragment">Natural experiments</li>
+<li class="fragment">We don’t have enough control of the system to do <em>controlled
+experiments</em>
+</li>
+<li class="fragment">SO we use natural variations in <em>instrumental variables</em>
+as <em>natural experiments</em>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>DAG:</p>
+<div class="bare">
+<p><img data-src="assets/fig/dag-2b-1.png"></p>
+</div>
+</li>
+<li class="fragment">
+<p>We can’t just put <span class="math inline">\(Q\)</span> in a
+regression model</p>
+<ul>
+<li class="fragment"><span class="math inline">\(E\)</span> is a <em>collider</em> of
+<span class="math inline">\(Q\)</span> and <span class="math inline">\(U\)</span>.</li>
+<li class="fragment">The collider opens up a <em>non-causal</em> path from <span class="math inline">\(Q\)</span> to <span class="math inline">\(W\)</span>, which creates a false correlation
+between <span class="math inline">\(Q\)</span> and <span class="math inline">\(W\)</span>, even if <span class="math inline">\(E\)</span> doesn’t influence <span class="math inline">\(W\)</span>.
+<ul>
+<li class="fragment"><span class="math inline">\(Q\)</span> is a <strong>bias
+amplifier</strong>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="example-of-instrumental-variable" class="slide level2 eighty"><h2 class="eighty">Example of Instrumental Variable</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Example:</p>
+<div class="bare">
+<p><img data-src="assets/fig/dag-2b-show-1.png"></p>
+</div>
+</li>
+<li class="fragment">
+<p><span class="math inline">\(Q\)</span> is the season of the
+year</p>
+<ul>
+<li>Students born earlier complete fewer grades by the time they reach
+the age where they can leave school (drop out).</li>
+<li class="fragment"><span class="math inline">\(Q\)</span> is not influenced by any
+of the other variables</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Generate simulated data:</p>
+<div class="bare max-listing">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>U_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>Q_sim <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">size =</span> N, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>E_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, U_sim <span class="sc">+</span> Q_sim)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>W_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, U_sim <span class="sc">+</span> <span class="dv">0</span> <span class="sc">*</span> E_sim)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>dat_sim <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">W=</span><span class="fu">standardize</span>(W_sim),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">E=</span><span class="fu">standardize</span>(E_sim),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Q=</span><span class="fu">standardize</span>(Q_sim)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<ul>
+<li class="fragment">Notice that in the simulated data, <span class="math inline">\(E\)</span> has no effect on <span class="math inline">\(W\)</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="writing-a-model" class="slide level2 eighty"><h2 class="eighty">Writing a model</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mdl_wages <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> aW <span class="sc">+</span> bEW <span class="sc">*</span> E,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    aW <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    bEW <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_sim, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb11"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_wages, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##       mean   sd  5.5% 94.5% n_eff Rhat4
+## aW    0.00 0.04 -0.06  0.07  1737     1
+## bEW   0.40 0.04  0.33  0.46  1648     1
+## sigma 0.92 0.03  0.88  0.96  1924     1</code></pre>
+</div>
+<ul>
+<li class="fragment">The influence of <span class="math inline">\(U\)</span> causes
+the model to incorrectly think <span class="math inline">\(E\)</span>
+has a significant effect on <span class="math inline">\(W\)</span>.</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment">
+<div class="sourceCode" id="cb13"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mdl_wages_q <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> aW <span class="sc">+</span> bEW <span class="sc">*</span> E <span class="sc">+</span> bQW <span class="sc">*</span> Q,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    aW <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    bEW <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    bQW <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_sim, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_wages_q, <span class="at">digits =</span> <span class="dv">2</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## aW     0.00 0.04 -0.06  0.06  1876     1
+## bEW    0.64 0.05  0.57  0.71  1189     1
+## bQW   -0.41 0.05 -0.48 -0.33  1533     1
+## sigma  0.86 0.03  0.82  0.90  1875     1</code></pre>
+</div>
+<ul>
+<li class="fragment">This is even worse:
+<ul>
+<li>The estimate of the effect of <span class="math inline">\(E\)</span>
+is even larger</li>
+<li>The model also thinks <span class="math inline">\(Q\)</span> has a
+direct effect on <span class="math inline">\(W\)</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="a-better-model-of-instrumental-variables" class="slide level2 eighty"><h2 class="eighty">A Better Model of Instrumental Variables</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Formula:</p>
+<p><span class="math display">\[
+\begin{align}
+W &amp;\sim \text{Normal}(\mu_{W}, \sigma_{W}) \\
+\mu_W &amp;= \alpha_W + \beta_{EW} E + U \\
+E &amp;\sim \text{Normal}(\mu_{E}, \sigma_{E}) \\
+\mu_E &amp;= \alpha_E + \beta_{QE} Q + U \\
+Q &amp;\sim \text{Categorical}({\small [0.25, 0.25, 0.25, 0.25]}) \\
+U &amp;\sim \text{Normal}(0, 1) \\
+\begin{pmatrix}
+W \\
+E
+\end{pmatrix}
+&amp;\sim \text{MVNormal} \left(
+\begin{pmatrix}
+\mu_W \\
+\mu_E
+\end{pmatrix}, S \right)\\
+\mu_W &amp;= \alpha_W + \beta_{EW} E \\
+\mu_E &amp;= \alpha_E + \beta_{QE} Q
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Model code</p>
+<div class="bare max-listing">
+<div class="sourceCode" id="cb16"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mdl_wages_inst <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(W,E) <span class="sc">~</span> <span class="fu">multi_normal</span>(<span class="fu">c</span>(muW, muE), Rho, Sigma),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    muW <span class="ot">&lt;-</span> aW <span class="sc">+</span> bEW <span class="sc">*</span> E,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    muE <span class="ot">&lt;-</span> aE <span class="sc">+</span> bQE <span class="sc">*</span> Q,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(aW,aE) <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bEW,bQE) <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    Rho <span class="sc">~</span> <span class="fu">lkj_corr</span>(<span class="dv">2</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    Sigma <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dat_sim, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+<div class="bare max-listing fragment mtop-1">
+<div class="sourceCode" id="cb17"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_wages_inst, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">depth=</span><span class="dv">3</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##           mean   sd  5.5% 94.5% n_eff Rhat4
+## aE        0.00 0.03 -0.06  0.05  1782     1
+## aW        0.00 0.05 -0.07  0.07  1643     1
+## bQE       0.59 0.04  0.53  0.64  1482     1
+## bEW      -0.05 0.07 -0.17  0.07   916     1
+## Rho[1,1]  1.00 0.00  1.00  1.00   NaN   NaN
+## Rho[1,2]  0.54 0.05  0.46  0.62   972     1
+## Rho[2,1]  0.54 0.05  0.46  0.62   972     1
+## Rho[2,2]  1.00 0.00  1.00  1.00   NaN   NaN
+## Sigma[1]  1.03 0.05  0.96  1.10  1145     1
+## Sigma[2]  0.81 0.02  0.77  0.85  1736     1</code></pre>
+</div>
+</li>
+<li class="fragment"><p><span class="math inline">\(\mu_{EW}\)</span> is consistent
+with zero, as it ought to be.</p></li>
+</ul>
+</div>
+</div>
+</section><section id="new-data" class="slide level2 eighty"><h2 class="eighty">New Data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Generate new data, where <span class="math inline">\(E\)</span>
+has a positive effect on wages.</p>
+<div class="bare max-listing">
+<div class="sourceCode" id="cb19"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>U_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>Q_sim <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">size =</span> N, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>E_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, U_sim <span class="sc">+</span> Q_sim)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>W_sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, U_sim <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> E_sim)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>dat_sim_2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">W=</span><span class="fu">standardize</span>(W_sim),</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">E=</span><span class="fu">standardize</span>(E_sim),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Q=</span><span class="fu">standardize</span>(Q_sim)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Rerun the model with new data:</p>
+<div class="bare max-listing">
+<div class="sourceCode" id="cb20"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mdl_wages_inst_2 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(mdl_wages_inst, <span class="at">data =</span> dat_sim_2, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+</div>
+<div class="bare max-listing fragment mtop-1">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_wages_inst_2, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">depth=</span><span class="dv">3</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##          mean   sd  5.5% 94.5% n_eff Rhat4
+## aE       0.00 0.04 -0.05  0.06  1578     1
+## aW       0.00 0.04 -0.06  0.06  1555     1
+## bQE      0.59 0.04  0.53  0.64  1167     1
+## bEW      0.23 0.07  0.12  0.33   869     1
+## Rho[1,1] 1.00 0.00  1.00  1.00   NaN   NaN
+## Rho[1,2] 0.54 0.05  0.46  0.63   870     1
+## Rho[2,1] 0.54 0.05  0.46  0.63   870     1
+## Rho[2,2] 1.00 0.00  1.00  1.00   NaN   NaN
+## Sigma[1] 0.88 0.04  0.81  0.94   910     1
+## Sigma[2] 0.81 0.03  0.77  0.85  1827     1</code></pre>
+</div>
+<ul>
+<li class="fragment"><span class="math inline">\(\beta_{EW}\)</span> is consistent
+with the correct value 0.3.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="gaussian-processes" class="title-slide slide level1 center"><h1 class="center">Gaussian Processes</h1>
+
+</section><section id="continuous-categories" class="slide level2 eighty"><h2 class="eighty">Continuous Categories</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Everything we’ve looked at with multilevel models so far has studied
+the varying effects of discrete categories (cafes, individual
+chimpanzees, academic departments, etc.).
+<ul>
+<li class="fragment">Data is organized in discrete clusters.</li>
+<li class="fragment">There’s no special order to the clusters, no significance of
+being cluster #1.</li>
+<li class="fragment">What about clustering on continuously distributed variables?
+<ul>
+<li>Height</li>
+<li>Age</li>
+<li>Income</li>
+<li>…</li>
+</ul>
+</li>
+<li class="fragment"><strong>Gaussian Process</strong> models allow us to study
+variation in slope or intercept for continuously distributed predictor
+variables.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Distribution of Tools across the islands of Oceania</p>
+<p><img data-src="assets/images/oceania.png" alt="Islands in the South Pacific"></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="the-data" class="slide level2 eighty"><h2 class="eighty">The Data</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Kline)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"islandsDistMatrix"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Kline</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> islandsDistMatrix</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(d)</span></code></pre></div>
+<table>
+<thead><tr class="header">
+<th style="text-align: left;">culture</th>
+<th style="text-align: right;">population</th>
+<th style="text-align: left;">contact</th>
+<th style="text-align: right;">total_tools</th>
+<th style="text-align: right;">mean_TU</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Malekula</td>
+<td style="text-align: right;">1100</td>
+<td style="text-align: left;">low</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">3.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tikopia</td>
+<td style="text-align: right;">1500</td>
+<td style="text-align: left;">low</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">4.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santa Cruz</td>
+<td style="text-align: right;">3600</td>
+<td style="text-align: left;">low</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yap</td>
+<td style="text-align: right;">4791</td>
+<td style="text-align: left;">high</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lau Fiji</td>
+<td style="text-align: right;">7400</td>
+<td style="text-align: left;">high</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">5.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Trobriand</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: left;">high</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chuuk</td>
+<td style="text-align: right;">9200</td>
+<td style="text-align: left;">high</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">3.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manus</td>
+<td style="text-align: right;">13000</td>
+<td style="text-align: left;">low</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">6.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tonga</td>
+<td style="text-align: right;">17500</td>
+<td style="text-align: left;">high</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">5.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hawaii</td>
+<td style="text-align: right;">275000</td>
+<td style="text-align: left;">low</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">6.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="column">
+<div class="mtop-3">
+<ul>
+<li>
+<strong>culture:</strong> Name of island culture</li>
+<li>
+<strong>population:</strong> Historical population size</li>
+<li>
+<strong>contact:</strong> low or high contact rate with other
+islands</li>
+<li>
+<strong>total tools</strong>: number of tools in historical tool
+kit</li>
+<li>
+<strong>mean TU:</strong> a measure of tool complexity</li>
+<li>Distance matrix (thousands of km):</li>
+</ul>
+<table>
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Malekula</th>
+<th style="text-align: right;">Tikopia</th>
+<th style="text-align: right;">Santa Cruz</th>
+<th style="text-align: right;">Yap</th>
+<th style="text-align: right;">Lau Fiji</th>
+<th style="text-align: right;">Trobriand</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Malekula</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.475</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">4.363</td>
+<td style="text-align: right;">1.234</td>
+<td style="text-align: right;">2.036</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tikopia</td>
+<td style="text-align: right;">0.475</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.315</td>
+<td style="text-align: right;">4.173</td>
+<td style="text-align: right;">1.236</td>
+<td style="text-align: right;">2.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santa Cruz</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">0.315</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">3.859</td>
+<td style="text-align: right;">1.550</td>
+<td style="text-align: right;">1.708</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yap</td>
+<td style="text-align: right;">4.363</td>
+<td style="text-align: right;">4.173</td>
+<td style="text-align: right;">3.859</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">5.391</td>
+<td style="text-align: right;">2.462</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lau Fiji</td>
+<td style="text-align: right;">1.234</td>
+<td style="text-align: right;">1.236</td>
+<td style="text-align: right;">1.550</td>
+<td style="text-align: right;">5.391</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">3.219</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Trobriand</td>
+<td style="text-align: right;">2.036</td>
+<td style="text-align: right;">2.007</td>
+<td style="text-align: right;">1.708</td>
+<td style="text-align: right;">2.462</td>
+<td style="text-align: right;">3.219</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="modeling-tool-acquisition" class="slide level2 eighty"><h2 class="eighty">Modeling Tool Acquisition</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Single-level Model:</p>
+<p><span class="math display">\[
+\begin{align}
+T &amp;\sim \text{Poisson}(\lambda) \\
+\lambda &amp;= \alpha P^\beta / \gamma
+\end{align}
+\]</span></p>
+</li>
+<li>
+<p>Multilevel model:</p>
+<p><span class="math display">\[
+\begin{align}
+T &amp;\sim \text{Poisson}(\lambda) \\
+\lambda &amp;= \exp(k_{\text{society}}) \alpha P^\beta / \gamma
+\end{align}
+\]</span></p>
+<ul>
+<li class="fragment"><span class="math inline">\(k\)</span> is the varying
+intercept.</li>
+<li class="fragment">Instead of assigning it randomly to each society category, we’re
+going to try to predict it from the distance of other islands.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="fragment">
+<p><span class="math display">\[
+\begin{align}
+\begin{pmatrix}
+k_1 \\
+k_2 \\
+k_3 \\
+\cdots \\
+k_{10}
+\end{pmatrix} &amp;\sim \text{MVNormal}\left(
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+\cdots \\
+0
+\end{pmatrix}, K
+\right) \\
+K_{i,j} &amp;= \eta^2 \exp( -\rho^2 D_{i,j}^2 ) + \delta_{i,j} \sigma^2
+\end{align}
+\]</span></p>
+</div>
+<ul>
+<li class="fragment"><span class="math inline">\(D_{i,j}\)</span> is the distance
+between islands <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>
+</li>
+<li class="fragment"><span class="math inline">\(\delta_{i,j}\)</span> is 1 if <span class="math inline">\(i == j\)</span> and 0 otherwise.</li>
+<li class="fragment">10-dimensional prior</li>
+<li class="fragment">Covariance matrix <span class="math inline">\(K\)</span>: <span class="math inline">\(K_{i,j}\)</span> is the covariance between
+societies <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>.
+<ul>
+<li>
+<span class="math inline">\(\exp(-\rho^2 D_{i,j}^2)\)</span> gives
+the covariance its shape.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="covariance-function" class="slide level2 eighty"><h2 class="eighty">Covariance Function</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Shape of the covariance function:
+<ul>
+<li>
+<p>Set <span class="math inline">\(\rho = 1\)</span></p>
+<div class="bare">
+<div class="sourceCode" id="cb24"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">exp</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>x) , <span class="at">from=</span><span class="dv">0</span> , <span class="at">to=</span><span class="dv">4</span> , <span class="at">lty=</span><span class="dv">2</span> )</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">exp</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span>) , <span class="at">add=</span><span class="cn">TRUE</span> )</span></code></pre></div>
+<p><img data-src="assets/fig/cov-shape-1.png"></p>
+</div>
+</li>
+<li><p>The dashed line is a linear distance, the solid has squared
+distance.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+
+</div>
+</div>
+</section><section id="gaussian-process-model" class="slide level2 eighty"><h2 class="eighty">Gaussian Process Model</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb25"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Kline2) <span class="co"># load the ordinary data, now with coordinates</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Kline2</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>society <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="co"># index observations</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">T =</span> d<span class="sc">$</span>total_tools,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">P =</span> d<span class="sc">$</span>population,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">society =</span> d<span class="sc">$</span>society,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dmat=</span>islandsDistMatrix )</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>mdl_gp <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>(lambda),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        lambda <span class="ot">&lt;-</span> (a <span class="sc">*</span> P<span class="sc">^</span>b <span class="sc">/</span> g) <span class="sc">*</span> <span class="fu">exp</span>(k[society]),</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">10</span>]<span class="sc">:</span>k <span class="sc">~</span> <span class="fu">multi_normal</span>(<span class="dv">0</span>, SIGMA),</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        matrix[<span class="dv">10</span>,<span class="dv">10</span>]<span class="sc">:</span>SIGMA <span class="ot">&lt;-</span> <span class="fu">cov_GPL2</span>(Dmat, etasq, rhosq, <span class="fl">0.01</span>),</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(a,b,g) <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>        etasq <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">2</span>),</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>        rhosq <span class="sc">~</span> <span class="fu">dexp</span>(<span class="fl">0.5</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_list, <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">iter=</span><span class="dv">2000</span> )</span></code></pre></div>
+</div>
+<div class="column">
+<div class="sourceCode" id="cb26"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis_show</span>(<span class="fu">precis</span>(mdl_gp, <span class="at">digits=</span><span class="dv">2</span>, <span class="at">depth=</span><span class="dv">3</span>))</span></code></pre></div>
+<pre class="seventy max-listing"><code>##        mean   sd  5.5% 94.5% n_eff Rhat4
+## k[1]  -0.17 0.29 -0.66  0.29   918     1
+## k[2]  -0.03 0.29 -0.48  0.43   871     1
+## k[3]  -0.07 0.27 -0.50  0.35   854     1
+## k[4]   0.34 0.26 -0.04  0.76   880     1
+## k[5]   0.07 0.25 -0.31  0.45   867     1
+## k[6]  -0.38 0.27 -0.83  0.01   943     1
+## k[7]   0.14 0.25 -0.24  0.52   860     1
+## k[8]  -0.21 0.25 -0.61  0.17   898     1
+## k[9]   0.26 0.24 -0.10  0.64   865     1
+## k[10] -0.16 0.34 -0.69  0.37  1213     1
+## g      0.58 0.56  0.07  1.62  1983     1
+## b      0.27 0.08  0.14  0.41  1309     1
+## a      1.40 1.08  0.25  3.43  2208     1
+## etasq  0.18 0.19  0.03  0.52   763     1
+## rhosq  1.36 1.70  0.08  4.58  1861     1</code></pre>
+</div>
+</div>
+</section><section id="posterior-vs.-prior-covariance" class="slide level2 eighty"><h2 class="eighty">Posterior vs. Prior Covariance</h2>
+<p><img data-src="assets/images/gp-prior-post.png"></p>
+</section><section id="posterior-on-the-distance-matrix" class="slide level2 eighty"><h2 class="eighty">Posterior on the distance matrix</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Computer posterior median covariance:</p>
+<div class="bare mtop-1 max-listing">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute posterior median covariance among societies</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="at">nrow=</span><span class="dv">10</span>,<span class="at">ncol=</span><span class="dv">10</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ( i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> )</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> ( j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> )</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    K[i,j] <span class="ot">&lt;-</span> <span class="fu">median</span>(post<span class="sc">$</span>etasq) <span class="sc">*</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>( <span class="sc">-</span><span class="fu">median</span>(post<span class="sc">$</span>rhosq) <span class="sc">*</span> islandsDistMatrix[i,j]<span class="sc">^</span><span class="dv">2</span> )</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="fu">median</span>(post<span class="sc">$</span>etasq) <span class="sc">+</span> <span class="fl">0.01</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="do">## R code 14.43</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to correlation matrix</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>Rho <span class="ot">&lt;-</span> <span class="fu">round</span>( <span class="fu">cov2cor</span>(K) , <span class="dv">2</span> )</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># add row/col names for convenience</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Rho) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Ml"</span>,<span class="st">"Ti"</span>,<span class="st">"SC"</span>,<span class="st">"Ya"</span>,<span class="st">"Fi"</span>,<span class="st">"Tr"</span>,<span class="st">"Ch"</span>,<span class="st">"Mn"</span>,<span class="st">"To"</span>,<span class="st">"Ha"</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Rho) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Rho)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>Rho</span></code></pre></div>
+<pre class="seventy max-listing"><code>##      Ml   Ti   SC   Ya   Fi   Tr   Ch   Mn   To Ha
+## Ml 1.00 0.79 0.69 0.00 0.31 0.05 0.00 0.00 0.08  0
+## Ti 0.79 1.00 0.86 0.00 0.31 0.05 0.00 0.01 0.06  0
+## SC 0.69 0.86 1.00 0.00 0.16 0.11 0.01 0.02 0.02  0
+## Ya 0.00 0.00 0.00 1.00 0.00 0.01 0.16 0.14 0.00  0
+## Fi 0.31 0.31 0.16 0.00 1.00 0.00 0.00 0.00 0.61  0
+## Tr 0.05 0.05 0.11 0.01 0.00 1.00 0.09 0.55 0.00  0
+## Ch 0.00 0.00 0.01 0.16 0.00 0.09 1.00 0.32 0.00  0
+## Mn 0.00 0.01 0.02 0.14 0.00 0.55 0.32 1.00 0.00  0
+## To 0.08 0.06 0.02 0.00 0.61 0.00 0.00 0.00 1.00  0
+## Ha 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00  1</code></pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment"><p>Notice the cluster at the top left</p></li>
+<li class="fragment">
+<p>Map</p>
+<p><img data-src="assets/images/gp-map-1.png"></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="maps" class="slide level2 eighty"><h2 class="eighty">Maps</h2>
+<p><img data-src="assets/images/gp-map-1.png">   <img data-src="assets/images/gp-map-2.png"></p>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_20">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_20"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_20">https://ees5891.jgilligan.org/slides/class_20</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_20/ees_5891-03_class_20_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_20/ees_5891-03_class_20_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>

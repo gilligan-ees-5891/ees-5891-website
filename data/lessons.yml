@@ -88,6 +88,7 @@ lessons:
 - date: '2022-11-08'
   title: More multilevel models
   reading: /reading/reading_20
+  lecture: /slides/class_20
 - date: '2022-11-10'
   title: Messy data
   reading: /reading/reading_21
