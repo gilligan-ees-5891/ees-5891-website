@@ -43,7 +43,7 @@ pdf_url: /files/homework_asgts/homework_07.pdf
 <div id="exercise-9m2" class="section level4">
 <h4>Exercise 9M2</h4>
 <p>For exercise 9M2, the question is ambiguous, about whether you should
-uze the original <code>dexp(1)</code> or the <code>dunif(0,1)</code> from 9M1 as the prior for
+use the original <code>dexp(1)</code> or the <code>dunif(0,1)</code> from 9M1 as the prior for
 sigma. Use <code>dexp(1)</code> and only change the prior for <code>b</code> from the <code>m9.1</code> in the
 book.</p>
 </div>
@@ -62,23 +62,23 @@ data(rugged)
 d &lt;- rugged %&gt;% mutate(log_gdp = log(rgdppc_2000))
 
 dd &lt;- d %&gt;% filter(complete.cases(rgdppc_2000)) %&gt;%
-mutate(
-  log_gdp_std = log_gdp / mean(log_gdp),
-  rugged_std = rugged / max(rugged),
-  cid = ifelse(cont_africa == 1, 1, 2)
-)
+  mutate(
+    log_gdp_std = log_gdp / mean(log_gdp),
+    rugged_std = rugged / max(rugged),
+    cid = ifelse(cont_africa == 1, 1, 2)
+  )
 
 dat_slim &lt;- dd %&gt;% select(log_gdp_std, rugged_std, cid) %&gt;%
-mutate(cid = as.integer(cid))
+  mutate(cid = as.integer(cid))
 
 m9.1 &lt;- ulam(
-alist(
-  log_gdp_std ~ dnorm(mu, sigma),
-  mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215) ,
-  a[cid] ~ dnorm(1, 0.1),
-  b[cid] ~ dnorm(0, 0.3),
-  sigma ~ dexp(1)
-), data=dat_slim, chains = 4, cores = 4)</code></pre>
+  alist(
+    log_gdp_std ~ dnorm(mu, sigma),
+    mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215) ,
+    a[cid] ~ dnorm(1, 0.1),
+    b[cid] ~ dnorm(0, 0.3),
+    sigma ~ dexp(1)
+  ), data=dat_slim, chains = 4, cores = 4)</code></pre>
 <p>This code will plot the posterior probability densities:</p>
 <pre class="r"><code>library(tidybayes)
 library(tidybayes.rethinking)
@@ -99,8 +99,8 @@ dens(post_bar$sigma, lwd = 1, col = rangi2, add = TRUE)</code></pre>
 bar_draws &lt;- tidy_draws(bar) %&gt;% mutate(model = &quot;bar&quot;)
 
 bind_rows(foo_draws, bar_draws) %&gt;% 
-ggplot(aes(x = sigma, color = model, fill = model)) + 
-geom_density(size = 1, alpha = 0.3)</code></pre>
+  ggplot(aes(x = sigma, color = model, fill = model)) + 
+  geom_density(size = 1, alpha = 0.3)</code></pre>
 <p>The first two lines extract the Monte-Carlo samples of the posterior for each
 model, and add a label <code>model</code> to indicate which model they came from.
 Then I use <code>ggplot</code> to plot the posterior density of sigma, from each model,

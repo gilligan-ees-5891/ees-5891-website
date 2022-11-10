@@ -402,6 +402,10 @@ font-weight: bold;
 .reveal h5.mtop-half,
 .reveal div.mtop-half,
 .reveal div.bare.mtop-half,
+.reveal pre.mtop-half,
+.reveal pre.bare.mtop-half,
+.reveal .bare pre.mtop-half,
+.reveal .bare pre.bare.mtop-half,
 .reveal section.mtop-half,
 .reveal section.bare.mtop-half {
   margin-top: 0.5rem;
@@ -414,6 +418,10 @@ font-weight: bold;
 .reveal h5.mtop-1,
 .reveal div.mtop-1,
 .reveal div.bare.mtop-1,
+.reveal pre.mtop-1,
+.reveal pre.bare.mtop-1,
+.reveal .bare pre.mtop-1,
+.reveal .bare pre.bare.mtop-1,
 .reveal section.mtop-1,
 .reveal section.bare.mtop-1 {
   margin-top: 1rem;
@@ -426,6 +434,10 @@ font-weight: bold;
 .reveal h5.mtop-2,
 .reveal div.mtop-2,
 .reveal div.bare.mtop-2,
+.reveal pre.mtop-2,
+.reveal pre.bare.mtop-2,
+.reveal .bare pre.mtop-2,
+.reveal .bare pre.bare.mtop-2,
 .reveal section.mtop-2,
 .reveal section.bare.mtop-2 {
   margin-top: 2rem;
@@ -439,6 +451,10 @@ font-weight: bold;
 .reveal div.mtop-3,
 .reveal div.mtop-3,
 .reveal div.bare.mtop-3,
+.reveal pre.mtop-3,
+.reveal pre.bare.mtop-3,
+.reveal .bare pre.mtop-3,
+.reveal .bare pre.bare.mtop-3,
 .reveal section.mtop-3,
 .reveal section.bare.mtop-3 {
   margin-top: 3rem;
@@ -451,6 +467,10 @@ font-weight: bold;
 .reveal h5.mbot-half,
 .reveal div.mbot-half,
 .reveal div.bare.mbot-half,
+.reveal pre.mbot-half,
+.reveal pre.bare.mbot-half,
+.reveal .bare pre.mbot-half,
+.reveal .bare pre.bare.mbot-half,
 .reveal section.mbot-half,
 .reveal section.bare.mbot-half {
   margin-bottom: 0.5rem;
@@ -463,6 +483,10 @@ font-weight: bold;
 .reveal h5.mbot-1,
 .reveal div.mbot-1,
 .reveal div.bare.mbot-1,
+.reveal pre.mbot-1,
+.reveal pre.bare.mbot-1,
+.reveal .bare pre.mbot-1,
+.reveal .bare pre.bare.mbot-1,
 .reveal section.mbot-1,
 .reveal section.bare.mbot-1 {
   margin-bottom: 1rem;
@@ -475,6 +499,10 @@ font-weight: bold;
 .reveal h5.mbot-2,
 .reveal div.mbot-2,
 .reveal div.bare.mbot-2,
+.reveal pre.mbot-2,
+.reveal pre.bare.mbot-2,
+.reveal .bare pre.mbot-2,
+.reveal .bare pre.bare.mbot-2,
 .reveal section.mbot-2,
 .reveal section.bare.mbot-2 {
   margin-bottom: 2rem;
@@ -487,6 +515,10 @@ font-weight: bold;
 .reveal h5.mbot-3,
 .reveal div.mbot-3,
 .reveal div.bare.mbot-3,
+.reveal pre.mbot-3,
+.reveal pre.bare.mbot-3,
+.reveal .bare pre.mbot-3,
+.reveal .bare pre.bare.mbot-3,
 .reveal section.mbot-3,
 .reveal section.bare.mbot-3 {
   margin-bottom: 3rem;
@@ -499,6 +531,10 @@ font-weight: bold;
 .reveal h5.mleft-half,
 .reveal div.mleft-half,
 .reveal div.bare.mleft-half,
+.reveal pre.mleft-half,
+.reveal pre.bare.mleft-half,
+.reveal .bare pre.mleft-half,
+.reveal .bare pre.bare.mleft-half,
 .reveal section.mleft-half,
 .reveal section.bare.mleft-half {
   margin-left: 0.5rem;
@@ -512,7 +548,11 @@ font-weight: bold;
 .reveal h5.mleft-1,
 .reveal div.mleft-1,
 .reveal div.bare.mleft-1,
+.reveal pre.mleft-1,
+.reveal pre.bare.mleft-1,
 .reveal section.mleft-1,
+.reveal .bare pre.mleft-1,
+.reveal .bare pre.bare.mleft-1,
 .reveal section.bare.mleft-1 {
   margin-left: 1rem;
 }
@@ -525,6 +565,10 @@ font-weight: bold;
 .reveal h5.mleft-2,
 .reveal div.mleft-2,
 .reveal div.bare.mleft-2,
+.reveal pre.mleft-2,
+.reveal pre.bare.mleft-2,
+.reveal .bare pre.mleft-2,
+.reveal .bare pre.bare.mleft-2,
 .reveal section.mleft-2,
 .reveal section.bare.mleft-2 {
   margin-left: 2rem;
@@ -537,6 +581,10 @@ font-weight: bold;
 .reveal h5.mleft-3,
 .reveal div.mleft-3,
 .reveal div.bare.mleft-3,
+.reveal pre.mleft-3,
+.reveal pre.bare.mleft-3,
+.reveal .bare pre.mleft-3,
+.reveal .bare pre.bare.mleft-3,
 .reveal section.mleft-3,
 .reveal section.bare.mleft-3 {
   margin-left: 3rem;
@@ -544,11 +592,15 @@ font-weight: bold;
 
 .reveal h1.mright-half,
 .reveal h2.mright-half,
-.reveal hhalf.mright-half,
+.reveal h3.mright-half,
 .reveal h4.mright-half,
 .reveal h5.mright-half,
 .reveal div.mright-half,
 .reveal div.bare.mright-half,
+.reveal pre.mright-half,
+.reveal pre.bare.mright-half,
+.reveal .bare pre.mright-half,
+.reveal .bare pre.mright-half,
 .reveal section.mright-half,
 .reveal section.bare.mright-half {
   margin-right: 0.5rem;
@@ -562,6 +614,10 @@ font-weight: bold;
 .reveal h5.mright-1,
 .reveal div.mright-1,
 .reveal div.bare.mright-1,
+.reveal pre.mright-1,
+.reveal pre.bare.mright-1,
+.reveal .bare pre.mright-1,
+.reveal .bare pre.bare.mright-1,
 .reveal section.mright-1,
 .reveal section.bare.mright-1 {
   margin-right: 1rem;
@@ -575,6 +631,10 @@ font-weight: bold;
 .reveal h5.mright-2,
 .reveal div.mright-2,
 .reveal div.bare.mright-2,
+.reveal pre.mright-2,
+.reveal pre.bare.mright-2,
+.reveal .bare pre.mright-2,
+.reveal .bare pre.bare.mright-2,
 .reveal section.mright-2,
 .reveal section.bare.mright-2 {
   margin-right: 2rem;
@@ -587,6 +647,10 @@ font-weight: bold;
 .reveal h5.mright-3,
 .reveal div.mright-3,
 .reveal div.bare.mright-3,
+.reveal pre.mright-3,
+.reveal pre.bare.mright-3,
+.reveal .bare pre.mright-3,
+.reveal .bare pre.bare.mright-3,
 .reveal section.mright-3,
 .reveal section.bare.mright-3 {
   margin-right: 3rem;
@@ -594,6 +658,10 @@ font-weight: bold;
 
 .reveal div.ptop-half,
 .reveal div.bare.ptop-half,
+.reveal pre.ptop-half,
+.reveal pre.bare.ptop-half,
+.reveal .bare pre.ptop-half,
+.reveal .bare pre.bare.ptop-half,
 .reveal section.ptop-half,
 .reveal section.bare.ptop-half {
   padding-top: 0.5rem;
@@ -601,6 +669,10 @@ font-weight: bold;
 
 .reveal div.ptop-1,
 .reveal div.bare.ptop-1,
+.reveal pre.ptop-1,
+.reveal pre.bare.ptop-1,
+.reveal .bare pre.ptop-1,
+.reveal .bare pre.bare.ptop-1,
 .reveal section.ptop-1,
 .reveal section.bare.ptop-1 {
   padding-top: 1rem;
@@ -608,6 +680,10 @@ font-weight: bold;
 
 .reveal div.ptop-2,
 .reveal div.bare.ptop-2,
+.reveal pre.ptop-2,
+.reveal pre.bare.ptop-2,
+.reveal .bare pre.ptop-2,
+.reveal .bare pre.bare.ptop-2,
 .reveal section.ptop-2,
 .reveal section.bare.ptop-2 {
   padding-top: 2rem;
@@ -615,6 +691,10 @@ font-weight: bold;
 
 .reveal div.ptop-3,
 .reveal div.bare.ptop-3,
+.reveal pre.ptop-3,
+.reveal pre.bare.ptop-3,
+.reveal .bare pre.ptop-3,
+.reveal .bare pre.bare.ptop-3,
 .reveal section.ptop-3,
 .reveal section.bare.ptop-3 {
   padding-top: 3rem;
@@ -622,6 +702,10 @@ font-weight: bold;
 
 .reveal div.pbot-half,
 .reveal div.bare.pbot-half,
+.reveal pre.pbot-half,
+.reveal pre.bare.pbot-half,
+.reveal .bare pre.pbot-half,
+.reveal .bare pre.bare.pbot-half,
 .reveal section.pbot-half,
 .reveal section.bare.pbot-half {
   padding-bottom: 0.5rem;
@@ -629,6 +713,10 @@ font-weight: bold;
 
 .reveal div.pbot-1,
 .reveal div.bare.pbot-1,
+.reveal pre.pbot-1,
+.reveal pre.bare.pbot-1,
+.reveal .bare pre.pbot-1,
+.reveal .bare pre.bare.pbot-1,
 .reveal section.pbot-1,
 .reveal section.bare.pbot-1 {
   padding-bottom: 1rem;
@@ -636,6 +724,10 @@ font-weight: bold;
 
 .reveal div.pbot-2,
 .reveal div.bare.pbot-2,
+.reveal pre.pbot-2,
+.reveal pre.bare.pbot-2,
+.reveal .bare pre.pbot-2,
+.reveal .bare pre.bare.pbot-2,
 .reveal section.pbot-2,
 .reveal section.bare.pbot-2 {
   padding-bottom: 2rem;
@@ -643,6 +735,10 @@ font-weight: bold;
 
 .reveal div.pbot-3,
 .reveal div.bare.pbot-3,
+.reveal pre.pbot-3,
+.reveal pre.bare.pbot-3,
+.reveal .bare pre.pbot-3,
+.reveal .bare pre.bare.pbot-3,
 .reveal section.pbot-3,
 .reveal section.bare.pbot-3 {
   padding-bottom: 3rem;
@@ -650,6 +746,10 @@ font-weight: bold;
 
 .reveal div.pleft-half,
 .reveal div.bare.pleft-half,
+.reveal pre.pleft-half,
+.reveal pre.bare.pleft-half,
+.reveal .bare pre.pleft-half,
+.reveal .bare pre.bare.pleft-half,
 .reveal section.pleft-half,
 .reveal section.bare.pleft-half {
   padding-left: 0.5rem;
@@ -657,6 +757,10 @@ font-weight: bold;
 
 .reveal div.pleft-1,
 .reveal div.bare.pleft-1,
+.reveal pre.pleft-1,
+.reveal pre.bare.pleft-1,
+.reveal .bare pre.pleft-1,
+.reveal .bare pre.bare.pleft-1,
 .reveal section.pleft-1,
 .reveal section.bare.pleft-1 {
   padding-left: 1rem;
@@ -664,6 +768,10 @@ font-weight: bold;
 
 .reveal div.pleft-2,
 .reveal div.bare.pleft-2,
+.reveal pre.pleft-2,
+.reveal pre.bare.pleft-2,
+.reveal .bare pre.pleft-2,
+.reveal .bare pre.bare.pleft-2,
 .reveal section.pleft-2,
 .reveal section.bare.pleft-2 {
   padding-left: 2rem;
@@ -671,6 +779,10 @@ font-weight: bold;
 
 .reveal div.pleft-3,
 .reveal div.bare.pleft-3,
+.reveal pre.pleft-3,
+.reveal pre.bare.pleft-3,
+.reveal .bare pre.pleft-3,
+.reveal .bare pre.bare.pleft-3,
 .reveal section.pleft-3,
 .reveal section.bare.pleft-3 {
   padding-left: 3rem;
@@ -678,6 +790,10 @@ font-weight: bold;
 
 .reveal div.pright-half,
 .reveal div.bare.pright-half,
+.reveal pre.pright-half,
+.reveal pre.bare.pright-half,
+.reveal .bare pre.pright-half,
+.reveal .bare pre.bare.pright-half,
 .reveal section.pright-half,
 .reveal section.bare.pright-half {
   padding-right: 0.5rem;
@@ -685,6 +801,10 @@ font-weight: bold;
 
 .reveal div.pright-1,
 .reveal div.bare.pright-1,
+.reveal pre.pright-1,
+.reveal pre.bare.pright-1,
+.reveal .bare pre.pright-1,
+.reveal .bare pre.bare.pright-1,
 .reveal section.pright-1,
 .reveal section.bare.pright-1 {
   padding-right: 1rem;
@@ -692,6 +812,10 @@ font-weight: bold;
 
 .reveal div.pright-2,
 .reveal div.bare.pright-2,
+.reveal pre.pright-2,
+.reveal pre.bare.pright-2,
+.reveal .bare pre.pright-2,
+.reveal .bare pre.bare.pright-2,
 .reveal section.pright-2,
 .reveal section.bare.pright-2 {
   padding-right: 2rem;
@@ -699,6 +823,10 @@ font-weight: bold;
 
 .reveal div.pright-3,
 .reveal div.bare.pright-3,
+.reveal pre.pright-3,
+.reveal pre.bare.pright-3,
+.reveal .bare pre.pright-3,
+.reveal .bare pre.bare.pright-3,
 .reveal section.pright-3,
 .reveal section.bare.pright-3 {
   padding-right: 3rem;
@@ -711,6 +839,10 @@ font-weight: bold;
 .reveal h5.mtop-half-em,
 .reveal div.mtop-half-em,
 .reveal div.bare.mtop-half-em,
+.reveal pre.mtop-half-em,
+.reveal pre.bare.mtop-half-em,
+.reveal .bare pre.mtop-half-em,
+.reveal .bare pre.bare.mtop-half-em,
 .reveal section.mtop-half-em,
 .reveal section.bare.mtop-half-em {
   margin-top: 0.5em;
@@ -723,6 +855,10 @@ font-weight: bold;
 .reveal h5.mtop-1-em,
 .reveal div.mtop-1-em,
 .reveal div.bare.mtop-1-em,
+.reveal pre.mtop-1-em,
+.reveal pre.bare.mtop-1-em,
+.reveal .bare pre.mtop-1-em,
+.reveal .bare pre.bare.mtop-1-em,
 .reveal section.mtop-1-em,
 .reveal section.bare.mtop-1-em {
   margin-top: 1em;
@@ -735,6 +871,10 @@ font-weight: bold;
 .reveal h5.mtop-2-em,
 .reveal div.mtop-2-em,
 .reveal div.bare.mtop-2-em,
+.reveal pre.mtop-2-em,
+.reveal pre.bare.mtop-2-em,
+.reveal .bare pre.mtop-2-em,
+.reveal .bare pre.bare.mtop-2-em,
 .reveal section.mtop-2-em,
 .reveal section.bare.mtop-2-em {
   margin-top: 2em;
@@ -747,6 +887,10 @@ font-weight: bold;
 .reveal h5.mtop-3-em,
 .reveal div.mtop-3-em,
 .reveal div.bare.mtop-3-em,
+.reveal pre.mtop-3-em,
+.reveal pre.bare.mtop-3-em,
+.reveal .bare pre.mtop-3-em,
+.reveal .bare pre.bare.mtop-3-em,
 .reveal section.mtop-3-em,
 .reveal section.bare.mtop-3-em {
   margin-top: 3em;
@@ -759,6 +903,10 @@ font-weight: bold;
 .reveal h5.mbot-half-em,
 .reveal div.mbot-half-em,
 .reveal div.bare.mbot-half-em,
+.reveal pre.mbot-half-em,
+.reveal pre.bare.mbot-half-em,
+.reveal .bare pre.mbot-half-em,
+.reveal .bare pre.bare.mbot-half-em,
 .reveal section.mbot-half-em,
 .reveal section.bare.mbot-half-em {
   margin-bottom: 0.5em;
@@ -771,6 +919,8 @@ font-weight: bold;
 .reveal h5.mbot-1-em,
 .reveal div.mbot-1-em,
 .reveal div.bare.mbot-1-em,
+.reveal pre.mbot-1-em,
+.reveal pre.bare.mbot-1-em,
 .reveal section.mbot-1-em,
 .reveal section.bare.mbot-1-em {
   margin-bottom: 1em;
@@ -783,6 +933,8 @@ font-weight: bold;
 .reveal h5.mbot-2-em,
 .reveal div.mbot-2-em,
 .reveal div.bare.mbot-2-em,
+.reveal pre.mbot-2-em,
+.reveal pre.bare.mbot-2-em,
 .reveal section.mbot-2-em,
 .reveal section.bare.mbot-2-em {
   margin-bottom: 2em;
@@ -795,6 +947,8 @@ font-weight: bold;
 .reveal h5.mbot-3-em,
 .reveal div.mbot-3-em,
 .reveal div.bare.mbot-3-em,
+.reveal pre.mbot-3-em,
+.reveal pre.bare.mbot-3-em,
 .reveal section.mbot-3-em,
 .reveal section.bare.mbot-3-em {
   margin-bottom: 3em;
@@ -802,6 +956,8 @@ font-weight: bold;
 
 .reveal div.ptop-half-em,
 .reveal div.bare.ptop-half-em,
+.reveal pre.ptop-half-em,
+.reveal pre.bare.ptop-half-em,
 .reveal section.ptop-half-em,
 .reveal section.bare.ptop-half-em {
   padding-top: 0.5em;
@@ -809,6 +965,8 @@ font-weight: bold;
 
 .reveal div.ptop-1-em,
 .reveal div.bare.ptop-1-em,
+.reveal pre.ptop-1-em,
+.reveal pre.bare.ptop-1-em,
 .reveal section.ptop-1-em,
 .reveal section.bare.ptop-1-em {
   padding-top: 1em;
@@ -816,6 +974,8 @@ font-weight: bold;
 
 .reveal div.ptop-2-em,
 .reveal div.bare.ptop-2-em,
+.reveal pre.ptop-2-em,
+.reveal pre.bare.ptop-2-em,
 .reveal section.ptop-2-em,
 .reveal section.bare.ptop-2-em {
   padding-top: 2em;
@@ -823,6 +983,8 @@ font-weight: bold;
 
 .reveal div.ptop-3-em,
 .reveal div.bare.ptop-3-em,
+.reveal pre.ptop-3-em,
+.reveal pre.bare.ptop-3-em,
 .reveal section.ptop-3-em,
 .reveal section.bare.ptop-3-em {
   padding-top: 3em;
@@ -830,6 +992,8 @@ font-weight: bold;
 
 .reveal div.pbot-half-em,
 .reveal div.bare.pbot-half-em,
+.reveal pre.pbot-half-em,
+.reveal pre.bare.pbot-half-em,
 .reveal section.pbot-half-em,
 .reveal section.bare.pbot-half-em {
   padding-bottom: 0.5em;
@@ -837,6 +1001,8 @@ font-weight: bold;
 
 .reveal div.pbot-1-em,
 .reveal div.bare.pbot-1-em,
+.reveal pre.pbot-1-em,
+.reveal pre.bare.pbot-1-em,
 .reveal section.pbot-1-em,
 .reveal section.bare.pbot-1-em {
   padding-bottom: 1em;
@@ -844,6 +1010,8 @@ font-weight: bold;
 
 .reveal div.pbot-2-em,
 .reveal div.bare.pbot-2-em,
+.reveal pre.pbot-2-em,
+.reveal pre.bare.pbot-2-em,
 .reveal section.pbot-2-em,
 .reveal section.bare.pbot-2-em {
   padding-bottom: 2em;
@@ -851,6 +1019,8 @@ font-weight: bold;
 
 .reveal div.pbot-3-em,
 .reveal div.bare.pbot-3-em,
+.reveal pre.pbot-3-em,
+.reveal pre.bare.pbot-3-em,
 .reveal section.pbot-3-em,
 .reveal section.bare.pbot-3-em {
   padding-bottom: 3em;
@@ -1337,6 +1507,7 @@ h2.fifty,
   }
 
 pre.bare,
+pre.bare.SourceCode,
 div.bare > div.sourceCode,
 pre.bare > div.sourceCode,
 pre.bare > code.SourceCode,
@@ -1346,6 +1517,8 @@ pre.bare > code.SourceCode,
 }
 
 pre.mtop-1,
+pre.mtop-1.SourceCode,
+pre.SourceCode.mtop-1,
 div.mtop-1 > div.sourceCode,
 pre.mtop-1 > div.SourceCode,
 pre.mtop-1 > code.SourceCode,
@@ -1354,6 +1527,8 @@ pre.mtop-1 > code.SourceCode,
 }
 
 pre.mtop-2,
+pre.mtop-2.sourceCode,
+pre.sourceCode.mtop-2,
 div.mtop-2 > div.sourceCode,
 pre.mtop-2 > div.SourceCode,
 pre.mtop-2 > code.SourceCode,
@@ -1362,6 +1537,8 @@ pre.mtop-2 > code.SourceCode,
 }
 
 pre.mtop-3,
+pre.mtop-3.sourceCode,
+pre.sourceCode.mtop-3,
 div.mtop-3 > div.sourceCode,
 pre.mtop-3 > div.SourceCode,
 pre.mtop-3 > code.SourceCode,
@@ -1370,6 +1547,8 @@ pre.mtop-3 > code.SourceCode,
 }
 
 pre.mbot-1,
+pre.mbot-1.SourcCode,
+pre.SourcCode.mbot-1,
 div.mbot-1 > div.sourceCode,
 pre.mbot-1 > div.SourceCode,
 pre.mbot-1 > code.SourceCode,
@@ -1378,6 +1557,7 @@ pre.mbot-1 > code.SourceCode,
 }
 
 pre.mbot-2,
+pre.mbot-2.SourceCode,
 div.mbot-2 > div.sourceCode,
 pre.mbot-2 > div.SourceCode,
 pre.mbot-2 > code.SourceCode,
@@ -1386,6 +1566,7 @@ pre.mbot-2 > code.SourceCode,
 }
 
 pre.mbot-3,
+pre.mbot-3.SourceCode,
 div.mbot-3 > div.sourceCode,
 pre.mbot-3 > div.SourceCode,
 pre.mbot-3 > code.SourceCode,

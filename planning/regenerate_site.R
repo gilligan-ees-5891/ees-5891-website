@@ -5,6 +5,8 @@ pacman::p_load_gh("jonathan-g/semestr")
 # library(git2r)
 
 regenerate_site <- function(root = NULL, force = FALSE, keep_tex = FALSE) {
+  options(blogdown.method="html")
+
   if (is.null(root)) {
     root = find_root(criterion = has_file(".semestr.here"))
   }
