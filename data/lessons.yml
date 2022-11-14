@@ -94,10 +94,10 @@ lessons:
   reading: /reading/reading_21
   lecture: /slides/class_21
 - date: '2022-11-15'
-  title: Geospatial data analysis
+  title: Review of Bayesian Regression
   reading: /reading/reading_22
 - date: '2022-11-17'
-  title: Laplace approximations
+  title: Discussion of projects
   reading: /reading/reading_23
   assignment: project_draft
 - date: '2022-11-22'
@@ -105,10 +105,10 @@ lessons:
 - date: '2022-11-24'
   title: Thanksgiving Break
 - date: '2022-11-29'
-  title: Nested Laplace approximations
+  title: Generalized Linear Madness
   reading: /reading/reading_24
 - date: '2022-12-01'
-  title: Diagnosing model output
+  title: Differential Equations
   reading: /reading/reading_25
 - date: '2022-12-06'
   title: Project presentations

@@ -1,5 +1,5 @@
 ---
-title: Geospatial data analysis
+title: Review of Bayesian Regression
 class_date: '2022-11-15'
 class_number: 22
 weight: 22
@@ -13,7 +13,8 @@ pdf_url: /files/reading_asgts/reading_22.pdf
 ---
 ## Reading:
 
-### Required Reading (everyone):
+No new reading for today.
 
-* Bayesian Inference with INLA.
+### Notes:
 
+No new reading for today. I will review selected topics that we've read about but not discussed in depth in class.
