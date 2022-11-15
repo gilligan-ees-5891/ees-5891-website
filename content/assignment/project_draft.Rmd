@@ -1,5 +1,5 @@
 ---
-title: Draft of project
+title: Progress report
 due_date: '2022-11-17'
 assignment_type: Semester Project Assignment
 short_assignment_type: Report
@@ -19,4 +19,8 @@ pdf_url: /files/homework_asgts/project_draft.pdf
 ## Homework
 
 ### Homework Exercises:
+
+
+
+* Come to class ready to discuss where you stand on your project. Turn in a one-page progress report in which you say what you've done so far and what is giving you the greatest trouble with your project.
 
