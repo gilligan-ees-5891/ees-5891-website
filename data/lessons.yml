@@ -96,6 +96,7 @@ lessons:
 - date: '2022-11-15'
   title: Review of Bayesian Regression
   reading: /reading/reading_22
+  lecture: /slides/class_22
 - date: '2022-11-17'
   title: Discussion of projects
   reading: /reading/reading_23

@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Review of Bayesian Regression</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.18.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Review of Bayesian Regression</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #22:
+       Tuesday, November 15
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="linear-regression" class="title-slide slide level1 center"><h1 class="center">Linear Regression</h1>
+
+</section><section id="linear-regression-1" class="slide level2 eighty"><h2 class="eighty">Linear Regression</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Start with simple regression:
+<ul>
+<li>One predictor variable <span class="math inline">\(X\)</span>
+</li>
+<li>Predictor and outcome are both continuous (real numbers)</li>
+</ul>
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta X
+\end{align}
+\]</span>
+</li>
+<li class="fragment">Multiple linear regression
+<ul>
+<li>
+<span class="math inline">\(N\)</span> predictor variables <span class="math inline">\(X_1, \ldots, X_N\)</span>
+</li>
+<li>Everything continuous</li>
+</ul>
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \sum_{i=1}^N \beta_i X_i
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Polynomial regression
+<ul>
+<li>Just treat each power of <span class="math inline">\(X\)</span> like
+a new predictor</li>
+<li>You can have polynomials with more than one variable</li>
+</ul>
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \sum_{j=1}^N \beta_i X^j
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="scaling-variables" class="slide level2 eighty"><h2 class="eighty">Scaling Variables</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Standardizing:
+<ul>
+<li><span class="math inline">\(X_{\text{std}} = (X = \bar X) /
+\sigma_X\)</span></li>
+<li>All variables on the same scale</li>
+<li>Centered with 0 at the mean</li>
+<li>Slopes (<span class="math inline">\(\beta\)</span>) measure the
+effect of changing by 1 standard deviation.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Log scaling
+<ul>
+<li>Good for outcome variables that <strong>must</strong> be
+positive</li>
+<li>Good for predictor variables with a tail that covers a large range
+<ul>
+<li class="fragment">Population is often log-scaled</li>
+</ul>
+</li>
+<li class="fragment">Variable must be <span class="math inline">\(&gt;0\)</span>, so
+if some values are <span class="math inline">\(0\)</span>, add a small
+number to them (e.g., 0.01, 0.001).</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="integer-models" class="slide level2 eighty"><h2 class="eighty">Integer Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Boolean (Yes/No)
+<ul>
+<li>Coin toss: Heads or tails</li>
+<li>Bernoulli distribution</li>
+<li>Special case of binomial, with one trial:
+<code>dbinom(1, p)</code>
+</li>
+</ul>
+</li>
+<li class="fragment">Count data:
+<ul>
+<li>Binomial distribution
+<ul>
+<li><code>rbinom(N, p)</code></li>
+<li>Maximum value = <span class="math inline">\(N\)</span>
+</li>
+</ul>
+</li>
+<li class="fragment">Poisson distribution
+<ul>
+<li><code>dpois(lambda)</code></li>
+<li>No maximum value</li>
+<li>Poisson(<span class="math inline">\(\lambda\)</span>) is the
+limiting case of Binomial(<span class="math inline">\(N\)</span>, <span class="math inline">\(p\)</span>) when <span class="math inline">\(N\)</span> is large and <span class="math inline">\(p\)</span> is small, with <span class="math inline">\(Np = \lambda\)</span>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Generalized Linear Models (GLMs):
+<ul>
+<li>
+<p>Link functions:</p>
+<p><span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Binomial}(N, p) \\
+p &amp;= \text{logit}^{-1}( \alpha + \beta X)
+\end{align}
+\]</span></p>
+<pre><code>y ~ dbinom(N, lambda),
+logit(p) = a + b * x</code></pre>
+<p><span class="math display">\[
+\begin{align}
+Y &amp;\sim \text{Poisson}(\lambda) \\
+\lambda &amp;= \exp( \alpha + \beta X)
+\end{align}
+\]</span></p>
+<pre><code>y ~ dpois(lambda),
+log(lambda) = a + b * x</code></pre>
+</li>
+<li class="fragment">
+<p>Priors for probabilities (range 0 to 1)</p>
+<ul>
+<li>Beta functions: <code>dbeta(a, b)</code>
+<ul>
+<li>Mean = <span class="math inline">\(a / (a + b)\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="beta-distributions" class="slide level2 eighty"><h2 class="eighty">Beta Distributions</h2>
+<div class="bare mtop-1">
+<p><img data-src="assets/fig/beta-dist-1.png"></p>
+</div>
+<ul>
+<li>Mean = <span class="math inline">\(a / (a + b)\)</span>
+</li>
+<li>Variance = <span class="math inline">\(ab / ((a+b)^2 (a + b +
+1))\)</span>
+</li>
+</ul></section><section id="exponential-family-of-distributions" class="slide level2 eighty"><h2 class="eighty">Exponential Family of Distributions</h2>
+<p><img data-src="assets/images/exp-family.png" height="900" alt="Exponential family of distributions"></p>
+</section><section id="categorical-variables" class="slide level2 eighty"><h2 class="eighty">Categorical Variables</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Categorical variables
+<ul>
+<li>Predictors (section 5.3):
+<ul>
+<li>Use index variables (0 or 1)</li>
+<li>
+<span class="math inline">\(N\)</span> levels: <span class="math inline">\(N-1\)</span> index-variables (default category)
+<ul>
+<li>Only one index is 1 (the one for the category)</li>
+<li>If they’re all zero, it’s the default category</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="1">Outcomes (section 11.3):
+<ul>
+<li>Integer 0…<em>N</em>
+</li>
+<li>Use multinomial (categorical) likelihood
+(<code>categorical()</code>)</li>
+<li class="fragment" data-fragment-index="2">Use Dirichlet priors (<code>dirichlet()</code>)
+<ul>
+<li>Dirichlet is like an <span class="math inline">\(N\)</span>-dimensional generalization of the beta
+distribution</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment" data-fragment-index="3">Ordered categorical variables
+<ul>
+<li>Effects are cumulative</li>
+<li>Predictors (section 12.4):
+<ul>
+<li>Use an integer variable (<span class="math inline">\(K\)</span>)
+with values <span class="math inline">\(0 \ldots N-1\)</span>
+</li>
+<li class="fragment" data-fragment-index="4"><span class="math inline">\(N - 1\)</span> variables <span class="math inline">\(\delta_i\)</span> (<span class="math inline">\(i
+\in [1, \ldots, N-1]\)</span>)
+<ul>
+<li><span class="math inline">\(\mu = \alpha + \sum_{i=1}^{K}
+\delta_i\)</span></li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="5">Initially, no effect.</li>
+<li class="fragment" data-fragment-index="5">Every time you step to the next level, there’s another effect,
+and they add up.</li>
+</ul>
+</li>
+<li class="fragment" data-fragment-index="6">Outcomes (section 12.3):
+<ul>
+<li>Integer 0…<em>N</em>
+</li>
+<li>Use multiple logistic regression
+<ul>
+<li class="fragment" data-fragment-index="7">Initially at lowest value</li>
+<li class="fragment" data-fragment-index="8">As effect grows, step through values in sequence.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="multilevel-models" class="title-slide slide level1 center"><h1 class="center">Multilevel Models</h1>
+
+</section><section id="multilevel-models-1" class="slide level2 eighty"><h2 class="eighty">Multilevel Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Data is grouped into <em>clusters</em></p>
+<div class="eighty">
+<ul>
+<li>Geographical groupings (states, counties, etc.)</li>
+<li>Temporal groupings (seasons)</li>
+<li>Other categories:
+<ul>
+<li>Gender</li>
+<li>Education</li>
+<li>Profession</li>
+<li>Species</li>
+<li>Individual</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+</div>
+</li>
+<li class="fragment">
+<p>Hyperpriors and hyperparameters:</p>
+<ul>
+<li>Each group may have its own prior for slope, intercept, etc.
+<ul>
+<li>The parameters for that prior are drawn from a
+<em>hyperprior</em>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Single-level model</p>
+<p><span class="math display">\[
+\small
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta X \\
+\alpha &amp;\sim \text{Normal}(0, 1) \\
+\beta &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span></p>
+</li>
+<li class="fragment">
+<p>Two-level model (varying intercept)</p>
+<p><span class="math display">\[
+\small
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta X \\
+\alpha &amp;\sim \text{Normal}(\bar \alpha, \sigma_\alpha) \\
+\beta &amp;\sim \text{Normal}(0, 1) \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="multilevel-models-2" class="slide level2 eighty"><h2 class="eighty">Multilevel Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Two-level model (varying intercept, varying slope)</p>
+<p><span class="math display">\[
+\small
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta X \\
+\alpha &amp;\sim \text{Normal}(\bar \alpha, \sigma_\alpha) \\
+\beta &amp;\sim \text{Normal}(\bar \beta, \sigma_\beta \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1) \\
+\bar \beta &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\beta &amp;\sim \text{Exponential}(1) \\
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>Two-level model (correlations between slope and
+intercept)</p>
+<p><span class="math display">\[
+\small
+\begin{align}
+Y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;= \alpha + \beta X \\
+\begin{bmatrix}
+  \alpha \\
+  \beta
+\end{bmatrix} &amp;\sim \text{MVNormal}\begin{pmatrix}
+  \begin{bmatrix}
+    \bar \alpha \\
+    \bar \beta
+  \end{bmatrix}, S
+\end{pmatrix} \\
+S &amp;\sim \begin{pmatrix}
+          \sigma_\alpha &amp; 0 \\
+          0 &amp; \sigma_\beta
+        \end{pmatrix}
+        R
+        \begin{pmatrix}
+          \sigma_\alpha &amp; 0 \\
+          0 &amp; \sigma_\beta
+        \end{pmatrix} \\
+\bar \alpha &amp;\sim \text{Normal}(0, 1) \\
+\bar \beta &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Exponential}(1) \\
+\sigma_\alpha &amp;\sim \text{Exponential}(1) \\
+\sigma_\beta &amp;\sim \text{Exponential}(1) \\
+R &amp; \sim \text{LKJCorr}(2)
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="designing-models" class="title-slide slide level1 center"><h1 class="center">Designing Models</h1>
+
+</section><section id="designing-models-1" class="slide level2 eighty"><h2 class="eighty">Designing Models</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Analyze relationships between variables</p>
+<ul>
+<li>DAGs describe <em>causal relationships</em> among variables.</li>
+<li>They can help us detect potential problems:
+<ul>
+<li>Spurious associations</li>
+<li>Masked relationships</li>
+<li>Multicollinearity</li>
+<li>Post-treatment bias</li>
+<li>Confounders</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">
+<p>Four fundamental types of confounding relationships:</p>
+<p><img data-src="assets/images/confounders.png" width="800" alt="Four confounding relationships: Fork, Pipe, Collider, Descendant"></p>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>General rules:</p>
+<div class="eighty">
+<ol type="1">
+<li>List all paths connecting <em>X</em> (potential cause) to <em>Y</em>
+(outcome)</li>
+<li>Classify each path as <em>open</em> or <em>closed</em>
+<ul>
+<li>A path is <em>open</em> unless it contains a <em>collider</em>
+</li>
+</ul>
+</li>
+<li>Classify each path by whether it’s a <em>backdoor path</em>.
+<ul>
+<li>A <em>backdoor path</em> has an arrow pointing at <em>X</em>
+</li>
+</ul>
+</li>
+<li>If there are any <em>open backdoor paths</em>, try to close it by
+<em>conditioning</em> on a variable.</li>
+</ol>
+</div>
+</li>
+<li class="fragment">
+<p>Example (Section 6.4.2)</p>
+<div class="bare">
+<p><img data-src="assets/fig/backdoor_dag-1.png"></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<aside class="notes"><ul>
+<li>Two potential backdoors:
+<ol type="1">
+<li><span class="math inline">\(X \leftarrow U \leftarrow A \rightarrow
+C \rightarrow Y\)</span></li>
+<li><span class="math inline">\(X \leftarrow U \rightarrow B \leftarrow
+C \rightarrow Y\)</span></li>
+</ol>
+</li>
+<li>Path (1) is open (no colliders) and path (2) is closed (collider at
+<em>B</em>), So condition on a variable in path (1): <em>A</em> or
+<em>C</em>
+</li>
+</ul></aside></section><section id="testing-dags" class="slide level2 eighty"><h2 class="eighty">Testing DAGs</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>How can you tell whether your DAG is correct?
+<ul>
+<li class="fragment">You can’t</li>
+<li class="fragment">There could always be important unobserved variables you don’t
+know about</li>
+</ul>
+</li>
+<li class="fragment">Comparing DAGs with evidence
+<ul>
+<li class="fragment">Analyze DAGs for <em>conditional independencies</em>
+<ul>
+<li>
+<em>Conditional independencies</em> are empirically testable
+statements</li>
+<li class="fragment">Use your model’s posterior predictions to test predicted
+<em>conditional independencies</em>.</li>
+<li class="fragment">If DAG’s <em>conditional independencies</em> are not observed,
+then it’s probably not correct.</li>
+<li class="fragment"><code>dagitty</code>’s
+<code>impliedConditionalIndependencies()</code> function is your
+friend.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">DAG analysis is helpful, but it’s not enough.
+<ul>
+<li>DAGs tell you about the <em>logical structure</em> of your model,
+but they don’t tell you about the science.</li>
+<li class="fragment">What you know as a scientist is even more important:
+<ul>
+<li>
+<em>Why</em> do you think <em>X</em> influences <em>Y</em>?</li>
+<li>
+<em>What</em> other variables might also play a role?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section></section><section><section id="example-urban-water-conservation-policies" class="title-slide slide level1 center"><h1 class="center">Example: Urban Water Conservation Policies</h1>
+
+</section><section id="urban-water-conservation-policies" class="slide level2 eighty"><h2 class="eighty">Urban Water Conservation Policies</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Build a database of water conservation policies for 197 largest
+cities in the US
+<ul>
+<li>Vanderbilt Water Conservation Index (VWCI)
+<ul>
+<li>List of 79 possible policies
+<ul>
+<li>31 are <em>requirements</em>
+</li>
+<li>21 are <em>rebates</em> for voluntary actions</li>
+</ul>
+</li>
+<li>Each city gets a score based on how many policies it has
+adopted</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/VWCI-map.png" alt="map of water conservation scores for 195 cities"></p>
+</div>
+</div>
+</section><section id="descxriptive-statistics" class="slide level2 eighty"><h2 class="eighty">Descxriptive Statistics</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Range of values: 3–53 (max. possible is 79)</li>
+<li>Mean: 18.7, median 15</li>
+<li class="fragment">Model VWCI:
+<ul>
+<li>Predict score from
+<ul>
+<li>Temperature</li>
+<li>Rainfall</li>
+<li>Fraction of water supply from surface water</li>
+<li>Population</li>
+<li>Population growth</li>
+<li>Personal income</li>
+<li>Partisan voting index</li>
+</ul>
+</li>
+<li class="fragment">Drop Honolulu HI and Anchorage AK and focus on 48 contiguous
+states</li>
+<li class="fragment">Temperature and Precipitation are collinear so use Köppen
+Aridity Index, which combines the two</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare">
+<p><img data-src="assets/images/VWCI-histograms.png" height="900"></p>
+</div>
+</div>
+</div>
+</section><section id="multilevel-model" class="slide level2 eighty"><h2 class="eighty">Multilevel Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Multilevel variable-intercept model:
+<ul>
+<li>Predict each city’s score from city-level data and state-level data
+<ul>
+<li>Priors for intercepts are based on state-level data</li>
+</ul>
+</li>
+</ul>
+<span class="math display">\[
+\begin{align}
+V_i &amp;\sim \text{Binomial}(N_{\text{Actions}}, p_i) \\
+\text{logit}(p_i) &amp;= \alpha_j + \sum_{k \in \text{city variables}}
+\beta_k x_{ik} \\
+\alpha_j &amp;\sim \text{Normal}(\mu_j, \sigma_\alpha) \\
+\mu_j &amp;= \alpha_0 + \sum_{k \in \text{state variables}} \gamma_k
+w_{jk}
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/VWCI-residuals.png" height="400"></p>
+<ul>
+<li>
+<p>Original residuals showed data were <em>overdispersed</em>
+(variance was too great for a Binomial), so we changed the model to use
+a <em>beta-binomial</em> distribution (see Chapter 12).</p>
+<p><span class="math display">\[
+\begin{align}
+V_i &amp;\sim \text{beta-Binomial}(N_{\text{Actions}}, \phi p_i, \phi (1
+- p_i) \\
+\end{align}
+\]</span></p>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="results" class="slide level2 eighty"><h2 class="eighty">Results</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Most important state-level predictors:
+<ul>
+<li>Aridity</li>
+<li>Partisan voting index (PVI)</li>
+</ul>
+</li>
+<li>Most important city-level predictors:
+<ul>
+<li>PVI</li>
+<li>Population growth</li>
+<li>Log population</li>
+</ul>
+</li>
+<li>City-level Aridity, surface water, and personal income don’t matter
+after accounting for state-level effects</li>
+</ul>
+</div>
+<div class="column">
+<p><img data-src="assets/images/VWCI-fit.png" height="900"></p>
+</div>
+</div>
+</section><section id="checking-model" class="slide level2 eighty"><h2 class="eighty">Checking model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>We did detailed interviews with water managers in San Antonio and
+Phoenix
+<ul>
+<li class="fragment">San Antonio has a higher score than predictied.
+<ul>
+<li>Its Republican political leaning suggests low water
+conservation,</li>
+<li>but the city doesn’t have so much choice:
+<ul>
+<li>A lawsuit over endangered species led to federal requirements to
+conserve water</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="fragment">Phoelix has a lower score than predicted.
+<ul>
+<li>Central Arizona Project brings water from Colorado River</li>
+<li>Reduces water stress on Phoenix</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div class="bare mtop-1">
+<p><img data-src="assets/images/VWCI-residuals.png" height="400"></p>
+</div>
+<div class="bare mtop-1">
+<p><img data-src="assets/images/biggest-VWCI-residuals.png" height="400"></p>
+</div>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_22">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_22"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_22">https://ees5891.jgilligan.org/slides/class_22</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_22/ees_5891-03_class_22_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_22/ees_5891-03_class_22_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
