@@ -1,11 +1,11 @@
 ---
 title: Project presentations
-class_date: '2022-12-06'
+class_date: '2022-12-08'
 class_number: 27
 weight: 27
 slug: reading_27
 pubdate: '2022-07-31'
-date: '2022-12-06'
+date: '2022-12-08'
 output:
   blogdown::html_page:
     md_extensions: +tex_math_single_backslash+compact_definition_lists

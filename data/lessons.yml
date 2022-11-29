@@ -113,8 +113,10 @@ lessons:
   reading: /reading/reading_25
 - date: '2022-12-06'
   title: Project presentations
-  reading: /reading/reading_27
+  reading: /reading/reading_26
   assignment: project_presentation
 - date: '2022-12-08'
+  title: Project presentations
+  reading: /reading/reading_27
 - date: '2022-12-10'
   assignment: project_report
