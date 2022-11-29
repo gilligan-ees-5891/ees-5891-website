@@ -108,6 +108,7 @@ lessons:
 - date: '2022-11-29'
   title: Generalized Linear Madness
   reading: /reading/reading_24
+  lecture: /slides/class_24
 - date: '2022-12-01'
   title: Differential Equations
   reading: /reading/reading_25
