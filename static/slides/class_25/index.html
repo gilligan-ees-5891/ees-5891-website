@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<!-- JG Reveal.js Template --><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="author" content="Jonathan Gilligan">
+<title>Bayesian Differential Equations</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reset.css">
+<link rel="stylesheet" href="../../lecture_lib/library/reveal.js-3.8.0/css/reveal.min.css">
+<style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}  </style>
+<style type="text/css">
+    div.qrbox,
+    aside.qrbox {
+     text-align: left;
+     vertical-align: bottom;
+     width: 95%;
+     position: fixed;
+     left: 2.5%;
+     bottom: 1rem;
+     display: block;
+    }
+  </style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+<!-- theme = solarized_jg --><link rel="stylesheet" href="../../lecture_lib/library/assets/css/theme/solarized_jg.css" id="theme">
+<!-- Printing and PDF exports --><script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '../../lecture_lib/library/reveal.js-3.8.0/css/print/pdf.css' : '../../lecture_lib/library/reveal.js-3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><!--[if lt IE 9]>
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]--><script src="../../lecture_lib/library/header-attrs-2.18.1.9000/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+            <!-- start title slide -->
+<section class="center" id="title"><h1 class="title">Bayesian Differential Equations</h1>
+    <h3 class="author">EES 5891-03</h3>
+        <h3 class="author">Bayesian Statistical Methods</h3>
+    <h3 class="author">Jonathan Gilligan</h3>
+    <h3 class="date">
+      Class #25:
+       Thursday, December 01
+      2022
+    </h3>
+	<!-- end title slide -->
+</section><section><section id="chimpanzees-cracking-nuts" class="title-slide slide level1 center"><h1 class="center">Chimpanzees Cracking Nuts</h1>
+
+</section><section id="panda-nuts-panda-oleosa" class="slide level2 eighty"><h2 class="eighty">Panda Nuts (<em>Panda oleosa</em>)</h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="assets/images/panda-oleosa-photo.jpg" height="400" alt="Panda oleosa"></p>
+<p><img data-src="assets/images/panda-nut-hand.jpg" height="400" alt="Panda oleosa with hand for scale"></p>
+</div>
+<div class="column">
+<p><img data-src="assets/images/panda-hut-chimp.webp" style="width:100%;" alt="Chimpanzee cracking panda nut with hammer"></p>
+</div>
+</div>
+</section><section id="chimpanzees-and-tools" class="slide level2 eighty"><h2 class="eighty">Chimpanzees and Tools</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Tool use by non-human primates</li>
+<li>How do chimpanzees learn to use tools to crack panda nuts?</li>
+<li class="fragment">Observe how # nuts cracked/second changes as chimps age</li>
+<li class="fragment">Model:
+<ul>
+<li class="fragment">Strength is related to body size</li>
+<li class="fragment">Mass (<em>M</em>) vs. age (<em>t</em>):
+<ul>
+<li>Growth: <span class="math display">\[\small
+\frac{\mathrm{d}M}{\mathrm{d}t} = k (M_{\text{max}} - M(t))
+\]</span>
+</li>
+<li class="fragment">Solve the differential equation <span class="math display">\[\small
+M(t) = M_{\text{max}} (1 - \exp(-kT))
+\]</span>
+</li>
+</ul>
+</li>
+<li class="fragment">Strength: <span class="math inline">\(\small S(t) = \beta
+M(t)\)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Nut-cracking rate per second (<span class="math inline">\(\lambda\)</span>): <span class="math display">\[
+\begin{align}
+\lambda &amp;= \alpha S(t)^\theta \\
+&amp;= \alpha \left(\beta M_{\text{max}} (1 - \exp(-kt)) \right)^\theta
+\end{align}
+\]</span>
+</li>
+<li class="fragment">Scale mass and simplify: <span class="math display">\[
+\begin{align}
+\lambda &amp;= \alpha \left(\beta (1 - \exp(-kt)) \right)^\theta \\
+        &amp;= \alpha \beta^\theta (1 - \exp(-kt))^\theta \\
+        &amp;= \phi (1 - \exp(-kt))^\theta
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="statistical-model" class="slide level2 eighty"><h2 class="eighty">Statistical Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li># nuts cracked in <em>d</em> seconds: <span class="math display">\[
+\begin{align}
+n &amp;\sim \text{Poisson}(\lambda) \\
+\lambda &amp;= d \phi (1 - \exp(-kt))^\theta
+\end{align}
+\]</span>
+</li>
+<li class="fragment">Priors: <span class="math display">\[
+\begin{align}
+\phi &amp;\sim \text{Log-Normal}(\log(1), 0.1) \\
+k &amp;\sim \text{Log-Normal}(\log(2), 0.25) \\
+\theta &amp;\sim \text{Log-Normal}(\log(5), 0.25) \\
+\end{align}
+\]</span>
+</li>
+</ul>
+</div>
+<div class="column fragment">
+<p><img data-src="assets/fig/unnamed-chunk-1-1.png"><!-- --></p>
+</div>
+</div>
+</section><section id="coding-the-model" class="slide level2 eighty"><h2 class="eighty">Coding the Model</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">nuts =</span> <span class="fu">as.integer</span>(Panda_nuts<span class="sc">$</span>nuts_opened),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> Panda_nuts<span class="sc">$</span>age <span class="sc">/</span> <span class="fu">max</span>(Panda_nuts<span class="sc">$</span>age),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">seconds =</span> Panda_nuts<span class="sc">$</span>seconds)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mdl_nuts <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        nuts <span class="sc">~</span> <span class="fu">poisson</span>(lambda),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        lambda <span class="ot">&lt;-</span> seconds <span class="sc">*</span> phi <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(<span class="sc">-</span>k <span class="sc">*</span> age))<span class="sc">^</span>theta,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        phi <span class="sc">~</span> <span class="fu">lognormal</span>(<span class="fu">log</span>(<span class="dv">1</span>), <span class="fl">0.1</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        k <span class="sc">~</span> <span class="fu">lognormal</span>(<span class="fu">log</span>(<span class="dv">2</span>), <span class="fl">0.25</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        theta <span class="sc">~</span> <span class="fu">lognormal</span>(<span class="fu">log</span>(<span class="dv">5</span>), <span class="fl">0.25</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data =</span> dat_list, <span class="at">chains =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">tidy_draws</span>(mdl_nuts) <span class="sc">%&gt;%</span> <span class="fu">select</span>(phi, k, theta)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">map_df</span>(<span class="fu">seq</span>(<span class="dv">30</span>), <span class="sc">~</span><span class="fu">tibble</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.idx =</span> .x,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">1.5</span>, <span class="at">length.out =</span> <span class="dv">100</span>), </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nuts =</span> post<span class="sc">$</span>phi[.x] <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(<span class="sc">-</span>post<span class="sc">$</span>k[.x] <span class="sc">*</span> age))<span class="sc">^</span>post<span class="sc">$</span>theta[.x]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> age <span class="sc">*</span> <span class="fu">max</span>(Panda_nuts<span class="sc">$</span>age), <span class="at">y =</span> nuts)) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> .idx), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> dat_list, <span class="fu">aes</span>(<span class="at">y =</span> nuts<span class="sc">/</span>seconds, </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">size =</span> <span class="fu">normalize</span>(seconds)),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">shape =</span> <span class="dv">1</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Nuts per second"</span>) <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="st">"none"</span>)</span></code></pre></div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/nuts-post-1.png"><!-- --></p>
+</div>
+</div>
+</section></section><section><section id="population-dynamics" class="title-slide slide level1 center"><h1 class="center">Population Dynamics</h1>
+
+</section><section id="predator-prey-model" class="slide level2 eighty"><h2 class="eighty">Predator-Prey Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>
+<p>Hares (prey) and Lynx (predators)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Lynx_Hare)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> Lynx_Hare</span></code></pre></div>
+</li>
+<li class="fragment">
+<p>Lynx eat hare</p>
+<ul>
+<li>Next year: more lynx, fewer hares.</li>
+</ul>
+</li>
+<li class="fragment">
+<p>As hare population drops, Lynx don’t have enough food</p>
+<ul>
+<li>Lynx population drops</li>
+</ul>
+</li>
+<li class="fragment"><p>As lynx population drops, hare population rebounds</p></li>
+</ul>
+</div>
+<div class="column">
+<div>
+<p><img data-src="assets/fig/plot-lynx-hare-1.png"><!-- --></p>
+</div>
+<ul>
+<li class="fragment">Modeling the data:
+<ul>
+<li>Geocentric: <strong>autoregressive model</strong> <span class="math display">\[
+E(H_t) = \alpha + \beta_1 H_{t - 1}
+\]</span> <em>E</em> = <em>expectation value</em>
+<ul>
+<li class="fragment">Add an epicycle for the Lynx <span class="math display">\[
+E(H_t) = \alpha + \beta_1 H_{t - 1} + \beta_2 L_{t - 1}
+\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="lotka-volterra-model" class="slide level2 eighty"><h2 class="eighty">Lotka-Volterra Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Ordinary Differential Equation:
+<ul>
+<li>Birth and death: <span class="math display">\[
+\begin{align}
+\frac{\mathrm{d}H}{\mathrm{d}t} =&amp; H_t \times (\text{birth rate}) \\
+   &amp; - H_t \times (\text{mortality rate}) \\
+   =&amp; b_H H_t - m_H H_t \\
+   =&amp; (b_H - m_H) H_t
+\end{align}
+\]</span>
+</li>
+<li class="fragment" data-fragment-index="1">Hare mortality depends on # lynx</li>
+<li class="fragment" data-fragment-index="1">Lynx birth rate depends on # hare <span class="math display">\[
+\begin{align}
+\frac{\mathrm{d}H}{\mathrm{d}t} &amp;= (b_H - m_H L_t) H_t \\
+\frac{\mathrm{d}L}{\mathrm{d}t} &amp;= (b_L H_t - m_L) L_t
+\end{align}
+\]</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<div>
+<p><img data-src="assets/fig/plot-lynx-hare-1.png"><!-- --></p>
+</div>
+</div>
+</div>
+</section><section id="simulate-population-dynamics" class="slide level2 eighty"><h2 class="eighty">Simulate Population Dynamics</h2>
+<div class="columns">
+<div class="column">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sim_lh <span class="ot">&lt;-</span> <span class="cf">function</span>(n_steps, init, theta, <span class="at">dt =</span> <span class="fl">0.002</span>) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  L <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_steps)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  H <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_steps)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  L[<span class="dv">1</span>] <span class="ot">&lt;-</span> init[<span class="dv">1</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  H[<span class="dv">1</span>] <span class="ot">&lt;-</span> init[<span class="dv">2</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n_steps) {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    H[i] <span class="ot">&lt;-</span> H[i<span class="dv">-1</span>] <span class="sc">+</span> dt <span class="sc">*</span> H[i<span class="dv">-1</span>] <span class="sc">*</span> (theta[<span class="dv">1</span>] <span class="sc">-</span> theta[<span class="dv">2</span>] <span class="sc">*</span> L[i<span class="dv">-1</span>])</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    L[i] <span class="ot">&lt;-</span> L[i<span class="dv">-1</span>] <span class="sc">+</span> dt <span class="sc">*</span> L[i<span class="dv">-1</span>] <span class="sc">*</span> (theta[<span class="dv">3</span>] <span class="sc">*</span> H[i<span class="dv">-1</span>] <span class="sc">-</span> theta[<span class="dv">4</span>])</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">tibble</span>(<span class="at">H =</span> H, <span class="at">L =</span> L, <span class="at">time =</span> <span class="fu">seq_along</span>(H)))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/unnamed-chunk-2-1.png"><!-- --></p>
+</div>
+</div>
+</section><section id="statistical-model-1" class="slide level2 eighty"><h2 class="eighty">Statistical Model</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Use Bayesian regression analysis to figure out <span class="math inline">\(b_H\)</span>, <span class="math inline">\(m_H\)</span>, <span class="math inline">\(b_L\)</span>, and <span class="math inline">\(m_L\)</span>.</li>
+<li class="fragment">Complication: The data show the number of pelts collected by
+hunters, not the actual populations.
+<ul>
+<li class="fragment">Estimate the population from the observations (pelts)</li>
+<li class="fragment"><span class="math inline">\(H\)</span>, <span class="math inline">\(L\)</span> are populations, <span class="math inline">\(h\)</span>, <span class="math inline">\(\ell\)</span> are observations</li>
+<li class="fragment">Hares and lynx are trapped with some probability <span class="math inline">\(p_t\)</span>, which varies from year to year
+<ul>
+<li>
+<span class="math inline">\(p_t \sim \text{Beta}(2, 18)\)</span>
+(mean = 0.1)</li>
+<li>The reported value of <span class="math inline">\(h\)</span> is
+rounded to the nearest 100, and divided by 1000</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">
+<p>What does this look like?</p>
+<div class="bare mbot-1">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Ht <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sim_hares <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="fu">rbeta</span>(N, <span class="dv">2</span>, <span class="dv">18</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">h =</span> <span class="fu">rbinom</span>(N, <span class="at">size=</span>Ht, <span class="at">prob=</span>p)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">h =</span> <span class="fu">round</span>(h <span class="sc">/</span> <span class="dv">1000</span>, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_hares, <span class="fu">aes</span>(<span class="at">x =</span> h)) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">bw =</span> <span class="fl">0.02</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"thousands of pelts"</span>, <span class="at">y =</span> <span class="st">"prob. density"</span>)</span></code></pre></div>
+<p><img data-src="assets/fig/plot-sim-obs-1.png"><!-- --></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="full-statistical-model" class="slide level2 eighty"><h2 class="eighty">Full Statistical Model</h2>
+<div class="columns">
+<div class="column">
+<p><span class="math display">\[
+\begin{align}
+h_t &amp;\sim \text{Log-Normal}(\log(p_H H_t), \sigma_H) \\
+\ell_t &amp;\sim \text{Log-Normal}(\log(p_L L_t), \sigma_L) \\
+H_t &amp;\sim  \text{Log-Normal}(\log(10), 1) \\
+L_t &amp;\sim  \text{Log-Normal}(\log(10), 1) \\
+H_{t &gt; 1} &amp;= H_1 + \int_1^T H_t (b_H - m_L L_t) dt \\
+L_{t &gt; 1} &amp;= L_1 + \int_1^T L_t (b_L H_t - m_L) dt
+\end{align}
+\]</span></p>
+</div>
+<div class="column">
+<ul>
+<li class="fragment">Priors:</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\sigma_H &amp;\sim \text{Exponential}(1) \\
+\sigma_L &amp;\sim \text{Exponential}(1) \\
+p_H      &amp;\sim \text{Beta}(\alpha_H, \beta_H) \\
+p_L      &amp;\sim \text{Beta}(\alpha_L, \beta_L) \\
+b_H      &amp;\sim \text{Half-Normal}(1, 0.5) \\
+b_L      &amp;\sim \text{Half-Normal}(0.05, 0.05) \\
+m_H      &amp;\sim \text{Half-Normal}(0.05, 0.05) \\
+m_L      &amp;\sim \text{Half-Normal}(1, 0.5) \\
+\end{align}
+\]</span></p>
+</div>
+</div>
+</section><section id="stan-model" class="slide level2 eighty"><h2 class="eighty">Stan Model</h2>
+<div class="columns">
+<div class="column">
+<div class="ninety">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Lynx_Hare_model"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(Lynx_Hare_model)</span></code></pre></div>
+<pre class="seventy max-listing"><code>## functions {
+##   real[] dpop_dt( real t,                 // time
+##                 real[] pop_init,          // initial state {lynx, hares}
+##                 real[] theta,             // parameters
+##                 real[] x_r, int[] x_i) {  // unused
+##     real L = pop_init[1];
+##     real H = pop_init[2];
+##     real bh = theta[1];
+##     real mh = theta[2];
+##     real ml = theta[3];
+##     real bl = theta[4];
+##     // differential equations
+##     real dH_dt = (bh - mh * L) * H;
+##     real dL_dt = (bl * H - ml) * L;
+##     return { dL_dt , dH_dt };
+##   }
+## }
+## data {
+##   int&lt;lower=0&gt; N;              // number of measurement times
+##   real&lt;lower=0&gt; pelts[N,2];    // measured populations
+## }
+## transformed data{
+##   real times_measured[N-1];    // N-1 because first time is initial state
+##   for ( i in 2:N ) times_measured[i-1] = i;
+## }</code></pre>
+</div>
+</div>
+<div class="column">
+<div class="ninety">
+<pre class="seventy max-listing"><code>## parameters {
+##   real&lt;lower=0&gt; theta[4];      // { bh, mh, ml, bl }
+##   real&lt;lower=0&gt; pop_init[2];   // initial population state
+##   real&lt;lower=0&gt; sigma[2];      // measurement errors
+##   real&lt;lower=0,upper=1&gt; p[2];  // trap rate
+## }
+## transformed parameters {
+##   real pop[N, 2];
+##   pop[1,1] = pop_init[1];
+##   pop[1,2] = pop_init[2];
+##   pop[2:N,1:2] = integrate_ode_rk45(
+##     dpop_dt, pop_init, 0, times_measured, theta,
+##     rep_array(0.0, 0), rep_array(0, 0),
+##     1e-5, 1e-3, 5e2);
+## }
+## model {
+##   // priors
+##   theta[{1,3}] ~ normal( 1 , 0.5 );    // bh,ml
+##   theta[{2,4}] ~ normal( 0.05, 0.05 ); // mh,bl
+##   sigma ~ exponential( 1 );
+##   pop_init ~ lognormal( log(10) , 1 );
+##   p ~ beta(40,200);
+##   // observation model
+##   // connect latent population state to observed pelts
+##   for ( t in 1:N )
+##     for ( k in 1:2 )
+##       pelts[t,k] ~ lognormal( log(pop[t,k]*p[k]) , sigma[k] );
+## }
+## generated quantities {
+##   real pelts_pred[N,2];
+##   for ( t in 1:N )
+##     for ( k in 1:2 )
+##       pelts_pred[t,k] = lognormal_rng( log(pop[t,k]*p[k]) , sigma[k] );
+## }</code></pre>
+</div>
+</div>
+</div>
+</section><section id="apply-the-model" class="slide level2 eighty"><h2 class="eighty">Apply the Model</h2>
+<div class="columns">
+<div class="column">
+<div class="bare ninetyfive">
+<div class="sourceCode" id="cb10"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">nrow</span>(Lynx_Hare),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pelts =</span> Lynx_Hare[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mdl_lh <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> Lynx_Hare_model, <span class="at">data =</span> dat_list, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.95</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(mdl_lh)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pelts <span class="ot">&lt;-</span> dat_list<span class="sc">$</span>pelts</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, pelts[,<span class="dv">2</span>], <span class="at">pch=</span><span class="dv">16</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120</span>), <span class="at">xlab=</span><span class="st">"year"</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"thousands of pelts"</span>, <span class="at">xaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>at <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">21</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> at, <span class="at">labels =</span> Lynx_Hare<span class="sc">$</span>Year[at])</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, pelts[,<span class="dv">1</span>], <span class="at">col =</span> rangi2, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 21 time series from posterior</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>) {</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, post<span class="sc">$</span>pelts_pred[s,,<span class="dv">2</span>], </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.1</span>), <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, post<span class="sc">$</span>pelts_pred[s,,<span class="dv">1</span>], </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">col.alpha</span>(rangi2, <span class="fl">0.2</span>), <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># text labels</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">17</span>, <span class="dv">90</span>, <span class="st">"Lepus"</span>, <span class="at">pos =</span> <span class="dv">2</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">19</span>, <span class="dv">50</span>, <span class="st">"Lynx"</span>,  <span class="at">pos =</span> <span class="dv">2</span>, <span class="at">col =</span> rangi2)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r seventy max-listing bare"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">21</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>), </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"year"</span>, <span class="at">ylab =</span> <span class="st">"thousands of animals"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>at <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">21</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> at, <span class="at">labels =</span> Lynx_Hare<span class="sc">$</span>Year[at])</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>) {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, post<span class="sc">$</span>pop[s,,<span class="dv">2</span>], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.2</span>), </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">21</span>, post<span class="sc">$</span>pop[s,,<span class="dv">1</span>], <span class="at">col =</span> <span class="fu">col.alpha</span>(rangi2, <span class="fl">0.4</span>), </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div class="column">
+<p><img data-src="assets/fig/plot_pelts-1.png"><!-- --><img data-src="assets/fig/plot_pop-1.png"><!-- --></p>
+</div>
+</div>
+</section></section>
+</div>
+  </div>
+  <!--
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.js"></script>
+  <!-- -->
+  <script src="../../lecture_lib/library/reveal.js-3.8.0/js/reveal.min.js"></script><!-- --><script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Display the page number of the current slide
+        showSlideNumber: 'speaker',
+        // Push each slide change to the browser history
+        history: true,
+        //  Enable hashing slide content to URL
+        hash: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Don't separate fragments in PDF rendering
+        pdfSeparateFragments: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+      
+        // Optional reveal.js plugins
+        dependencies: [
+                    { src: '../../lecture_lib/library/assets/plugin/chalkboard/chalkboard.js', async: true },
+                                        { src: '../../lecture_lib/library/assets/plugin/reveal-skip-fragments/skip-fragments.js', async: true },
+                    { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/notes/notes.js', async: true },
+          { src: '../../lecture_lib/library/reveal.js-3.8.0/plugin/math/math.js', async: true }
+        ],
+        shift_keyboard: {
+    	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'C' is pressed
+    	    66: function() { RevealChalkboard.toggleChalkboard() },	  // toggle chalkboard when 'B' is pressed
+    	    88: function() { RevealChalkboard.clear() },	            // clear chalkboard when 'X' is pressed
+    	    82: function() { RevealChalkboard.reset() },	            // reset chalkboard data on current slide when 'R' is pressed
+    	    68: function() { RevealChalkboard.download() },	          // downlad recorded chalkboard drawing when 'D' is pressed
+        },
+              	// Shortcut for showing all fragments
+      	skipFragmentsShowShortcut: 'S',
+
+      	// Shortcut for hiding all fragments
+      	skipFragmentsHideShortcut: 'H',
+      	      });
+    </script><script>
+  	function createSingletonNodejg( container, tagname, classname, innerHTML ) {
+
+		// Find all nodes matching the description
+		var nodes = container.querySelectorAll( '.' + classname );
+
+		// Check all matches to find one which is a direct child of
+		// the specified container
+		for( var i = 0; i < nodes.length; i++ ) {
+			var testNode = nodes[i];
+			if( testNode.parentNode === container ) {
+				return testNode;
+			}
+		}
+
+		// If no node was found, create it now
+		var node = document.createElement( tagname );
+		node.className = classname;
+		if( typeof innerHTML === 'string' ) {
+			node.innerHTML = innerHTML;
+		}
+		container.appendChild( node );
+
+		return node;
+
+	}
+
+  var dom_wrapper = document.querySelector('.reveal');
+  createSingletonNodejg(dom_wrapper, 'div', 'qrbox',
+  '<div class="qrbox" id="qrbox" style="font-size:90%;">' + '\n' +
+  '<div style="font-size:30%;width:100%;">' + '\n' +
+      '<a href="https://ees5891.jgilligan.org/slides/class_25">' +
+  	'<img src="qrcode.png" alt="https://ees5891.jgilligan.org/slides/class_25"/>' +
+  	'</a>' + '\n' +
+	  '</div>' + '\n' +
+  '<div style="font-size:30%;width:100%;vertical-align:top;">' + '\n' +
+    '<span style="display:inline-block;text-align:left;margin-left:0">' + '\n' +
+        'Live web page: <a href="https://ees5891.jgilligan.org/slides/class_25">https://ees5891.jgilligan.org/slides/class_25</a>' + '\n' +
+              '<br/>' + '\n' +
+        'PDF: <a href="https://ees5891.jgilligan.org/slides/class_25/ees_5891-03_class_25_slides.pdf" target="_blank">https://ees5891.jgilligan.org/slides/class_25/ees_5891-03_class_25_slides.pdf</a>' + '\n' +
+          	'</span>' + '\n' +
+  	'<span style="display:inline-block;text-align:right;vertical-align:top;position:absolute;right:0;bottom:0;">' + '\n' +
+  	  'Navigate slides: next: N or &lt;space&gt;; previous: P or &lt;backspace&gt;<br/>' + '\n' +
+  	  'Also: up, down, left, right arrows; overview: o; help: ?' + '\n' +
+  	'</span>' + '\n' +
+	'</div>' + '\n' +
+  '</div>' + '\n'
+  );
+</script><script>
+var MathJax = { jax: ["input/TeX", "output/HTML-CSS"],
+                TeX: {extensions: ["color.js", "mhchem.js"],
+                Macros: {
+                  indep: "\\perp \\!\\!\\! \\perp"
+                },
+                  },
+                "HTML-CSS" : {scale: 100 }};
+</script><!-- dynamically load mathjax for compatibility with self-contained --><script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook("HTML-CSS Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["HTML-CSS"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Register.StartupHook("SVG Jax Ready",function () {
+    var VARIANT = MathJax.OutputJax["SVG"].FONTDATA.VARIANT;
+    VARIANT["normal"].fonts.unshift("MathJax_SansSerif");
+	  VARIANT["bold"].fonts.unshift("MathJax_SansSerif-bold");
+	  VARIANT["italic"].fonts.unshift("MathJax_SansSerif-italic");
+	  VARIANT["-tex-mathit"].fonts.unshift("MathJax_SansSerif-italic");
+	});
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true
+  }
+})
+  </script><script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script><script>
+  var qrbox = document.querySelector("#qrbox");
+  var advance_fragment = 0;
+
+	function isPrintingPDF() {
+	  let printing = ( /print-pdf/gi ).test( window.location.search );
+	  console.log("printing test: " + printing);
+	  return printing;
+	}
+
+
+  if ( qrbox.hasAttribute('qr-box-hide') || Reveal.isOverview() ||
+      ! Reveal.isFirstSlide() || isPrintingPDF()) {
+    console.log("Initializing");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }
+
+  Reveal.addEventListener('overviewshown', function() {
+      console.log("Overview shown");
+    console.log("Hiding QR box");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+  }, false);
+
+  Reveal.addEventListener('overviewhidden', function() {
+    if (Reveal.isFirstSlide() && ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Overview hidden");
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    console.log("Slide changed...");
+    if (Reveal.isFirstSlide() && ! Reveal.isOverview() &&
+        ! qrbox.hasAttribute('qr-box-hide') &&
+        ! isPrintingPDF()) {
+      console.log("Showing QR box");
+      qrbox.style.visibility="visible";
+      qrbox.style.display="block";
+    } else {
+      console.log("Hiding QR box");
+      qrbox.style.visibility="hidden";
+      qrbox.style.display="none";
+    }
+  }, false);
+
+  Reveal.addEventListener('pdf-ready', function() {
+    console.log("hiding qrbox for printing");
+    qrbox.style.visibility="hidden";
+    qrbox.style.display="none";
+    qrbox.setAttribute('qr-box-hide', 'true');
+  });
+
+  </script><script>
+  Reveal.addEventListener('slidechanged', function() {
+    while (advance_fragment > 0) {
+      // console.log('advancing fragment');
+      Reveal.nextFragment();
+      advance_fragment--;
+    }
+  }, false);
+
+  Reveal.addEventListener('slidechanged', function() {
+    if ( Reveal.getCurrentSlide().hasAttribute('data-skip')) {
+      // console.log("going to next slide...");
+      Reveal.next();
+    }
+  }, false);
+
+  Reveal.addEventListener('skip_slide', function() {
+    Reveal.next();
+  }, false);
+
+  Reveal.addEventListener('advance_fragment', function() {
+    // console.log("setting advance fragment");
+    advance_fragment++;
+    }, false);
+  </script>
+</body>
+</html>
