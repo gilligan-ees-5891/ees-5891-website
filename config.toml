@@ -155,8 +155,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "_scripts$", "_
   fullCourseName = "EES 5891-03: Bayesian Statistical Methods"
   semester = "Fall 2022"
   courseCatalogEntry = "An introduction to Bayesian statistics, with a focus on both practical application of Bayesian regression methods to data as well as philosophical background on statistical inference and interpretation of statistical analyses. Bayes's theorem and tools for applying it, including quadratic approximations, Hamiltonian Monte Carlo sampling, and Integrated Nested Laplace Approximation (INLA). Advanced methods, including multilevel regression methods and geospatial analysis."
-  fontAwesomePro = "sha384-POYwD7xcktv3gUeZO5s/9nUbRJG/WOmV6jfEGikMJu77LGYO8Rfs2X7URG822aum"
   siteGitHub = "https://github.com/gilligan-ees-5891/EES-5891-website.git"
+
+  [params.fontAwesomePro]
+    key = "sha384-POYwD7xcktv3gUeZO5s/9nUbRJG/WOmV6jfEGikMJu77LGYO8Rfs2X7URG822aum"
+    kit = "536cbb4daa"
 
   [params.lectures]
     times = "TR 11:00--12:15"
